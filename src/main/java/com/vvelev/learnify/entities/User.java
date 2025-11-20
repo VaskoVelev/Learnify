@@ -52,4 +52,7 @@ public class User {
 
     @OneToMany(mappedBy = "createdBy")
     private Set<Course> courses = new HashSet<>();
+
+    @OneToMany(mappedBy = "student")
+    private Set<Enrollment> enrollments = new HashSet<>();
 }
