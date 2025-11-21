@@ -11,7 +11,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "student_progressions")
+@Table(
+        name = "student_progressions",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"student_id", "course_id"})
+)
 public class StudentProgression {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

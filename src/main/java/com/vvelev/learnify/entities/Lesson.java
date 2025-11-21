@@ -28,7 +28,7 @@ public class Lesson {
     private String content;
 
     @Column(name = "video_url")
-    private String videoURL;
+    private String videoUrl;
 
     @Column(name = "order_index")
     private Long orderIndex;
