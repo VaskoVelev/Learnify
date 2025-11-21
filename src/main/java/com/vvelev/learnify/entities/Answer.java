@@ -6,16 +6,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "questions")
-public class Question {
+@Table(name = "answers")
+public class Answer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -24,13 +21,10 @@ public class Question {
     @Column(name = "text")
     private String text;
 
-    @Column(name = "type")
-    private String type;
+    @Column(name = "is_correct")
+    private boolean isCorrect;
 
     @ManyToOne
-    @JoinColumn(name = "quiz_id")
-    private Quiz quiz;
-
-    @OneToMany(mappedBy = "question")
-    private Set<Answer> answers = new HashSet<>();
+    @JoinColumn(name = "question_id")
+    private Question question;
 }
