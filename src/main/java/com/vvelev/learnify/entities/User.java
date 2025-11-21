@@ -58,4 +58,7 @@ public class User {
 
     @OneToMany(mappedBy = "student")
     private Set<Submission> submissions = new HashSet<>();
+
+    @OneToMany(mappedBy = "student")
+    private Set<StudentProgression> studentProgressions = new HashSet<>();
 }
