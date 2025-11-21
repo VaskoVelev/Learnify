@@ -124,6 +124,6 @@ CREATE TABLE notifications (
 	message text NOT NULL,
 	type varchar(50) NOT NULL,
 	created_at timestamp NOT NULL DEFAULT current_timestamp,
-	read boolean NOT NULL DEFAULT FALSE,
+	is_read boolean NOT NULL DEFAULT FALSE,
 	FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
