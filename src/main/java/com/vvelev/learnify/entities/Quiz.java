@@ -33,4 +33,7 @@ public class Quiz {
 
     @OneToMany(mappedBy = "quiz")
     private Set<Question> questions = new HashSet<>();
+
+    @OneToMany(mappedBy = "quiz")
+    private Set<Submission> submissions = new HashSet<>();
 }
