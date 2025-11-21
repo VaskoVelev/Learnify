@@ -8,6 +8,8 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -35,4 +37,7 @@ public class Submission {
     @ManyToOne
     @JoinColumn(name = "student_id")
     private User student;
+
+    @OneToMany(mappedBy = "submission")
+    private Set<SubmissionAnswer> submissionAnswers = new HashSet<>();
 }
