@@ -1,4 +1,4 @@
-package com.vvelev.learnify.dtos;
+package com.vvelev.learnify.dtos.course;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,11 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateCourseDto {
+public class UpdateCourseDto {
     private String title;
     private String description;
     private String category;
     private String difficulty;
     private String thumbnail;
-    private Long createdById;
 }
