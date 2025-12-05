@@ -11,7 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class MaterialDto {
     private Long id;
-    private Long lessonId;
     private String filePath;
     private String fileType;
+    private Long lessonId;
 }

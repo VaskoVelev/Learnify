@@ -10,9 +10,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateLessonDto {
-    private Long courseId;
     private String title;
     private String content;
     private String videoUrl;
     private Long orderIndex;
+    private Long courseId;
 }

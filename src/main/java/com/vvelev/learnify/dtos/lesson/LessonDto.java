@@ -11,9 +11,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class LessonDto {
     private Long id;
-    private Long courseId;
     private String title;
     private String content;
     private String videoUrl;
     private Long orderIndex;
+    private Long courseId;
 }

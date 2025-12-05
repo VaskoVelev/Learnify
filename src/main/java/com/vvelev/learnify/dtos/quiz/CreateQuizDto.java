@@ -1,4 +1,4 @@
-package com.vvelev.learnify.dtos.material;
+package com.vvelev.learnify.dtos.quiz;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateMaterialDto {
-    private String filePath;
-    private String fileType;
-    private Long lessonId;
+public class CreateQuizDto {
+    private String title;
+    private String description;
+    private Long courseId;
 }
