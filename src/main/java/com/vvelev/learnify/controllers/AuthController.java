@@ -1,5 +1,6 @@
 package com.vvelev.learnify.controllers;
 
+import com.vvelev.learnify.dtos.auth.LoginDto;
 import com.vvelev.learnify.dtos.auth.RegisterDto;
 import com.vvelev.learnify.dtos.user.UserDto;
 import com.vvelev.learnify.entities.User;
@@ -7,6 +8,7 @@ import com.vvelev.learnify.mappers.UserMapper;
 import com.vvelev.learnify.repositories.UserRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +27,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping("/auth/register")
-    public ResponseEntity<?> registerUser(
+    public ResponseEntity<?> register(
             @Valid @RequestBody RegisterDto request,
             UriComponentsBuilder uriBuilder
     ) {
@@ -50,5 +52,23 @@ public class AuthController {
         URI uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
 
         return ResponseEntity.created(uri).body(userDto);
+    }
+
+    @PostMapping("/auth/login")
+    public ResponseEntity<Void> login(@Valid @RequestBody LoginDto request) {
+        User user = userRepository.findByEmail(request.getEmail());
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (!user.isActive()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        return ResponseEntity.ok().build();
     }
 }
