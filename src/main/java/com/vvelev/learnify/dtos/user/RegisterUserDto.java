@@ -1,4 +1,4 @@
-package com.vvelev.learnify.dtos.auth;
+package com.vvelev.learnify.dtos.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterDto {
+public class RegisterUserDto {
     @NotBlank(message = "Email is required")
     @Email
     private String email;
