@@ -1,5 +1,6 @@
 package com.vvelev.learnify.services;
 
+import com.vvelev.learnify.entities.User;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,15 +13,24 @@ public class JwtService {
     @Value("${spring.jwt.secret}")
     private String secret;
 
-    public String generateToken(String email) {
-        final long tokenExpiration = 86400;
-
+    private String generateToken(User user, long tokenExpiration) {
         return Jwts.builder()
-                .subject(email)
+                .subject(user.getId().toString())
+                .claim("email", user.getEmail())
+                .claim("firstName", user.getFirstName())
+                .claim("lastName", user.getLastName())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 1000 * tokenExpiration))
                 .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
                 .compact();
+    }
+
+    public String generateAccessToken(User user) {
+        return generateToken(user, 300);
+    }
+
+    public String generateRefreshToken(User user) {
+        return generateToken(user, 604800);
     }
 
     private Claims getClaims(String token) {
@@ -40,7 +50,7 @@ public class JwtService {
         }
     }
 
-    public String getEmailFromToken(String token) {
-        return getClaims(token).getSubject();
+    public Long getIdFromToken(String token) {
+        return Long.valueOf(getClaims(token).getSubject());
     }
 }
