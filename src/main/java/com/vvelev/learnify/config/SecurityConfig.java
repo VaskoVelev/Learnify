@@ -1,5 +1,6 @@
 package com.vvelev.learnify.config;
 
+import com.vvelev.learnify.filters.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @AllArgsConstructor
 @Configuration
@@ -22,6 +24,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -45,15 +48,14 @@ public class SecurityConfig {
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(c -> c
-                        /*
+
                         .requestMatchers(HttpMethod.GET, "/users/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/users/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/users/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/**", "/users/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/login", "/users/**").permitAll()
                         .anyRequest().authenticated()
-                        */
-                        .anyRequest().permitAll()
-                );
+                )
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
