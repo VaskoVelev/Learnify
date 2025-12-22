@@ -34,4 +34,27 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Void> handleDisabledException() {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<Map<String, String>> handleEmailAlreadyExistsException(
+            EmailAlreadyExistsException exception
+    ) {
+        return ResponseEntity.badRequest().body(
+                Map.of("email", exception.getMessage())
+        );
+    }
+
+    @ExceptionHandler(PasswordsDoNotMatchException.class)
+    public ResponseEntity<Map<String, String>> handlePasswordsDoNotMatchException(
+            PasswordsDoNotMatchException exception
+    ) {
+        return ResponseEntity.badRequest().body(
+                Map.of("confirmPassword", exception.getMessage())
+        );
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Void> handleUserNotFoundException() {
+        return ResponseEntity.notFound().build();
+    }
 }
