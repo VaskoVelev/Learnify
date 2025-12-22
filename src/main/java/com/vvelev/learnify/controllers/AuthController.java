@@ -1,5 +1,6 @@
 package com.vvelev.learnify.controllers;
 
+import com.vvelev.learnify.config.JwtConfig;
 import com.vvelev.learnify.dtos.auth.AuthResponseDto;
 import com.vvelev.learnify.dtos.auth.LoginDto;
 import com.vvelev.learnify.dtos.user.UserDto;
@@ -11,6 +12,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final JwtConfig  jwtConfig;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
@@ -39,17 +42,24 @@ public class AuthController {
         Cookie cookie = new Cookie("refreshToken", refreshToken);
         cookie.setHttpOnly(true);
         cookie.setPath("/auth/refresh");
-        cookie.setMaxAge(604800);
+        cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration());
         cookie.setSecure(true);
         response.addCookie(cookie);
 
         return ResponseEntity.ok(new AuthResponseDto(accessToken));
     }
 
-    @PostMapping("/auth/validate")
-    public boolean validate(@RequestHeader("Authorization") String authHeader) {
-        String token = authHeader.replace("Bearer ", "");
-        return jwtService.validateToken(token);
+    @PostMapping("/auth/refresh")
+    public ResponseEntity<AuthResponseDto> refresh(@CookieValue(value = "refreshToken") String refreshToken) {
+        if (!jwtService.validateToken(refreshToken)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        Long id = jwtService.getIdFromToken(refreshToken);
+        User user = userRepository.findById(id).orElseThrow();
+        String accessToken = jwtService.generateAccessToken(user);
+
+        return ResponseEntity.ok(new AuthResponseDto(accessToken));
     }
 
     @GetMapping("/auth/me")

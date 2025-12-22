@@ -1,17 +1,17 @@
 package com.vvelev.learnify.services;
 
+import com.vvelev.learnify.config.JwtConfig;
 import com.vvelev.learnify.entities.User;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+@AllArgsConstructor
 @Service
 public class JwtService {
-    @Value("${spring.jwt.secret}")
-    private String secret;
+    private final JwtConfig jwtConfig;
 
     private String generateToken(User user, long tokenExpiration) {
         return Jwts.builder()
@@ -21,21 +21,21 @@ public class JwtService {
                 .claim("lastName", user.getLastName())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 1000 * tokenExpiration))
-                .signWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .signWith(jwtConfig.getSecretKey())
                 .compact();
     }
 
     public String generateAccessToken(User user) {
-        return generateToken(user, 300);
+        return generateToken(user, jwtConfig.getAccessTokenExpiration());
     }
 
     public String generateRefreshToken(User user) {
-        return generateToken(user, 604800);
+        return generateToken(user, jwtConfig.getRefreshTokenExpiration());
     }
 
     private Claims getClaims(String token) {
         return Jwts.parser()
-                .verifyWith(Keys.hmacShaKeyFor(secret.getBytes()))
+                .verifyWith(jwtConfig.getSecretKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
