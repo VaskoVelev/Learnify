@@ -13,24 +13,34 @@ import java.util.Date;
 public class JwtService {
     private final JwtConfig jwtConfig;
 
-    private String generateToken(User user, long tokenExpiration) {
-        return Jwts.builder()
+    private Jwt generateToken(User user, long tokenExpiration) {
+        Claims claims = Jwts.claims()
                 .subject(user.getId().toString())
-                .claim("email", user.getEmail())
-                .claim("firstName", user.getFirstName())
-                .claim("lastName", user.getLastName())
+                .add("email", user.getEmail())
+                .add("firstName", user.getFirstName())
+                .add("lastName", user.getLastName())
+                .add("role", user.getRole())
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + 1000 * tokenExpiration))
-                .signWith(jwtConfig.getSecretKey())
-                .compact();
+                .build();
+
+        return new Jwt(claims, jwtConfig.getSecretKey());
     }
 
-    public String generateAccessToken(User user) {
+    public Jwt generateAccessToken(User user) {
         return generateToken(user, jwtConfig.getAccessTokenExpiration());
     }
 
-    public String generateRefreshToken(User user) {
+    public Jwt generateRefreshToken(User user) {
         return generateToken(user, jwtConfig.getRefreshTokenExpiration());
+    }
+
+    public Jwt parseToken(String token) {
+        try {
+            return new Jwt(getClaims(token),  jwtConfig.getSecretKey());
+        }  catch (JwtException e) {
+            return null;
+        }
     }
 
     private Claims getClaims(String token) {
@@ -39,18 +49,5 @@ public class JwtService {
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-    }
-
-    public boolean validateToken(String token) {
-        try {
-            Claims claims = getClaims(token);
-            return claims.getExpiration().after(new Date());
-        } catch (JwtException e) {
-            return false;
-        }
-    }
-
-    public Long getIdFromToken(String token) {
-        return Long.valueOf(getClaims(token).getSubject());
     }
 }

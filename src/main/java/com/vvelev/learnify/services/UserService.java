@@ -72,6 +72,7 @@ public class UserService implements UserDetailsService {
 
         User user = userMapper.toEntity(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(user.getRole());
         user.setActive(true);
         userRepository.save(user);
 

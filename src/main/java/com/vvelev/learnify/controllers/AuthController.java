@@ -7,6 +7,7 @@ import com.vvelev.learnify.dtos.user.UserDto;
 import com.vvelev.learnify.entities.User;
 import com.vvelev.learnify.mappers.UserMapper;
 import com.vvelev.learnify.repositories.UserRepository;
+import com.vvelev.learnify.services.Jwt;
 import com.vvelev.learnify.services.JwtService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -36,30 +37,30 @@ public class AuthController {
         );
 
         User user = userRepository.findByEmail(request.getEmail());
-        String accessToken = jwtService.generateAccessToken(user);
-        String refreshToken = jwtService.generateRefreshToken(user);
+        Jwt accessToken = jwtService.generateAccessToken(user);
+        Jwt refreshToken = jwtService.generateRefreshToken(user);
 
-        Cookie cookie = new Cookie("refreshToken", refreshToken);
+        Cookie cookie = new Cookie("refreshToken", refreshToken.toString());
         cookie.setHttpOnly(true);
         cookie.setPath("/auth/refresh");
         cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration());
         cookie.setSecure(true);
         response.addCookie(cookie);
 
-        return ResponseEntity.ok(new AuthResponseDto(accessToken));
+        return ResponseEntity.ok(new AuthResponseDto(accessToken.toString()));
     }
 
     @PostMapping("/auth/refresh")
     public ResponseEntity<AuthResponseDto> refresh(@CookieValue(value = "refreshToken") String refreshToken) {
-        if (!jwtService.validateToken(refreshToken)) {
+        Jwt jwt = jwtService.parseToken(refreshToken);
+        if (jwt == null || jwt.isExpired()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        Long id = jwtService.getIdFromToken(refreshToken);
-        User user = userRepository.findById(id).orElseThrow();
-        String accessToken = jwtService.generateAccessToken(user);
+        User user = userRepository.findById(jwt.getId()).orElseThrow();
+        Jwt accessToken = jwtService.generateAccessToken(user);
 
-        return ResponseEntity.ok(new AuthResponseDto(accessToken));
+        return ResponseEntity.ok(new AuthResponseDto(accessToken.toString()));
     }
 
     @GetMapping("/auth/me")
