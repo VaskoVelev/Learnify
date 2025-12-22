@@ -45,11 +45,14 @@ public class SecurityConfig {
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(c -> c
+                        /*
                         .requestMatchers(HttpMethod.GET, "/users/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/users/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/users/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/auth/**", "/users/**").permitAll()
                         .anyRequest().authenticated()
+                        */
+                        .anyRequest().permitAll()
                 );
 
         return http.build();
