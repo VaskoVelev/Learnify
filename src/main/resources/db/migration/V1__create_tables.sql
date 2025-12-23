@@ -60,7 +60,6 @@ CREATE TABLE questions (
 	id serial PRIMARY KEY,
 	quiz_id integer NOT NULL,
 	text text NOT NULL,
-	type varchar(50) NOT NULL,
 	FOREIGN KEY (quiz_id) REFERENCES quizzes(id) ON DELETE CASCADE
 );
 
@@ -86,7 +85,6 @@ CREATE TABLE submission_answers (
 	submission_id integer NOT NULL,
 	question_id integer NOT NULL,
 	answer_id integer,
-	text_answer text,
 	PRIMARY KEY (submission_id, question_id),
     FOREIGN KEY (submission_id) REFERENCES submissions(id) ON DELETE CASCADE,
     FOREIGN KEY (question_id) REFERENCES questions(id) ON DELETE CASCADE,

@@ -34,7 +34,8 @@ public class Course {
     private String category;
 
     @Column(name = "difficulty")
-    private String difficulty;
+    @Enumerated(EnumType.STRING)
+    private Difficulty difficulty;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

@@ -24,9 +24,6 @@ public class Question {
     @Column(name = "text")
     private String text;
 
-    @Column(name = "type")
-    private String type;
-
     @ManyToOne
     @JoinColumn(name = "quiz_id")
     private Quiz quiz;

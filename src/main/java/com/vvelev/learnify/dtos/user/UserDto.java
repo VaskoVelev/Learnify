@@ -1,5 +1,8 @@
 package com.vvelev.learnify.dtos.user;
 
+import com.vvelev.learnify.entities.Role;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,4 +21,7 @@ public class UserDto {
     private String lastName;
     private LocalDateTime createdAt;
     private boolean active;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 }

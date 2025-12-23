@@ -22,7 +22,8 @@ public class Material {
     private String filePath;
 
     @Column(name = "file_type")
-    private String fileType;
+    @Enumerated(EnumType.STRING)
+    private FileType fileType;
 
     @ManyToOne
     @JoinColumn(name = "lesson_id")

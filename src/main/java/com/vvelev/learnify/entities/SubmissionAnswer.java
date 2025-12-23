@@ -16,9 +16,6 @@ public class SubmissionAnswer {
     @EmbeddedId
     private SubmissionAnswerId id;
 
-    @Column(name = "text_answer")
-    private String textAnswer;
-
     @ManyToOne
     @MapsId("submissionId")
     @JoinColumn(name = "submission_id")
