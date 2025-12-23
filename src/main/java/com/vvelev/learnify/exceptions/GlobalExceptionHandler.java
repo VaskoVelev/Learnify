@@ -57,4 +57,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Void> handleUserNotFoundException() {
         return ResponseEntity.notFound().build();
     }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<Void> handleInvalidTokenException() {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
 }
