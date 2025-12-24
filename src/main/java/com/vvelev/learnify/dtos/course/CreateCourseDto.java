@@ -1,5 +1,6 @@
 package com.vvelev.learnify.dtos.course;
 
+import com.vvelev.learnify.entities.Category;
 import com.vvelev.learnify.entities.Difficulty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -18,9 +19,7 @@ public class CreateCourseDto {
     @Size(max = 5000)
     private String description;
 
-    @Size(max = 100)
-    private String category;
-
+    private Category category;
     private Difficulty difficulty;
     private String thumbnail;
 }

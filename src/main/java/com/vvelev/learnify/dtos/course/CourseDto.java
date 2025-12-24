@@ -1,5 +1,6 @@
 package com.vvelev.learnify.dtos.course;
 
+import com.vvelev.learnify.entities.Category;
 import com.vvelev.learnify.entities.Difficulty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,7 +15,7 @@ public class CourseDto {
     private Long id;
     private String title;
     private String description;
-    private String category;
+    private Category category;
     private String thumbnail;
     private Long createdById;
     private LocalDateTime createdAt;

@@ -31,7 +31,8 @@ public class Course {
     private String description;
 
     @Column(name = "category")
-    private String category;
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
     @Column(name = "difficulty")
     @Enumerated(EnumType.STRING)

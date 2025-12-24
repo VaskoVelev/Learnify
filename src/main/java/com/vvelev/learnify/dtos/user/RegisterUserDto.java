@@ -24,9 +24,11 @@ public class RegisterUserDto {
     private String confirmPassword;
 
     @NotBlank(message = "First name is required")
+    @Size(max = 100)
     private String firstName;
 
     @NotBlank(message = "Last name is required")
+    @Size(max = 100)
     private String lastName;
 
     private Role role;
