@@ -1,8 +1,6 @@
 package com.vvelev.learnify.dtos.user;
 
 import com.vvelev.learnify.entities.Role;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -11,10 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter
+@AllArgsConstructor @NoArgsConstructor
 public class RegisterUserDto {
     @NotBlank(message = "Email is required")
     @Email
@@ -33,6 +29,5 @@ public class RegisterUserDto {
     @NotBlank(message = "Last name is required")
     private String lastName;
 
-    @Enumerated(EnumType.STRING)
     private Role role;
 }

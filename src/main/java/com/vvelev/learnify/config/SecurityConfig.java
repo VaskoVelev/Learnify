@@ -50,11 +50,7 @@ public class SecurityConfig {
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(c -> c
-
-                        .requestMatchers(HttpMethod.GET, "/users/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/users/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/users/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/auth/login", "/auth/refresh", "/users/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/auth/login", "/users").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

@@ -62,4 +62,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Void> handleInvalidTokenException() {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
+
+    @ExceptionHandler(CourseNotFoundException.class)
+    public ResponseEntity<Void> handleCourseNotFoundException() {
+        return ResponseEntity.notFound().build();
+    }
 }

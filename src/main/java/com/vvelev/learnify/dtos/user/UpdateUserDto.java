@@ -6,10 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Getter @Setter
+@AllArgsConstructor @NoArgsConstructor
 public class UpdateUserDto {
     @NotBlank(message = "First name is required")
     private String firstName;
