@@ -7,9 +7,7 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Getter @Setter
 @AllArgsConstructor
 public class EnrollmentDto {
     private LocalDateTime enrolledAt;

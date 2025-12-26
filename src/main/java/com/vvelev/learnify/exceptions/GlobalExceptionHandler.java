@@ -67,4 +67,13 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Void> handleCourseNotFoundException() {
         return ResponseEntity.notFound().build();
     }
+
+    @ExceptionHandler(StudentAlreadyEnrolledException.class)
+    public ResponseEntity<Map<String, String>> handleStudentAlreadyEnrolledException(
+            StudentAlreadyEnrolledException exception
+    ) {
+        return ResponseEntity.badRequest().body(
+                Map.of("Enrollment", exception.getMessage())
+        );
+    }
 }
