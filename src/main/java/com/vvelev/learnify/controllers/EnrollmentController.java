@@ -19,23 +19,29 @@ import java.util.List;
 public class EnrollmentController {
     private final EnrollmentService enrollmentService;
 
-    @PostMapping("/courses/{id}/enroll")
-    public ResponseEntity<?> createEnrollment(@PathVariable Long id) {
-        EnrollmentDto enrollmentDto = enrollmentService.createEnrollment(id);
+    @PostMapping("users/{studentId}/enroll/courses/{courseId}/")
+    public ResponseEntity<?> enrollStudent(
+            @PathVariable Long studentId,
+            @PathVariable Long courseId
+    ) {
+        EnrollmentDto enrollmentDto = enrollmentService.enrollStudent(studentId, courseId);
         return ResponseEntity.status(HttpStatus.CREATED).body(enrollmentDto);
     }
 
-    @GetMapping("/me/enrollments")
-    public List<EnrollmentCourseSummaryDto> getMyEnrollments() {
-        return enrollmentService.getMyEnrollments();
+    @GetMapping("/users/{id}/enrollments")
+    public List<EnrollmentCourseSummaryDto> getStudentEnrollments(@PathVariable Long id) {
+        return enrollmentService.getStudentEnrollments(id);
     }
 
-    @GetMapping("/courses/{id}/enrollments")
-    public List<EnrollmentStudentSummaryDto> getCourseEnrollments(@PathVariable Long id) {
-        return enrollmentService.getCourseEnrollments(id);
+    @GetMapping("users/{userId}/courses/{id}/enrollments")
+    public List<EnrollmentStudentSummaryDto> getCourseEnrollments(
+            @PathVariable Long userId,
+            @PathVariable Long courseId
+    ) {
+        return enrollmentService.getCourseEnrollments(userId, courseId);
     }
 
-    @GetMapping("/admin/enrollments")
+    @GetMapping("/enrollments")
     public List<EnrollmentDto> getAllEnrollments() {
         return enrollmentService.getAllEnrollments();
     }

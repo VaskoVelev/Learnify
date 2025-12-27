@@ -16,8 +16,6 @@ import com.vvelev.learnify.repositories.CourseRepository;
 import com.vvelev.learnify.repositories.EnrollmentRepository;
 import com.vvelev.learnify.repositories.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,21 +29,11 @@ public class EnrollmentService {
     private final EnrollmentRepository enrollmentRepository;
     private final EnrollmentMapper enrollmentMapper;
 
-    public EnrollmentDto createEnrollment(Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long studentId = (Long) authentication.getPrincipal();
+    public EnrollmentDto enrollStudent(Long studentId, Long courseId) {
+        User student = userRepository.findById(studentId).orElseThrow(UserNotFoundException::new);
+        Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
 
-        User student = userRepository.findById(studentId).orElse(null);
-        if (student == null) {
-            throw new UserNotFoundException();
-        }
-
-        Course course = courseRepository.findById(id).orElse(null);
-        if (course == null) {
-            throw new CourseNotFoundException();
-        }
-
-        EnrollmentId enrollmentId = new EnrollmentId(studentId, id);
+        EnrollmentId enrollmentId = new EnrollmentId(studentId, courseId);
         if (enrollmentRepository.existsById(enrollmentId)) {
             throw new StudentAlreadyEnrolledException();
         }
@@ -59,40 +47,29 @@ public class EnrollmentService {
         return enrollmentMapper.toDto(enrollment);
     }
 
-    public List<EnrollmentCourseSummaryDto> getMyEnrollments() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long studentId = (Long) authentication.getPrincipal();
-
-        User student = userRepository.findById(studentId).orElse(null);
-        if (student == null) {
+    public List<EnrollmentCourseSummaryDto> getStudentEnrollments(Long id) {
+        if (!userRepository.existsById(id)) {
             throw new UserNotFoundException();
         }
 
-        return enrollmentRepository.findByIdStudentId(studentId)
+        return enrollmentRepository.findByIdStudentId(id)
                 .stream()
                 .map(enrollmentMapper::toCourseSummary)
                 .toList();
     }
 
-    public List<EnrollmentStudentSummaryDto> getCourseEnrollments(Long id) {
-        Course course = courseRepository.findById(id).orElse(null);
-        if (course == null) {
-            throw new CourseNotFoundException();
-        }
+    public List<EnrollmentStudentSummaryDto> getCourseEnrollments(Long userId, Long courseId) {
+        Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = (Long) authentication.getPrincipal();
-
-        User student = userRepository.findById(userId).orElse(null);
-        if (student == null) {
+        if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException();
         }
 
-        if (!Objects.equals(course.getCreatedBy().getId(), userId) && !enrollmentRepository.existsByIdStudentIdAndIdCourseId(userId, id)) {
+        if (!Objects.equals(course.getCreatedBy().getId(), userId) && !enrollmentRepository.existsById(new EnrollmentId(userId, courseId))) {
             throw new AccessDeniedException();
         }
 
-        return enrollmentRepository.findByIdCourseId(id)
+        return enrollmentRepository.findByIdCourseId(courseId)
                 .stream()
                 .map(enrollmentMapper::toStudentSummary)
                 .toList();
