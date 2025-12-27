@@ -76,4 +76,9 @@ public class GlobalExceptionHandler {
                 Map.of("Enrollment", exception.getMessage())
         );
     }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Void> handleAccessDeniedException() {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+    }
 }

@@ -44,4 +44,16 @@ public class AuthController {
         UserDto userDto = authService.getLoggedInUser();
         return ResponseEntity.ok(userDto);
     }
+
+    @PostMapping("/auth/logout")
+    public ResponseEntity<Void> logout(HttpServletResponse response) {
+        Cookie cookie = new Cookie("refreshToken", null);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/auth/refresh");
+        cookie.setMaxAge(0);
+        cookie.setSecure(true);
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok().build();
+    }
 }

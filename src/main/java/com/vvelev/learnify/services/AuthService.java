@@ -20,10 +20,10 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 @Service
 public class AuthService {
-    private UserRepository userRepository;
-    private UserMapper userMapper;
-    private JwtService jwtService;
-    private AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
     public AuthResponseDto refresh(String refreshToken) {
         Jwt jwt = jwtService.parseToken(refreshToken);
