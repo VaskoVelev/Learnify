@@ -19,6 +19,7 @@ import java.util.List;
 public class EnrollmentController {
     private final EnrollmentService enrollmentService;
 
+    // Enrolls a student in a given course
     @PostMapping("users/{studentId}/enroll/courses/{courseId}/")
     public ResponseEntity<?> enrollStudent(
             @PathVariable Long studentId,
@@ -28,12 +29,16 @@ public class EnrollmentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(enrollmentDto);
     }
 
+    // Returns the courses:
+    //     - a student is enrolled in
+    //     - a teacher has created
     @GetMapping("/users/{id}/enrollments")
     public List<EnrollmentCourseSummaryDto> getStudentEnrollments(@PathVariable Long id) {
         return enrollmentService.getStudentEnrollments(id);
     }
 
-    @GetMapping("users/{userId}/courses/{id}/enrollments")
+    // Returns the students enrolled in a given course
+    @GetMapping("users/{userId}/courses/{courseId}/enrollments")
     public List<EnrollmentStudentSummaryDto> getCourseEnrollments(
             @PathVariable Long userId,
             @PathVariable Long courseId
@@ -41,6 +46,7 @@ public class EnrollmentController {
         return enrollmentService.getCourseEnrollments(userId, courseId);
     }
 
+    // Returns all enrollments
     @GetMapping("/enrollments")
     public List<EnrollmentDto> getAllEnrollments() {
         return enrollmentService.getAllEnrollments();

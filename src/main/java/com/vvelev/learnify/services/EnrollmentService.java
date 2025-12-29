@@ -29,52 +29,70 @@ public class EnrollmentService {
     private final EnrollmentRepository enrollmentRepository;
     private final EnrollmentMapper enrollmentMapper;
 
+    // Enrolls a student in a given course
     public EnrollmentDto enrollStudent(Long studentId, Long courseId) {
+        // Gets the student from the repository
         User student = userRepository.findById(studentId).orElseThrow(UserNotFoundException::new);
+
+        // Gets the course from the repository
         Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
 
+        // Checks if the student is already enrolled in the course
         EnrollmentId enrollmentId = new EnrollmentId(studentId, courseId);
         if (enrollmentRepository.existsById(enrollmentId)) {
             throw new StudentAlreadyEnrolledException();
         }
 
+        // Creates a new enrollment
         Enrollment enrollment = new Enrollment();
         enrollment.setId(enrollmentId);
         enrollment.setStudent(student);
         enrollment.setCourse(course);
         enrollmentRepository.save(enrollment);
 
+        // Returns the enrollment
         return enrollmentMapper.toDto(enrollment);
     }
 
+    // Returns the courses:
+    //     - a student is enrolled in
+    //     - a teacher has created
     public List<EnrollmentCourseSummaryDto> getStudentEnrollments(Long id) {
+        // Checks if the user exists
         if (!userRepository.existsById(id)) {
             throw new UserNotFoundException();
         }
 
+        // Returns the courses' summaries
         return enrollmentRepository.findByIdStudentId(id)
                 .stream()
                 .map(enrollmentMapper::toCourseSummary)
                 .toList();
     }
 
+    // Returns the students enrolled in a given course
     public List<EnrollmentStudentSummaryDto> getCourseEnrollments(Long userId, Long courseId) {
+        // Gets the course from the repository
         Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
 
+        // Checks if the user exists
         if (!userRepository.existsById(userId)) {
             throw new UserNotFoundException();
         }
 
+        // Checks if the user is the course's creator and if the user is enrolled in the course
         if (!Objects.equals(course.getCreatedBy().getId(), userId) && !enrollmentRepository.existsById(new EnrollmentId(userId, courseId))) {
             throw new AccessDeniedException();
         }
 
+        // Returns the students' summaries
         return enrollmentRepository.findByIdCourseId(courseId)
                 .stream()
                 .map(enrollmentMapper::toStudentSummary)
                 .toList();
     }
 
+    // Returns all enrollments
     public List<EnrollmentDto> getAllEnrollments() {
         return enrollmentRepository.findAll()
                 .stream()
