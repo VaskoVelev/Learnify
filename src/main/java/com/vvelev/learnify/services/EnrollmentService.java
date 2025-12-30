@@ -54,11 +54,9 @@ public class EnrollmentService {
         return enrollmentMapper.toDto(enrollment);
     }
 
-    // Returns the courses:
-    //     - a student is enrolled in
-    //     - a teacher has created
+    // Returns the courses a student is enrolled in
     public List<EnrollmentCourseSummaryDto> getStudentEnrollments(Long id) {
-        // Checks if the user exists
+        // Checks if the student exists
         if (!userRepository.existsById(id)) {
             throw new UserNotFoundException();
         }

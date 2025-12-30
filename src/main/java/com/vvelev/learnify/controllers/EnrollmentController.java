@@ -29,9 +29,7 @@ public class EnrollmentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(enrollmentDto);
     }
 
-    // Returns the courses:
-    //     - a student is enrolled in
-    //     - a teacher has created
+    // Returns the courses a student is enrolled in
     @GetMapping("/users/{id}/enrollments")
     public List<EnrollmentCourseSummaryDto> getStudentEnrollments(@PathVariable Long id) {
         return enrollmentService.getStudentEnrollments(id);
