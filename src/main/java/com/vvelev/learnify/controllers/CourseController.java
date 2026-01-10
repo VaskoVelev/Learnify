@@ -18,6 +18,17 @@ import java.util.List;
 public class CourseController {
     private CourseService courseService;
 
+    @PostMapping("/courses")
+    public ResponseEntity<CourseDto> createCourse(
+            @Valid @RequestBody CreateCourseDto request,
+            UriComponentsBuilder uriBuilder
+    ) {
+        CourseDto courseDto = courseService.createCourse(request);
+        URI uri = uriBuilder.path("/courses/{id}").buildAndExpand(courseDto.getId()).toUri();
+
+        return ResponseEntity.created(uri).body(courseDto);
+    }
+
     @GetMapping("/courses")
     public List<CourseDto> getAllCourses() {
         return courseService.getAllCourses();
@@ -32,17 +43,6 @@ public class CourseController {
     @GetMapping("/users/{id}/courses-created")
     public List<CourseDto> getCoursesCreated(@PathVariable Long id) {
         return courseService.getCoursesCreated(id);
-    }
-
-    @PostMapping("/courses")
-    public ResponseEntity<CourseDto> createCourse(
-            @Valid @RequestBody CreateCourseDto request,
-            UriComponentsBuilder uriBuilder
-    ) {
-        CourseDto courseDto = courseService.createCourse(request);
-        URI uri = uriBuilder.path("/courses/{id}").buildAndExpand(courseDto.getId()).toUri();
-
-        return ResponseEntity.created(uri).body(courseDto);
     }
 
     @PutMapping("/courses/{id}")

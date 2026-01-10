@@ -18,17 +18,6 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @GetMapping("/users")
-    public List<UserDto> getAllUsers() {
-        return userService.getAllUsers();
-    }
-
-    @GetMapping("/users/{id}")
-    public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
-        UserDto userDto = userService.getUser(id);
-        return ResponseEntity.ok(userDto);
-    }
-
     @PostMapping("/users")
     public ResponseEntity<?> registerUser(
             @Valid @RequestBody RegisterUserDto request,
@@ -38,6 +27,17 @@ public class UserController {
         URI uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
 
         return ResponseEntity.created(uri).body(userDto);
+    }
+
+    @GetMapping("/users")
+    public List<UserDto> getAllUsers() {
+        return userService.getAllUsers();
+    }
+
+    @GetMapping("/users/{id}")
+    public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
+        UserDto userDto = userService.getUser(id);
+        return ResponseEntity.ok(userDto);
     }
 
     @PutMapping("/users/{id}")

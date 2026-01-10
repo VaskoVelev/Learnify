@@ -4,6 +4,7 @@ import com.vvelev.learnify.dtos.user.RegisterUserDto;
 import com.vvelev.learnify.dtos.user.UpdateUserDto;
 import com.vvelev.learnify.dtos.user.UserDto;
 import com.vvelev.learnify.entities.User;
+import com.vvelev.learnify.exceptions.AccessDeniedException;
 import com.vvelev.learnify.exceptions.EmailAlreadyExistsException;
 import com.vvelev.learnify.exceptions.PasswordsDoNotMatchException;
 import com.vvelev.learnify.exceptions.UserNotFoundException;
@@ -11,6 +12,8 @@ import com.vvelev.learnify.mappers.UserMapper;
 import com.vvelev.learnify.repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -45,22 +48,6 @@ public class UserService implements UserDetailsService {
         );
     }
 
-    public List<UserDto> getAllUsers() {
-        return userRepository.findAll()
-                .stream()
-                .map(userMapper::toDto)
-                .toList();
-    }
-
-    public UserDto getUser(Long id) {
-        User user = userRepository.findById(id).orElse(null);
-        if (user == null) {
-            throw new UserNotFoundException();
-        }
-
-        return userMapper.toDto(user);
-    }
-
     public UserDto registerUser(RegisterUserDto request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new EmailAlreadyExistsException();
@@ -79,7 +66,37 @@ public class UserService implements UserDetailsService {
         return userMapper.toDto(user);
     }
 
+    public List<UserDto> getAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(userMapper::toDto)
+                .toList();
+    }
+
+    public UserDto getUser(Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = (Long) authentication.getPrincipal();
+
+        if (!userId.equals(id)) {
+            throw new AccessDeniedException();
+        }
+
+        User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            throw new UserNotFoundException();
+        }
+
+        return userMapper.toDto(user);
+    }
+
     public UserDto updateUser(Long id, UpdateUserDto request) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = (Long) authentication.getPrincipal();
+
+        if (!userId.equals(id)) {
+            throw new AccessDeniedException();
+        }
+
         User user = userRepository.findById(id).orElse(null);
         if (user == null) {
             throw new UserNotFoundException();
@@ -92,6 +109,13 @@ public class UserService implements UserDetailsService {
     }
 
     public void deleteUser(Long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = (Long) authentication.getPrincipal();
+
+        if (!userId.equals(id)) {
+            throw new AccessDeniedException();
+        }
+
         User user = userRepository.findById(id).orElse(null);
         if (user == null) {
             throw new UserNotFoundException();
