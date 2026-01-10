@@ -4,7 +4,6 @@ import com.vvelev.learnify.dtos.course.CourseDto;
 import com.vvelev.learnify.dtos.course.CreateCourseDto;
 import com.vvelev.learnify.dtos.course.UpdateCourseDto;
 import com.vvelev.learnify.entities.Course;
-import com.vvelev.learnify.entities.EnrollmentId;
 import com.vvelev.learnify.entities.User;
 import com.vvelev.learnify.exceptions.AccessDeniedException;
 import com.vvelev.learnify.exceptions.CourseNotFoundException;
