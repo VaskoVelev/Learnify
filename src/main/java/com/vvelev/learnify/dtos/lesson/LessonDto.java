@@ -2,12 +2,9 @@ package com.vvelev.learnify.dtos.lesson;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Getter @Setter
 @AllArgsConstructor
 public class LessonDto {
     private Long id;

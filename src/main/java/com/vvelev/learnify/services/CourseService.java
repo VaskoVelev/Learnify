@@ -12,7 +12,6 @@ import com.vvelev.learnify.mappers.CourseMapper;
 import com.vvelev.learnify.repositories.CourseRepository;
 import com.vvelev.learnify.repositories.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -27,16 +26,11 @@ public class CourseService {
     private final CourseMapper courseMapper;
 
     public CourseDto createCourse(CreateCourseDto request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long id = (Long) authentication.getPrincipal();
-
-        User user = userRepository.findById(id).orElse(null);
-        if (user == null) {
-            throw new UserNotFoundException();
-        }
+        Long teacherId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User teacher = userRepository.findById(teacherId).orElseThrow(UserNotFoundException::new);
 
         Course course = courseMapper.toEntity(request);
-        course.setCreatedBy(user);
+        course.setCreatedBy(teacher);
         courseRepository.save(course);
 
         return courseMapper.toDto(course);
@@ -50,25 +44,14 @@ public class CourseService {
     }
 
     public CourseDto getCourse(Long id) {
-        Course course = courseRepository.findById(id).orElse(null);
-        if (course == null) {
-            throw new CourseNotFoundException();
-        }
-
+        Course course = courseRepository.findById(id).orElseThrow(CourseNotFoundException::new);
         return courseMapper.toDto(course);
     }
 
     public List<CourseDto> getCoursesCreated(Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = (Long) authentication.getPrincipal();
-
-        if (!userId.equals(id)) {
+        Long teacherId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!teacherId.equals(id)) {
             throw new AccessDeniedException();
-        }
-
-        User user = userRepository.findById(id).orElse(null);
-        if (user == null) {
-            throw new UserNotFoundException();
         }
 
         return courseRepository.findByCreatedById(id)
@@ -78,12 +61,10 @@ public class CourseService {
     }
 
     public CourseDto updateCourse(Long id, UpdateCourseDto request) {
-        Course course = courseRepository.findById(id).orElse(null);
-        if (course == null) {
-            throw new CourseNotFoundException();
-        }
+        Course course = courseRepository.findById(id).orElseThrow(CourseNotFoundException::new);
 
-        if (!Objects.equals(course.getCreatedBy().getId(), id)) {
+        Long teacherId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!Objects.equals(course.getCreatedBy().getId(), teacherId)) {
             throw new AccessDeniedException();
         }
 
@@ -94,12 +75,10 @@ public class CourseService {
     }
 
     public void deleteCourse(Long id) {
-        Course course = courseRepository.findById(id).orElse(null);
-        if (course == null) {
-            throw new CourseNotFoundException();
-        }
+        Course course = courseRepository.findById(id).orElseThrow(CourseNotFoundException::new);
 
-        if (!Objects.equals(course.getCreatedBy().getId(), id)) {
+        Long teacherId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (!Objects.equals(course.getCreatedBy().getId(), teacherId)) {
             throw new AccessDeniedException();
         }
 

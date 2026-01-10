@@ -1,17 +1,13 @@
 package com.vvelev.learnify.dtos.lesson;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Getter @Setter
 @AllArgsConstructor
 public class CreateLessonDto {
     @NotBlank(message = "Title is required")
@@ -23,10 +19,6 @@ public class CreateLessonDto {
 
     private String videoUrl;
 
-    @NotNull
     @PositiveOrZero
     private Long orderIndex;
-
-    @NotNull
-    private Long courseId;
 }
