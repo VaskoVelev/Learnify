@@ -81,4 +81,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Void> handleAccessDeniedException() {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
     }
+
+    @ExceptionHandler(LessonNotFoundException.class)
+    public ResponseEntity<Void> handleLessonNotFoundException() {
+        return ResponseEntity.notFound().build();
+    }
 }
