@@ -30,9 +30,6 @@ public class Lesson {
     @Column(name = "video_url")
     private String videoUrl;
 
-    @Column(name = "order_index")
-    private Long orderIndex;
-
     @ManyToOne
     @JoinColumn(name = "course_id")
     private Course course;

@@ -36,7 +36,6 @@ CREATE TABLE lessons (
 	title varchar(255) NOT NULL,
 	content text,
 	video_url varchar(255),
-	order_index integer NOT NULL,
 	FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
 );
 

@@ -19,7 +19,7 @@ import java.util.List;
 public class EnrollmentController {
     private final EnrollmentService enrollmentService;
 
-    @PostMapping("/users/{studentId}/enroll/courses/{courseId}/")
+    @PostMapping("/users/{studentId}/enroll/courses/{courseId}")
     public ResponseEntity<?> enrollStudent(
             @PathVariable Long studentId,
             @PathVariable Long courseId

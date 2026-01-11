@@ -1,7 +1,6 @@
 package com.vvelev.learnify.dtos.lesson;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,7 +17,4 @@ public class UpdateLessonDto {
     private String content;
 
     private String videoUrl;
-
-    @PositiveOrZero
-    private Long orderIndex;
 }

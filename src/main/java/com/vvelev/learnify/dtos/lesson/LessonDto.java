@@ -11,6 +11,5 @@ public class LessonDto {
     private String title;
     private String content;
     private String videoUrl;
-    private Long orderIndex;
     private Long courseId;
 }
