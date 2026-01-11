@@ -25,7 +25,7 @@ public class MaterialController {
             UriComponentsBuilder uriBuilder
     ) {
         MaterialDto materialDto = materialService.createMaterial(id, request);
-        URI uri = uriBuilder.path("/materials{id}").buildAndExpand(materialDto.getId()).toUri();
+        URI uri = uriBuilder.path("/materials/{id}").buildAndExpand(materialDto.getId()).toUri();
 
         return ResponseEntity.created(uri).body(materialDto);
     }
