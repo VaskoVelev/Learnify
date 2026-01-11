@@ -86,4 +86,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Void> handleLessonNotFoundException() {
         return ResponseEntity.notFound().build();
     }
+
+    @ExceptionHandler(MaterialNotFoundException.class)
+    public ResponseEntity<Void> handleMaterialNotFoundException() {
+        return ResponseEntity.notFound().build();
+    }
 }

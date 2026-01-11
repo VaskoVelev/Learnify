@@ -1,7 +1,7 @@
 package com.vvelev.learnify.dtos.material;
 
+import com.vvelev.learnify.entities.FileType;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,8 +18,5 @@ public class CreateMaterialDto {
     private String filePath;
 
     @NotBlank
-    private String fileType;
-
-    @NotNull
-    private Long lessonId;
+    private FileType fileType;
 }
