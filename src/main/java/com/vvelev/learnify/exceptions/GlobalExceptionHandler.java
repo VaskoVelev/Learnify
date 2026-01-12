@@ -101,4 +101,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Void> handleQuestionNotFoundException() {
         return ResponseEntity.notFound().build();
     }
+
+    @ExceptionHandler(AnswerNotFoundException.class)
+    public ResponseEntity<Void> handleAnswerNotFoundException() {
+        return ResponseEntity.notFound().build();
+    }
 }

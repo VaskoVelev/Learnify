@@ -49,5 +49,4 @@ public class MaterialController {
         materialService.deleteMaterial(id);
         return ResponseEntity.noContent().build();
     }
-
 }

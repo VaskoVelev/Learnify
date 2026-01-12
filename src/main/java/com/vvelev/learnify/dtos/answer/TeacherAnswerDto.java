@@ -2,14 +2,11 @@ package com.vvelev.learnify.dtos.answer;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Getter @Setter
 @AllArgsConstructor
-public class AnswerDto {
+public class TeacherAnswerDto {
     private Long id;
     private String text;
     private boolean isCorrect;
