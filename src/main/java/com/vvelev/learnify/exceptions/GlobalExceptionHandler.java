@@ -147,4 +147,13 @@ public class GlobalExceptionHandler {
                 Map.of("error", exception.getMessage())
         );
     }
+
+    @ExceptionHandler(StudentProgressionNotFoundException.class)
+    public ResponseEntity<Map<String, String>> StudentProgressionNotFoundException(
+            StudentProgressionNotFoundException exception
+    ) {
+        return ResponseEntity.badRequest().body(
+                Map.of("error", exception.getMessage())
+        );
+    }
 }

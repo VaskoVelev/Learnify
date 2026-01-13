@@ -3,7 +3,9 @@ package com.vvelev.learnify.controllers;
 import com.vvelev.learnify.dtos.course.CourseDto;
 import com.vvelev.learnify.dtos.course.CreateCourseDto;
 import com.vvelev.learnify.dtos.course.UpdateCourseDto;
+import com.vvelev.learnify.dtos.studentprogression.StudentProgressionDto;
 import com.vvelev.learnify.services.CourseService;
+import com.vvelev.learnify.services.StudentProgressionService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import java.util.List;
 @RestController
 public class CourseController {
     private CourseService courseService;
+    private StudentProgressionService studentProgressionService;
 
     @PostMapping("/courses")
     public ResponseEntity<CourseDto> createCourse(
@@ -43,6 +46,17 @@ public class CourseController {
     @GetMapping("/users/{id}/courses-created")
     public List<CourseDto> getCoursesCreated(@PathVariable Long id) {
         return courseService.getCoursesCreated(id);
+    }
+
+    @GetMapping("/courses/{id}/progression/me")
+    public ResponseEntity<StudentProgressionDto> getMyProgression(@PathVariable Long id) {
+        StudentProgressionDto studentProgressionDto = studentProgressionService.getMyProgression(id);
+        return ResponseEntity.ok(studentProgressionDto);
+    }
+
+    @GetMapping("/courses/{id}/progressions")
+    public List<StudentProgressionDto> getCourseProgressions(@PathVariable Long id) {
+        return studentProgressionService.getCourseProgressions(id);
     }
 
     @PutMapping("/courses/{id}")

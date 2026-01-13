@@ -19,6 +19,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Service
 public class SubmissionService {
+    private final StudentProgressionService studentProgressionService;
     private final QuizRepository quizRepository;
     private final SubmissionRepository submissionRepository;
     private final SubmissionAnswerRepository submissionAnswerRepository;
@@ -39,7 +40,7 @@ public class SubmissionService {
 
         User student = userRepository.findById(studentId).orElseThrow(UserNotFoundException::new);
 
-        double totalQuestions = questionRepository.countByQuizId(quizId);
+        long totalQuestions = questionRepository.countByQuizId(quizId);
         if (answers.size() != totalQuestions) {
             throw new UnansweredQuestionsException();
         }
@@ -56,7 +57,7 @@ public class SubmissionService {
         submission.setStudent(student);
         submissionRepository.save(submission);
 
-        double correct = 0;
+        long correct = 0;
 
         for (SubmissionAnswerDto dto : answers) {
             Answer answer = answerRepository.findById(dto.getAnswerId()).orElseThrow(AnswerNotFoundException::new);
@@ -80,10 +81,11 @@ public class SubmissionService {
             }
         }
 
-        double score = (correct / totalQuestions) * 100;
+        double score = ((double) correct / totalQuestions) * 100;
         submission.setScore(score);
 
         submissionRepository.save(submission);
+        studentProgressionService.updateProgression(student, course);
 
         return submissionMapper.toDto(submission);
     }
