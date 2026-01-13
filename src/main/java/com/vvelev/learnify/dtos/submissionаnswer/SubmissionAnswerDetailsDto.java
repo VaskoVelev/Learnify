@@ -6,7 +6,10 @@ import lombok.Setter;
 
 @Getter @Setter
 @AllArgsConstructor
-public class SubmissionAnswerDto {
+public class SubmissionAnswerDetailsDto {
     private Long questionId;
-    private Long answerId;
+    private String questionText;
+    private Long chosenAnswerId;
+    private String chosenAnswerText;
+    private boolean isCorrect;
 }

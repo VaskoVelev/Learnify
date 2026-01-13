@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
             EmailAlreadyExistsException exception
     ) {
         return ResponseEntity.badRequest().body(
-                Map.of("email", exception.getMessage())
+                Map.of("error", exception.getMessage())
         );
     }
 
@@ -49,7 +49,7 @@ public class GlobalExceptionHandler {
             PasswordsDoNotMatchException exception
     ) {
         return ResponseEntity.badRequest().body(
-                Map.of("confirmPassword", exception.getMessage())
+                Map.of("error", exception.getMessage())
         );
     }
 
@@ -73,7 +73,7 @@ public class GlobalExceptionHandler {
             StudentAlreadyEnrolledException exception
     ) {
         return ResponseEntity.badRequest().body(
-                Map.of("Enrollment", exception.getMessage())
+                Map.of("error", exception.getMessage())
         );
     }
 
@@ -105,5 +105,46 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(AnswerNotFoundException.class)
     public ResponseEntity<Void> handleAnswerNotFoundException() {
         return ResponseEntity.notFound().build();
+    }
+
+    @ExceptionHandler(SubmissionNotFoundException.class)
+    public ResponseEntity<Void> handleSubmissionNotFoundException() {
+        return ResponseEntity.notFound().build();
+    }
+
+    @ExceptionHandler(UnansweredQuestionsException.class)
+    public ResponseEntity<Map<String, String>> handleUnansweredQuestionsException(
+            UnansweredQuestionsException exception
+    ) {
+        return ResponseEntity.badRequest().body(
+                Map.of("error", exception.getMessage())
+        );
+    }
+
+    @ExceptionHandler(QuestionAlreadyAnsweredException.class)
+    public ResponseEntity<Map<String, String>> handleQuestionAlreadyAnsweredException(
+            QuestionAlreadyAnsweredException exception
+    ) {
+        return ResponseEntity.badRequest().body(
+                Map.of("error", exception.getMessage())
+        );
+    }
+
+    @ExceptionHandler(AnswerNotInQuizException.class)
+    public ResponseEntity<Map<String, String>> handleAnswerNotInQuizException(
+            AnswerNotInQuizException exception
+    ) {
+        return ResponseEntity.badRequest().body(
+                Map.of("error", exception.getMessage())
+        );
+    }
+
+    @ExceptionHandler(AnswerNotInQuestionException.class)
+    public ResponseEntity<Map<String, String>> handleAnswerNotInQuestionException(
+            AnswerNotInQuestionException exception
+    ) {
+        return ResponseEntity.badRequest().body(
+                Map.of("error", exception.getMessage())
+        );
     }
 }
