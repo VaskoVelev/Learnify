@@ -38,7 +38,7 @@ public class StudentProgressionService {
                 });
 
         long totalQuizzes = quizRepository.countByCourseId(course.getId());
-        long submittedQuizzes = submissionRepository.countDistinctQuizByStudentIdAndCourseId(student.getId(), course.getId());
+        long submittedQuizzes = submissionRepository.countDistinctQuizByStudentIdAndQuiz_Course_Id(student.getId(), course.getId());
 
         double progressionPercent = totalQuizzes == 0 ? 0 : ((double) submittedQuizzes / totalQuizzes) * 100;
         Double averageScore = submissionRepository.findAverageScoreByStudentIdAndCourseId(student.getId(), course.getId());

@@ -11,7 +11,7 @@ import java.util.List;
 public interface SubmissionRepository extends JpaRepository<Submission, Long> {
     List<Submission> findByQuizIdOrderBySubmittedAtDesc(Long quizId);
     List<Submission> findByQuizIdAndStudentIdOrderBySubmittedAtDesc(Long quizId, Long studentId);
-    long countDistinctQuizByStudentIdAndCourseId(Long studentId, Long courseId);
+    long countDistinctQuizByStudentIdAndQuiz_Course_Id(Long studentId, Long courseId);
 
     @Query("""
         SELECT AVG(s.score)
