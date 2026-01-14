@@ -48,7 +48,7 @@ public class CourseController {
     }
 
     @PreAuthorize("hasRole(Role.TEACHER.name())")
-    @GetMapping("/courses-created")
+    @GetMapping("/courses-created/me")
     public List<CourseDto> getMyCoursesCreated() {
         return courseService.getMyCoursesCreated();
     }

@@ -7,6 +7,7 @@ import com.vvelev.learnify.services.EnrollmentService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,28 +20,26 @@ import java.util.List;
 public class EnrollmentController {
     private final EnrollmentService enrollmentService;
 
-    @PostMapping("/users/{studentId}/enroll/courses/{courseId}")
-    public ResponseEntity<?> enrollStudent(
-            @PathVariable Long studentId,
-            @PathVariable Long courseId
-    ) {
-        EnrollmentDto enrollmentDto = enrollmentService.enrollStudent(studentId, courseId);
+    @PreAuthorize("hasRole(Role.STUDENT.name())")
+    @PostMapping("/courses/{id}/enroll")
+    public ResponseEntity<?> enrollInCourse(@PathVariable Long id) {
+        EnrollmentDto enrollmentDto = enrollmentService.enrollInCourse(id);
         return ResponseEntity.status(HttpStatus.CREATED).body(enrollmentDto);
     }
 
-    @GetMapping("/users/{id}/enrollments")
-    public List<EnrollmentCourseSummaryDto> getStudentEnrollments(@PathVariable Long id) {
-        return enrollmentService.getStudentEnrollments(id);
+    @PreAuthorize("hasRole(Role.STUDENT.name())")
+    @GetMapping("/enrollments/me")
+    public List<EnrollmentCourseSummaryDto> getMyEnrollments() {
+        return enrollmentService.getMyEnrollments();
     }
 
-    @GetMapping("/users/{userId}/courses/{courseId}/enrollments")
-    public List<EnrollmentStudentSummaryDto> getCourseEnrollments(
-            @PathVariable Long userId,
-            @PathVariable Long courseId
-    ) {
-        return enrollmentService.getCourseEnrollments(userId, courseId);
+    @PreAuthorize("hasAnyRole(Role.TEACHER.name(), Role.STUDENT.name())")
+    @GetMapping("courses/{id}/enrollments")
+    public List<EnrollmentStudentSummaryDto> getCourseEnrollments(@PathVariable Long id) {
+        return enrollmentService.getCourseEnrollments(id);
     }
 
+    @PreAuthorize("Role.ADMIN.name()")
     @GetMapping("/enrollments")
     public List<EnrollmentDto> getAllEnrollments() {
         return enrollmentService.getAllEnrollments();

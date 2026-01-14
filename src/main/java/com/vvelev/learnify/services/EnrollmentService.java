@@ -15,13 +15,11 @@ import com.vvelev.learnify.mappers.EnrollmentMapper;
 import com.vvelev.learnify.repositories.CourseRepository;
 import com.vvelev.learnify.repositories.EnrollmentRepository;
 import com.vvelev.learnify.repositories.UserRepository;
+import com.vvelev.learnify.utils.SecurityUtils;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @AllArgsConstructor
 @Service
@@ -30,25 +28,20 @@ public class EnrollmentService {
     private final UserRepository userRepository;
     private final EnrollmentRepository enrollmentRepository;
     private final EnrollmentMapper enrollmentMapper;
+    private final SecurityUtils securityUtils;
 
-    public EnrollmentDto enrollStudent(Long studentId, Long courseId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long id = (Long) authentication.getPrincipal();
+    public EnrollmentDto enrollInCourse(Long courseId) {
+        Course course = getCourseOrThrow(courseId);
 
-        if (!studentId.equals(id)) {
-            throw new AccessDeniedException();
-        }
-
-        User student = userRepository.findById(studentId).orElseThrow(UserNotFoundException::new);
-        Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
-
-        EnrollmentId enrollmentId = new EnrollmentId(studentId, courseId);
-        if (enrollmentRepository.existsById(enrollmentId)) {
+        Long studentId = securityUtils.getCurrentUserId();
+        if (isStudentEnrolled(studentId, courseId)) {
             throw new StudentAlreadyEnrolledException();
         }
 
+        User student = getUserOrThrow(studentId);
+
         Enrollment enrollment = new Enrollment();
-        enrollment.setId(enrollmentId);
+        enrollment.setId(new EnrollmentId(studentId, courseId));
         enrollment.setStudent(student);
         enrollment.setCourse(course);
         enrollmentRepository.save(enrollment);
@@ -56,48 +49,56 @@ public class EnrollmentService {
         return enrollmentMapper.toDto(enrollment);
     }
 
-    public List<EnrollmentCourseSummaryDto> getStudentEnrollments(Long id) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long studentId = (Long) authentication.getPrincipal();
+    public List<EnrollmentCourseSummaryDto> getMyEnrollments() {
+        Long studentId = securityUtils.getCurrentUserId();
 
-        if (!studentId.equals(id)) {
-            throw new AccessDeniedException();
-        }
-
-        return enrollmentRepository.findByIdStudentId(studentId)
+        return enrollmentRepository
+                .findByIdStudentId(studentId)
                 .stream()
                 .map(enrollmentMapper::toCourseSummary)
                 .toList();
     }
 
-    public List<EnrollmentStudentSummaryDto> getCourseEnrollments(Long userId, Long courseId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long id = (Long) authentication.getPrincipal();
+    public List<EnrollmentStudentSummaryDto> getCourseEnrollments(Long courseId) {
+        Course course = getCourseOrThrow(courseId);
 
-        if (!userId.equals(id)) {
+        Long userId = securityUtils.getCurrentUserId();
+        if (!isCourseCreator(course, userId) && !isStudentEnrolled(userId, courseId)) {
             throw new AccessDeniedException();
         }
 
-        Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
-
-        if (!userRepository.existsById(userId)) {
-            throw new UserNotFoundException();
-        }
-
-        if (!Objects.equals(course.getCreatedBy().getId(), userId) && !enrollmentRepository.existsById(new EnrollmentId(userId, courseId))) {
-            throw new AccessDeniedException();
-        }
-
-        return enrollmentRepository.findByIdCourseId(courseId)
+        return enrollmentRepository
+                .findByIdCourseId(courseId)
                 .stream()
                 .map(enrollmentMapper::toStudentSummary)
                 .toList();
     }
 
     public List<EnrollmentDto> getAllEnrollments() {
-        return enrollmentRepository.findAll()
+        return enrollmentRepository
+                .findAll()
                 .stream()
                 .map(enrollmentMapper::toDto)
                 .toList();
+    }
+
+    private Course getCourseOrThrow(Long courseId) {
+        return courseRepository
+                .findById(courseId)
+                .orElseThrow(CourseNotFoundException::new);
+    }
+
+    private User getUserOrThrow(Long userId) {
+        return userRepository
+                .findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+    }
+
+    private boolean isStudentEnrolled(Long studentId, Long courseId) {
+        return enrollmentRepository.existsById(new EnrollmentId(studentId, courseId));
+    }
+
+    private boolean isCourseCreator(Course course, Long teacherId) {
+        return course.getCreatedBy().getId().equals(teacherId);
     }
 }
