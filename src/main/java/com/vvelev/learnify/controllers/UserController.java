@@ -7,6 +7,7 @@ import com.vvelev.learnify.services.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -29,17 +30,26 @@ public class UserController {
         return ResponseEntity.created(uri).body(userDto);
     }
 
+    @PreAuthorize("Role.ADMIN.name()")
     @GetMapping("/users")
     public List<UserDto> getAllUsers() {
         return userService.getAllUsers();
     }
 
+    @PreAuthorize("Role.ADMIN.name()")
     @GetMapping("/users/{id}")
     public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
         UserDto userDto = userService.getUser(id);
         return ResponseEntity.ok(userDto);
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<UserDto> getMe() {
+        UserDto userDto = userService.getMe();
+        return ResponseEntity.ok(userDto);
+    }
+
+    @PreAuthorize("Role.ADMIN.name()")
     @PutMapping("/users/{id}")
     public ResponseEntity<UserDto> updateUser(
             @PathVariable Long id,
@@ -49,9 +59,15 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
-    @DeleteMapping("/users/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
+    @PutMapping("/me")
+    public ResponseEntity<UserDto> updateMe(@Valid @RequestBody UpdateUserDto request) {
+        UserDto userDto = userService.updateMe(request);
+        return ResponseEntity.ok(userDto);
+    }
+
+    @DeleteMapping("/me")
+    public ResponseEntity<Void> deleteMe() {
+        userService.deleteMe();
         return ResponseEntity.noContent().build();
     }
 }

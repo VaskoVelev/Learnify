@@ -4,7 +4,6 @@ import com.vvelev.learnify.config.JwtConfig;
 import com.vvelev.learnify.dtos.auth.AuthResponseDto;
 import com.vvelev.learnify.dtos.auth.LoginDto;
 import com.vvelev.learnify.dtos.auth.LoginResult;
-import com.vvelev.learnify.dtos.user.UserDto;
 import com.vvelev.learnify.services.AuthService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -37,12 +36,6 @@ public class AuthController {
     public ResponseEntity<AuthResponseDto> refresh(@CookieValue(value = "refreshToken") String refreshToken) {
         AuthResponseDto authResponseDto = authService.refresh(refreshToken);
         return ResponseEntity.ok(authResponseDto);
-    }
-
-    @GetMapping("/auth/me")
-    public ResponseEntity<UserDto> me() {
-        UserDto userDto = authService.getLoggedInUser();
-        return ResponseEntity.ok(userDto);
     }
 
     @PostMapping("/auth/logout")

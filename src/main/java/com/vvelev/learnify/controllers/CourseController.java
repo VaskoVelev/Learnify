@@ -34,13 +34,11 @@ public class CourseController {
         return ResponseEntity.created(uri).body(courseDto);
     }
 
-    @PreAuthorize("permitAll()")
     @GetMapping("/courses")
     public List<CourseDto> getAllCourses() {
         return courseService.getAllCourses();
     }
 
-    @PreAuthorize("permitAll()")
     @GetMapping("/courses/{id}")
     public ResponseEntity<CourseDto> getCourse(@PathVariable Long id) {
         CourseDto courseDto = courseService.getCourse(id);
