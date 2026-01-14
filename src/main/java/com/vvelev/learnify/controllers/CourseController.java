@@ -9,6 +9,7 @@ import com.vvelev.learnify.services.StudentProgressionService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -21,6 +22,7 @@ public class CourseController {
     private CourseService courseService;
     private StudentProgressionService studentProgressionService;
 
+    @PreAuthorize("hasRole(Role.TEACHER.name())")
     @PostMapping("/courses")
     public ResponseEntity<CourseDto> createCourse(
             @Valid @RequestBody CreateCourseDto request,
@@ -32,33 +34,39 @@ public class CourseController {
         return ResponseEntity.created(uri).body(courseDto);
     }
 
+    @PreAuthorize("permitAll()")
     @GetMapping("/courses")
     public List<CourseDto> getAllCourses() {
         return courseService.getAllCourses();
     }
 
+    @PreAuthorize("permitAll()")
     @GetMapping("/courses/{id}")
     public ResponseEntity<CourseDto> getCourse(@PathVariable Long id) {
         CourseDto courseDto = courseService.getCourse(id);
         return ResponseEntity.ok(courseDto);
     }
 
-    @GetMapping("/users/{id}/courses-created")
-    public List<CourseDto> getCoursesCreated(@PathVariable Long id) {
-        return courseService.getCoursesCreated(id);
+    @PreAuthorize("hasRole(Role.TEACHER.name())")
+    @GetMapping("/courses-created")
+    public List<CourseDto> getMyCoursesCreated() {
+        return courseService.getMyCoursesCreated();
     }
 
+    @PreAuthorize("hasRole(Role.STUDENT.name())")
     @GetMapping("/courses/{id}/progression/me")
     public ResponseEntity<StudentProgressionDto> getMyProgression(@PathVariable Long id) {
         StudentProgressionDto studentProgressionDto = studentProgressionService.getMyProgression(id);
         return ResponseEntity.ok(studentProgressionDto);
     }
 
+    @PreAuthorize("hasRole(Role.TEACHER.name())")
     @GetMapping("/courses/{id}/progressions")
     public List<StudentProgressionDto> getCourseProgressions(@PathVariable Long id) {
         return studentProgressionService.getCourseProgressions(id);
     }
 
+    @PreAuthorize("hasRole(Role.TEACHER.name())")
     @PutMapping("/courses/{id}")
     public ResponseEntity<CourseDto> updateCourse(
             @PathVariable Long id,
@@ -68,6 +76,7 @@ public class CourseController {
         return ResponseEntity.ok(courseDto);
     }
 
+    @PreAuthorize("hasRole(Role.TEACHER.name())")
     @DeleteMapping("/courses/{id}")
     public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
         courseService.deleteCourse(id);
