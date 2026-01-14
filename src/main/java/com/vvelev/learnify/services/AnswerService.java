@@ -14,12 +14,11 @@ import com.vvelev.learnify.mappers.AnswerMapper;
 import com.vvelev.learnify.repositories.AnswerRepository;
 import com.vvelev.learnify.repositories.EnrollmentRepository;
 import com.vvelev.learnify.repositories.QuestionRepository;
+import com.vvelev.learnify.utils.SecurityUtils;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @AllArgsConstructor
 @Service
@@ -28,13 +27,14 @@ public class AnswerService {
     private final QuestionRepository questionRepository;
     private final EnrollmentRepository enrollmentRepository;
     private final AnswerMapper answerMapper;
+    private final SecurityUtils securityUtils;
 
     public TeacherAnswerDto createAnswer(Long questionId, CreateAnswerDto request) {
-        Question question = questionRepository.findById(questionId).orElseThrow(QuestionNotFoundException::new);
+        Question question = getQuestionOrThrow(questionId);
         Course course = question.getQuiz().getCourse();
 
-        Long teacherId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!Objects.equals(course.getCreatedBy().getId(), teacherId)) {
+        Long teacherId = securityUtils.getCurrentUserId();
+        if (!isCourseCreator(course, teacherId)) {
             throw new AccessDeniedException();
         }
 
@@ -46,19 +46,22 @@ public class AnswerService {
     }
 
     public List<?> getQuestionAnswers(Long questionId) {
-        Question question = questionRepository.findById(questionId).orElseThrow(QuestionNotFoundException::new);
+        Question question = getQuestionOrThrow(questionId);
         Course course = question.getQuiz().getCourse();
 
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (Objects.equals(course.getCreatedBy().getId(), userId)) {
-            return answerRepository.findByQuestionId(questionId)
+        Long userId = securityUtils.getCurrentUserId();
+
+        if (isCourseCreator(course, userId)) {
+            return answerRepository
+                    .findByQuestionId(questionId)
                     .stream()
                     .map(answerMapper::toTeacherDto)
                     .toList();
         }
 
-        if (enrollmentRepository.existsById(new EnrollmentId(userId, course.getId()))) {
-            return answerRepository.findByQuestionId(questionId)
+        if (isStudentEnrolled(userId, course.getId())) {
+            return answerRepository
+                    .findByQuestionId(questionId)
                     .stream()
                     .map(answerMapper::toStudentDto)
                     .toList();
@@ -67,12 +70,12 @@ public class AnswerService {
         throw new AccessDeniedException();
     }
 
-    public TeacherAnswerDto updateAnswer(Long id, UpdateAnswerDto request) {
-        Answer answer = answerRepository.findById(id).orElseThrow(AnswerNotFoundException::new);
+    public TeacherAnswerDto updateAnswer(Long answerId, UpdateAnswerDto request) {
+        Answer answer = getAnswerOrThrow(answerId);
         Course course = answer.getQuestion().getQuiz().getCourse();
 
-        Long teacherId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!Objects.equals(course.getCreatedBy().getId(), teacherId)) {
+        Long teacherId = securityUtils.getCurrentUserId();
+        if (!isCourseCreator(course, teacherId)) {
             throw new AccessDeniedException();
         }
 
@@ -82,15 +85,35 @@ public class AnswerService {
         return answerMapper.toTeacherDto(answer);
     }
 
-    public void deleteAnswer(Long id) {
-        Answer answer = answerRepository.findById(id).orElseThrow(AnswerNotFoundException::new);
+    public void deleteAnswer(Long answerId) {
+        Answer answer = getAnswerOrThrow(answerId);
         Course course = answer.getQuestion().getQuiz().getCourse();
 
-        Long teacherId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!Objects.equals(course.getCreatedBy().getId(), teacherId)) {
+        Long teacherId = securityUtils.getCurrentUserId();
+        if (!isCourseCreator(course, teacherId)) {
             throw new AccessDeniedException();
         }
 
         answerRepository.delete(answer);
+    }
+
+    private Question getQuestionOrThrow(Long questionId) {
+        return questionRepository
+                .findById(questionId)
+                .orElseThrow(QuestionNotFoundException::new);
+    }
+
+    private Answer getAnswerOrThrow(Long answerId) {
+        return answerRepository
+                .findById(answerId)
+                .orElseThrow(AnswerNotFoundException::new);
+    }
+
+    private boolean isStudentEnrolled(Long studentId, Long courseId) {
+        return enrollmentRepository.existsById(new EnrollmentId(studentId, courseId));
+    }
+
+    private boolean isCourseCreator(Course course, Long teacherId) {
+        return course.getCreatedBy().getId().equals(teacherId);
     }
 }
