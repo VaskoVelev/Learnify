@@ -7,6 +7,7 @@ import com.vvelev.learnify.services.MaterialService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -18,6 +19,7 @@ import java.util.List;
 public class MaterialController {
     private final MaterialService materialService;
 
+    @PreAuthorize("hasRole(Role.TEACHER.name())")
     @PostMapping("/lessons/{id}/materials")
     public ResponseEntity<MaterialDto> createMaterial(
             @PathVariable Long id,
@@ -30,11 +32,13 @@ public class MaterialController {
         return ResponseEntity.created(uri).body(materialDto);
     }
 
+    @PreAuthorize("hasAnyRole(Role.TEACHER.name(), Role.STUDENT.name())")
     @GetMapping("/lessons/{id}/materials")
     List<MaterialDto> getLessonMaterials(@PathVariable Long id) {
         return materialService.getLessonMaterials(id);
     }
 
+    @PreAuthorize("hasRole(Role.TEACHER.name())")
     @PutMapping("/materials/{id}")
     public ResponseEntity<MaterialDto> updateMaterial(
             @PathVariable Long id,
@@ -44,6 +48,7 @@ public class MaterialController {
         return ResponseEntity.ok(materialDto);
     }
 
+    @PreAuthorize("hasRole(Role.TEACHER.name())")
     @DeleteMapping("/materials/{id}")
     public ResponseEntity<Void> deleteMaterial(@PathVariable Long id) {
         materialService.deleteMaterial(id);
