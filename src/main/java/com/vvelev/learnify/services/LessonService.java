@@ -13,12 +13,11 @@ import com.vvelev.learnify.mappers.LessonMapper;
 import com.vvelev.learnify.repositories.CourseRepository;
 import com.vvelev.learnify.repositories.EnrollmentRepository;
 import com.vvelev.learnify.repositories.LessonRepository;
+import com.vvelev.learnify.utils.SecurityUtils;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @AllArgsConstructor
 @Service
@@ -27,12 +26,13 @@ public class LessonService {
     private final CourseRepository courseRepository;
     private final EnrollmentRepository enrollmentRepository;
     private final LessonMapper lessonMapper;
+    private final SecurityUtils securityUtils;
 
     public LessonDto createLesson(Long courseId, CreateLessonDto request) {
-        Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
+        Course course = getCourseOrThrow(courseId);
 
-        Long teacherId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!Objects.equals(course.getCreatedBy().getId(), teacherId)) {
+        Long teacherId = securityUtils.getCurrentUserId();
+        if (!isCourseCreator(course, teacherId)) {
             throw new AccessDeniedException();
         }
 
@@ -44,37 +44,38 @@ public class LessonService {
     }
 
     public List<LessonDto> getCourseLessons(Long courseId) {
-        Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
+        Course course = getCourseOrThrow(courseId);
 
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!Objects.equals(course.getCreatedBy().getId(), userId) && !enrollmentRepository.existsById(new EnrollmentId(userId, courseId))) {
+        Long userId = securityUtils.getCurrentUserId();
+        if (!isCourseCreator(course, userId) && !isStudentEnrolled(userId, courseId)) {
             throw new AccessDeniedException();
         }
 
-        return lessonRepository.findByCourseId(courseId)
+        return lessonRepository
+                .findByCourseId(courseId)
                 .stream()
                 .map(lessonMapper::toDto)
                 .toList();
     }
 
-    public LessonDto getLesson(Long id) {
-        Lesson lesson = lessonRepository.findById(id).orElseThrow(LessonNotFoundException::new);
+    public LessonDto getLesson(Long lessonId) {
+        Lesson lesson = getLessonOrThrow(lessonId);
         Course course = lesson.getCourse();
 
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!Objects.equals(course.getCreatedBy().getId(), userId) && !enrollmentRepository.existsById(new EnrollmentId(userId, course.getId()))) {
+        Long userId = securityUtils.getCurrentUserId();
+        if (!isCourseCreator(course, userId) && !isStudentEnrolled(userId, course.getId())) {
             throw new AccessDeniedException();
         }
 
         return lessonMapper.toDto(lesson);
     }
 
-    public LessonDto updateLesson(Long id, UpdateLessonDto request) {
-        Lesson lesson = lessonRepository.findById(id).orElseThrow(LessonNotFoundException::new);
+    public LessonDto updateLesson(Long lessonId, UpdateLessonDto request) {
+        Lesson lesson = getLessonOrThrow(lessonId);
         Course course = lesson.getCourse();
 
-        Long teacherId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!Objects.equals(course.getCreatedBy().getId(), teacherId)) {
+        Long teacherId = securityUtils.getCurrentUserId();
+        if (!isCourseCreator(course, teacherId)) {
             throw new AccessDeniedException();
         }
 
@@ -84,15 +85,35 @@ public class LessonService {
         return lessonMapper.toDto(lesson);
     }
 
-    public void deleteLesson(Long id) {
-        Lesson lesson = lessonRepository.findById(id).orElseThrow(LessonNotFoundException::new);
+    public void deleteLesson(Long lessonId) {
+        Lesson lesson = getLessonOrThrow(lessonId);
         Course course = lesson.getCourse();
 
-        Long teacherId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!Objects.equals(course.getCreatedBy().getId(), teacherId)) {
+        Long teacherId = securityUtils.getCurrentUserId();
+        if (!isCourseCreator(course, teacherId)) {
             throw new AccessDeniedException();
         }
 
         lessonRepository.delete(lesson);
+    }
+
+    private Course getCourseOrThrow(Long courseId) {
+        return courseRepository
+                .findById(courseId)
+                .orElseThrow(CourseNotFoundException::new);
+    }
+
+    private Lesson getLessonOrThrow(Long lessonId) {
+        return lessonRepository
+                .findById(lessonId)
+                .orElseThrow(LessonNotFoundException::new);
+    }
+
+    private boolean isStudentEnrolled(Long studentId, Long courseId) {
+        return enrollmentRepository.existsById(new EnrollmentId(studentId, courseId));
+    }
+
+    private boolean isCourseCreator(Course course, Long teacherId) {
+        return course.getCreatedBy().getId().equals(teacherId);
     }
 }
