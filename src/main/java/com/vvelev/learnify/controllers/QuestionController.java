@@ -7,6 +7,7 @@ import com.vvelev.learnify.services.QuestionService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -18,6 +19,7 @@ import java.util.List;
 public class QuestionController {
     private final QuestionService questionService;
 
+    @PreAuthorize("hasRole(Role.TEACHER.name())")
     @PostMapping("/quizzes/{id}/questions")
     public ResponseEntity<QuestionDto> createQuestion(
             @PathVariable Long id,
@@ -30,11 +32,13 @@ public class QuestionController {
         return ResponseEntity.created(uri).body(questionDto);
     }
 
+    @PreAuthorize("hasAnyRole(Role.TEACHER.name(), Role.STUDENT.name())")
     @GetMapping("/quizzes/{id}/questions")
     public List<QuestionDto> getQuizQuestions(@PathVariable Long id) {
         return questionService.getQuizQuestions(id);
     }
 
+    @PreAuthorize("hasRole(Role.TEACHER.name())")
     @PutMapping("/questions/{id}")
     public ResponseEntity<QuestionDto> updateQuestion(
             @PathVariable Long id,
@@ -44,6 +48,7 @@ public class QuestionController {
         return ResponseEntity.ok(questionDto);
     }
 
+    @PreAuthorize("hasRole(Role.TEACHER.name())")
     @DeleteMapping("/questions/{id}")
     public ResponseEntity<Void> deleteQuestion(@PathVariable Long id) {
         questionService.deleteQuestion(id);
