@@ -3,22 +3,17 @@ package com.vvelev.learnify.services;
 import com.vvelev.learnify.dtos.quiz.CreateQuizDto;
 import com.vvelev.learnify.dtos.quiz.QuizDto;
 import com.vvelev.learnify.dtos.quiz.UpdateQuizDto;
-import com.vvelev.learnify.entities.Course;
-import com.vvelev.learnify.entities.EnrollmentId;
-import com.vvelev.learnify.entities.Quiz;
-import com.vvelev.learnify.exceptions.AccessDeniedException;
-import com.vvelev.learnify.exceptions.CourseNotFoundException;
-import com.vvelev.learnify.exceptions.QuizNotFoundException;
+import com.vvelev.learnify.entities.*;
+import com.vvelev.learnify.exceptions.*;
 import com.vvelev.learnify.mappers.QuizMapper;
 import com.vvelev.learnify.repositories.CourseRepository;
 import com.vvelev.learnify.repositories.EnrollmentRepository;
 import com.vvelev.learnify.repositories.QuizRepository;
+import com.vvelev.learnify.utils.SecurityUtils;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @AllArgsConstructor
 @Service
@@ -27,12 +22,13 @@ public class QuizService {
     private final CourseRepository courseRepository;
     private final EnrollmentRepository enrollmentRepository;
     private final QuizMapper quizMapper;
+    private final SecurityUtils securityUtils;
 
     public QuizDto createQuiz(Long courseId, CreateQuizDto request) {
-        Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
+        Course course = getCourseOrThrow(courseId);
 
-        Long teacherId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!Objects.equals(course.getCreatedBy().getId(), teacherId)) {
+        Long teacherId = securityUtils.getCurrentUserId();
+        if (!isCourseCreator(course, teacherId)) {
             throw new AccessDeniedException();
         }
 
@@ -44,37 +40,38 @@ public class QuizService {
     }
 
     public List<QuizDto> getCourseQuizzes(Long courseId) {
-        Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
+        Course course = getCourseOrThrow(courseId);
 
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!Objects.equals(course.getCreatedBy().getId(), userId) && !enrollmentRepository.existsById(new EnrollmentId(userId, courseId))) {
+        Long userId = securityUtils.getCurrentUserId();
+        if (!isCourseCreator(course, userId) && !isStudentEnrolled(userId, courseId)) {
             throw new AccessDeniedException();
         }
 
-        return quizRepository.findByCourseId(courseId)
+        return quizRepository
+                .findByCourseId(courseId)
                 .stream()
                 .map(quizMapper::toDto)
                 .toList();
     }
 
-    public QuizDto getQuiz(Long id) {
-        Quiz quiz = quizRepository.findById(id).orElseThrow(QuizNotFoundException::new);
+    public QuizDto getQuiz(Long quizId) {
+        Quiz quiz = getQuizOrThrow(quizId);
         Course course = quiz.getCourse();
 
-        Long userId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!Objects.equals(course.getCreatedBy().getId(), userId) && !enrollmentRepository.existsById(new EnrollmentId(userId, course.getId()))) {
+        Long userId = securityUtils.getCurrentUserId();
+        if (!isCourseCreator(course, userId) && !isStudentEnrolled(userId, course.getId())) {
             throw new AccessDeniedException();
         }
 
         return quizMapper.toDto(quiz);
     }
 
-    public QuizDto updateQuiz(Long id, UpdateQuizDto request) {
-        Quiz quiz = quizRepository.findById(id).orElseThrow(QuizNotFoundException::new);
+    public QuizDto updateQuiz(Long quizId, UpdateQuizDto request) {
+        Quiz quiz = getQuizOrThrow(quizId);
         Course course = quiz.getCourse();
 
-        Long teacherId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!Objects.equals(course.getCreatedBy().getId(), teacherId)) {
+        Long teacherId = securityUtils.getCurrentUserId();
+        if (!isCourseCreator(course, teacherId)) {
             throw new AccessDeniedException();
         }
 
@@ -84,15 +81,35 @@ public class QuizService {
         return quizMapper.toDto(quiz);
     }
 
-    public void deleteQuiz(Long id) {
-        Quiz quiz = quizRepository.findById(id).orElseThrow(QuizNotFoundException::new);
+    public void deleteQuiz(Long quizId) {
+        Quiz quiz = getQuizOrThrow(quizId);
         Course course = quiz.getCourse();
 
-        Long teacherId = (Long) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (!Objects.equals(course.getCreatedBy().getId(), teacherId)) {
+        Long teacherId = securityUtils.getCurrentUserId();
+        if (!isCourseCreator(course, teacherId)) {
             throw new AccessDeniedException();
         }
 
         quizRepository.delete(quiz);
+    }
+
+    private Course getCourseOrThrow(Long courseId) {
+        return courseRepository
+                .findById(courseId)
+                .orElseThrow(CourseNotFoundException::new);
+    }
+
+    private Quiz getQuizOrThrow(Long quizId) {
+        return quizRepository
+                .findById(quizId)
+                .orElseThrow(QuizNotFoundException::new);
+    }
+
+    private boolean isStudentEnrolled(Long studentId, Long courseId) {
+        return enrollmentRepository.existsById(new EnrollmentId(studentId, courseId));
+    }
+
+    private boolean isCourseCreator(Course course, Long teacherId) {
+        return course.getCreatedBy().getId().equals(teacherId);
     }
 }
