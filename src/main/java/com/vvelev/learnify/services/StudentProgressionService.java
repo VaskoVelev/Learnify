@@ -43,32 +43,43 @@ public class StudentProgressionService {
     }
 
     public StudentProgressionDto getMyProgression(Long courseId) {
-        Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
+        if (!courseExists(courseId)) {
+            throw new CourseNotFoundException();
+        }
 
         Long studentId = securityUtils.getCurrentUserId();
         if (!isStudentEnrolled(studentId, courseId)) {
             throw new AccessDeniedException();
         }
 
-        StudentProgression studentProgression = studentProgressionRepository
-                .findByStudentIdAndCourseId(studentId, course.getId())
-                .orElseThrow(StudentProgressionNotFoundException::new);
+        StudentProgression progression = getProgressionOrThrow(studentId, courseId);
 
-        return studentProgressionMapper.toDto(studentProgression);
+        return studentProgressionMapper.toDto(progression);
     }
 
     public List<StudentProgressionDto> getCourseProgressions(Long courseId) {
-        Course course = courseRepository.findById(courseId).orElseThrow(CourseNotFoundException::new);
+        Course course = getCourseOrThrow(courseId);
 
         Long teacherId = securityUtils.getCurrentUserId();
         if (!isCourseCreator(course, teacherId)) {
             throw new AccessDeniedException();
         }
 
-        return studentProgressionRepository.findByCourseId(courseId)
+        return studentProgressionRepository
+                .findByCourseId(courseId)
                 .stream()
                 .map(studentProgressionMapper::toDto)
                 .toList();
+    }
+
+    private boolean courseExists(Long courseId) {
+        return courseRepository.existsById(courseId);
+    }
+
+    private Course getCourseOrThrow(Long courseId) {
+        return courseRepository
+                .findById(courseId)
+                .orElseThrow(CourseNotFoundException::new);
     }
 
     private StudentProgression getOrCreateProgression(User student, Course course) {
@@ -80,6 +91,12 @@ public class StudentProgressionService {
                     progression.setCourse(course);
                     return progression;
                 });
+    }
+
+    private StudentProgression getProgressionOrThrow(Long studentId, Long courseId) {
+        return studentProgressionRepository
+                .findByStudentIdAndCourseId(studentId, courseId)
+                .orElseThrow(StudentProgressionNotFoundException::new);
     }
 
     private double calculateProgressionPercent(long submittedQuizzes, long totalQuizzes) {
