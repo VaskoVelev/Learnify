@@ -1,4 +1,4 @@
-package com.vvelev.learnify.dtos.submissionаnswer;
+package com.vvelev.learnify.dtos.submissionanswer;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

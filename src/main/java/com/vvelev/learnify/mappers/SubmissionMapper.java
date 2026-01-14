@@ -2,7 +2,7 @@ package com.vvelev.learnify.mappers;
 
 import com.vvelev.learnify.dtos.submission.SubmissionDetailsDto;
 import com.vvelev.learnify.dtos.submission.SubmissionDto;
-import com.vvelev.learnify.dtos.submissionаnswer.SubmissionAnswerDetailsDto;
+import com.vvelev.learnify.dtos.submissionanswer.SubmissionAnswerDetailsDto;
 import com.vvelev.learnify.entities.Submission;
 import com.vvelev.learnify.entities.SubmissionAnswer;
 import org.mapstruct.Mapper;

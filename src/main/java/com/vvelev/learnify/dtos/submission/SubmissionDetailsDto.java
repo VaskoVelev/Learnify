@@ -1,6 +1,6 @@
 package com.vvelev.learnify.dtos.submission;
 
-import com.vvelev.learnify.dtos.submissionаnswer.SubmissionAnswerDetailsDto;
+import com.vvelev.learnify.dtos.submissionanswer.SubmissionAnswerDetailsDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

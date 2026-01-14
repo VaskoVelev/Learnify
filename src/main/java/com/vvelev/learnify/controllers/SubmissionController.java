@@ -2,7 +2,7 @@ package com.vvelev.learnify.controllers;
 
 import com.vvelev.learnify.dtos.submission.SubmissionDetailsDto;
 import com.vvelev.learnify.dtos.submission.SubmissionDto;
-import com.vvelev.learnify.dtos.submissionаnswer.SubmissionAnswerDto;
+import com.vvelev.learnify.dtos.submissionanswer.SubmissionAnswerDto;
 import com.vvelev.learnify.services.SubmissionService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;

@@ -2,7 +2,7 @@ package com.vvelev.learnify.services;
 
 import com.vvelev.learnify.dtos.submission.SubmissionDetailsDto;
 import com.vvelev.learnify.dtos.submission.SubmissionDto;
-import com.vvelev.learnify.dtos.submissionаnswer.SubmissionAnswerDto;
+import com.vvelev.learnify.dtos.submissionanswer.SubmissionAnswerDto;
 import com.vvelev.learnify.entities.*;
 import com.vvelev.learnify.exceptions.*;
 import com.vvelev.learnify.mappers.SubmissionMapper;
