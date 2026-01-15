@@ -6,6 +6,7 @@ import com.vvelev.learnify.dtos.material.UpdateMaterialDto;
 import com.vvelev.learnify.entities.*;
 import com.vvelev.learnify.exceptions.AccessDeniedException;
 import com.vvelev.learnify.exceptions.LessonNotFoundException;
+import com.vvelev.learnify.exceptions.MaterialNotFoundException;
 import com.vvelev.learnify.mappers.MaterialMapper;
 import com.vvelev.learnify.repositories.EnrollmentRepository;
 import com.vvelev.learnify.repositories.LessonRepository;
@@ -37,7 +38,6 @@ public class MaterialServiceTest {
     private MaterialService materialService;
 
     private Lesson lesson;
-    private Course course;
     private User teacher;
     private User student;
     private Material material;
@@ -61,7 +61,7 @@ public class MaterialServiceTest {
         student.setLastName("Smith");
         student.setRole(Role.STUDENT);
 
-        course = new Course();
+        Course course = new Course();
         course.setId(1L);
         course.setTitle("Test Course");
         course.setDescription("Course Description");
@@ -84,7 +84,7 @@ public class MaterialServiceTest {
         materialDto = new MaterialDto(1L, "/uploads/materials/test.pdf", FileType.PDF, 1L);
     }
 
-    /* ---------- Create Material ---------- */
+    /* -------------------- Create Material -------------------- */
 
     @Test
     void createMaterial_ShouldCreateMaterial_WhenTeacherIsCourseCreator() {
@@ -139,7 +139,7 @@ public class MaterialServiceTest {
         verifyNoInteractions(materialMapper, materialRepository);
     }
 
-    /* ---------- Get Lesson Materials ---------- */
+    /* -------------------- Get Lesson Materials -------------------- */
 
     @Test
     void getLessonMaterials_ShouldReturnLessonMaterials_WhenTeacherIsCourseCreator() {
@@ -233,5 +233,101 @@ public class MaterialServiceTest {
         verify(securityUtils, times(1)).getCurrentUserId();
         verify(materialRepository, times(1)).findByLessonId(lesson.getId());
         verify(materialMapper, never()).toDto(any(Material.class));
+    }
+
+    /* -------------------- Update Material -------------------- */
+
+    @Test
+    void updateMaterial_ShouldUpdateMaterial_WhenTeacherIsCourseCreator() {
+        when(materialRepository.findById(material.getId())).thenReturn(Optional.of(material));
+        when(securityUtils.getCurrentUserId()).thenReturn(teacher.getId());
+        doNothing().when(materialMapper).update(eq(updateMaterialDto), any(Material.class));
+        when(materialRepository.save(material)).thenReturn(material);
+        when(materialMapper.toDto(material)).thenReturn(materialDto);
+
+        MaterialDto result = materialService.updateMaterial(material.getId(), updateMaterialDto);
+
+        assertNotNull(result);
+        assertEquals(materialDto.getId(), result.getId());
+        assertEquals(materialDto.getFilePath(), result.getFilePath());
+        assertEquals(materialDto.getFileType(), result.getFileType());
+        assertEquals(materialDto.getLessonId(), result.getLessonId());
+
+        verify(materialRepository, times(1)).findById(material.getId());
+        verify(securityUtils, times(1)).getCurrentUserId();
+        verify(materialMapper, times(1)).update(updateMaterialDto, material);
+        verify(materialRepository, times(1)).save(material);
+        verify(materialMapper, times(1)).toDto(material);
+    }
+
+    @Test
+    void updateMaterial_ShouldThrowMaterialNotFoundException_WhenMaterialNotFound() {
+        when(materialRepository.findById(material.getId())).thenReturn(Optional.empty());
+
+        assertThrows(
+                MaterialNotFoundException.class,
+                () -> materialService.updateMaterial(material.getId(), updateMaterialDto)
+        );
+
+        verify(materialRepository, times(1)).findById(1L);
+        verifyNoInteractions(securityUtils, materialMapper);
+    }
+
+    @Test
+    void updateMaterial_ShouldThrowAccessDeniedException_WhenTeacherIsNotCourseCreator() {
+        when(materialRepository.findById(material.getId())).thenReturn(Optional.of(material));
+        when(securityUtils.getCurrentUserId()).thenReturn(student.getId());
+
+        assertThrows(
+                AccessDeniedException.class,
+                () -> materialService.updateMaterial(material.getId(), updateMaterialDto)
+        );
+
+        verify(materialRepository, times(1)).findById(material.getId());
+        verify(securityUtils, times(1)).getCurrentUserId();
+        verifyNoInteractions(materialMapper);
+    }
+
+    /* -------------------- Delete Material -------------------- */
+
+    @Test
+    void deleteMaterial_ShouldDeleteMaterial_WhenTeacherIsCourseCreator() {
+        when(materialRepository.findById(material.getId())).thenReturn(Optional.of(material));
+        when(securityUtils.getCurrentUserId()).thenReturn(teacher.getId());
+        doNothing().when(materialRepository).delete(material);
+
+        materialService.deleteMaterial(material.getId());
+
+        verify(materialRepository, times(1)).findById(material.getId());
+        verify(securityUtils, times(1)).getCurrentUserId();
+        verify(materialRepository, times(1)).delete(material);
+    }
+
+    @Test
+    void deleteMaterial_ShouldThrowMaterialNotFoundException_WhenMaterialNotFound() {
+        when(materialRepository.findById(material.getId())).thenReturn(Optional.empty());
+
+        assertThrows(
+                MaterialNotFoundException.class,
+                () -> materialService.deleteMaterial(material.getId())
+        );
+
+        verify(materialRepository, times(1)).findById(material.getId());
+        verifyNoInteractions(securityUtils);
+    }
+
+    @Test
+    void deleteMaterial_ShouldThrowAccessDeniedException_WhenTeacherIsNotCourseCreator() {
+        when(materialRepository.findById(material.getId())).thenReturn(Optional.of(material));
+        when(securityUtils.getCurrentUserId()).thenReturn(student.getId());
+
+        assertThrows(
+                AccessDeniedException.class,
+                () -> materialService.deleteMaterial(material.getId())
+        );
+
+        verify(materialRepository, times(1)).findById(material.getId());
+        verify(securityUtils, times(1)).getCurrentUserId();
+        verify(materialRepository, never()).delete(any());
     }
 }
