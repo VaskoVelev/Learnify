@@ -87,7 +87,7 @@ public class MaterialServiceTest {
     /* -------------------- Create Material -------------------- */
 
     @Test
-    void createMaterial_ShouldCreateMaterial_WhenTeacherIsCourseCreator() {
+    void createMaterial_ShouldCreateMaterial_WhenUserIsCourseCreator() {
         when(lessonRepository.findById(lesson.getId())).thenReturn(Optional.of(lesson));
         when(securityUtils.getCurrentUserId()).thenReturn(teacher.getId());
         when(materialMapper.toEntity(createMaterialDto)).thenReturn(material);
@@ -102,30 +102,31 @@ public class MaterialServiceTest {
         assertEquals(materialDto.getFileType(), result.getFileType());
         assertEquals(materialDto.getLessonId(), result.getLessonId());
 
+        assertEquals(lesson, material.getLesson());
+
         verify(lessonRepository, times(1)).findById(lesson.getId());
         verify(securityUtils, times(1)).getCurrentUserId();
         verify(materialMapper, times(1)).toEntity(createMaterialDto);
         verify(materialRepository, times(1)).save(material);
         verify(materialMapper, times(1)).toDto(material);
-
-        assertEquals(lesson, material.getLesson());
     }
 
     @Test
     void createMaterial_ShouldThrowLessonNotFoundException_WhenLessonNotFound() {
-        when(lessonRepository.findById(lesson.getId())).thenReturn(Optional.empty());
+        Long nonExistentLessonId = 999L;
+        when(lessonRepository.findById(nonExistentLessonId)).thenReturn(Optional.empty());
 
         assertThrows(
                 LessonNotFoundException.class,
-                () -> materialService.createMaterial(lesson.getId(), createMaterialDto)
+                () -> materialService.createMaterial(nonExistentLessonId, createMaterialDto)
         );
 
-        verify(lessonRepository, times(1)).findById(lesson.getId());
+        verify(lessonRepository, times(1)).findById(nonExistentLessonId);
         verifyNoInteractions(securityUtils, materialMapper, materialRepository);
     }
 
     @Test
-    void createMaterial_ShouldThrowAccessDeniedException_WhenTeacherIsNotCourseCreator() {
+    void createMaterial_ShouldThrowAccessDeniedException_WhenUserIsNotCourseCreator() {
         when(lessonRepository.findById(lesson.getId())).thenReturn(Optional.of(lesson));
         when(securityUtils.getCurrentUserId()).thenReturn(student.getId());
 
@@ -142,7 +143,7 @@ public class MaterialServiceTest {
     /* -------------------- Get Lesson Materials -------------------- */
 
     @Test
-    void getLessonMaterials_ShouldReturnLessonMaterials_WhenTeacherIsCourseCreator() {
+    void getLessonMaterials_ShouldReturnLessonMaterials_WhenUserIsCourseCreator() {
         when(lessonRepository.findById(lesson.getId())).thenReturn(Optional.of(lesson));
         when(securityUtils.getCurrentUserId()).thenReturn(teacher.getId());
         when(materialRepository.findByLessonId(lesson.getId())).thenReturn(List.of(material));
@@ -165,7 +166,7 @@ public class MaterialServiceTest {
     }
 
     @Test
-    void getLessonMaterials_ShouldReturnLessonMaterials_WhenStudentIsEnrolledInCourse() {
+    void getLessonMaterials_ShouldReturnLessonMaterials_WhenUserIsEnrolledInCourse() {
         when(lessonRepository.findById(lesson.getId())).thenReturn(Optional.of(lesson));
         when(securityUtils.getCurrentUserId()).thenReturn(student.getId());
         when(enrollmentRepository.existsById(any(EnrollmentId.class))).thenReturn(true);
@@ -190,21 +191,25 @@ public class MaterialServiceTest {
 
     @Test
     void getLessonMaterials_ShouldThrowLessonNotFoundException_WhenLessonNotFound() {
-        when(lessonRepository.findById(lesson.getId())).thenReturn(Optional.empty());
+        Long nonExistentLessonId = 999L;
+        when(lessonRepository.findById(nonExistentLessonId)).thenReturn(Optional.empty());
 
         assertThrows(
                 LessonNotFoundException.class,
-                () -> materialService.getLessonMaterials(lesson.getId())
+                () -> materialService.getLessonMaterials(nonExistentLessonId)
         );
 
-        verify(lessonRepository, times(1)).findById(lesson.getId());
+        verify(lessonRepository, times(1)).findById(nonExistentLessonId);
         verifyNoInteractions(securityUtils, enrollmentRepository, materialMapper, materialRepository);
     }
 
     @Test
     void getLessonMaterials_ShouldThrowAccessDeniedException_WhenUserIsNotAuthorized() {
+        User unauthorizedUser = new User();
+        unauthorizedUser.setId(3L);
+
         when(lessonRepository.findById(lesson.getId())).thenReturn(Optional.of(lesson));
-        when(securityUtils.getCurrentUserId()).thenReturn(3L);
+        when(securityUtils.getCurrentUserId()).thenReturn(unauthorizedUser.getId());
         when(enrollmentRepository.existsById(any(EnrollmentId.class))).thenReturn(false);
 
         assertThrows(
@@ -238,7 +243,7 @@ public class MaterialServiceTest {
     /* -------------------- Update Material -------------------- */
 
     @Test
-    void updateMaterial_ShouldUpdateMaterial_WhenTeacherIsCourseCreator() {
+    void updateMaterial_ShouldUpdateMaterial_WhenUserIsCourseCreator() {
         when(materialRepository.findById(material.getId())).thenReturn(Optional.of(material));
         when(securityUtils.getCurrentUserId()).thenReturn(teacher.getId());
         doNothing().when(materialMapper).update(eq(updateMaterialDto), any(Material.class));
@@ -262,19 +267,20 @@ public class MaterialServiceTest {
 
     @Test
     void updateMaterial_ShouldThrowMaterialNotFoundException_WhenMaterialNotFound() {
-        when(materialRepository.findById(material.getId())).thenReturn(Optional.empty());
+        Long nonExistentMaterialId = 999L;
+        when(materialRepository.findById(nonExistentMaterialId)).thenReturn(Optional.empty());
 
         assertThrows(
                 MaterialNotFoundException.class,
-                () -> materialService.updateMaterial(material.getId(), updateMaterialDto)
+                () -> materialService.updateMaterial(nonExistentMaterialId, updateMaterialDto)
         );
 
-        verify(materialRepository, times(1)).findById(1L);
+        verify(materialRepository, times(1)).findById(nonExistentMaterialId);
         verifyNoInteractions(securityUtils, materialMapper);
     }
 
     @Test
-    void updateMaterial_ShouldThrowAccessDeniedException_WhenTeacherIsNotCourseCreator() {
+    void updateMaterial_ShouldThrowAccessDeniedException_WhenUserIsNotCourseCreator() {
         when(materialRepository.findById(material.getId())).thenReturn(Optional.of(material));
         when(securityUtils.getCurrentUserId()).thenReturn(student.getId());
 
@@ -291,7 +297,7 @@ public class MaterialServiceTest {
     /* -------------------- Delete Material -------------------- */
 
     @Test
-    void deleteMaterial_ShouldDeleteMaterial_WhenTeacherIsCourseCreator() {
+    void deleteMaterial_ShouldDeleteMaterial_WhenUserIsCourseCreator() {
         when(materialRepository.findById(material.getId())).thenReturn(Optional.of(material));
         when(securityUtils.getCurrentUserId()).thenReturn(teacher.getId());
         doNothing().when(materialRepository).delete(material);
@@ -305,19 +311,20 @@ public class MaterialServiceTest {
 
     @Test
     void deleteMaterial_ShouldThrowMaterialNotFoundException_WhenMaterialNotFound() {
-        when(materialRepository.findById(material.getId())).thenReturn(Optional.empty());
+        Long nonExistentMaterialId = 999L;
+        when(materialRepository.findById(nonExistentMaterialId)).thenReturn(Optional.empty());
 
         assertThrows(
                 MaterialNotFoundException.class,
-                () -> materialService.deleteMaterial(material.getId())
+                () -> materialService.deleteMaterial(nonExistentMaterialId)
         );
 
-        verify(materialRepository, times(1)).findById(material.getId());
+        verify(materialRepository, times(1)).findById(nonExistentMaterialId);
         verifyNoInteractions(securityUtils);
     }
 
     @Test
-    void deleteMaterial_ShouldThrowAccessDeniedException_WhenTeacherIsNotCourseCreator() {
+    void deleteMaterial_ShouldThrowAccessDeniedException_WhenUserIsNotCourseCreator() {
         when(materialRepository.findById(material.getId())).thenReturn(Optional.of(material));
         when(securityUtils.getCurrentUserId()).thenReturn(student.getId());
 
