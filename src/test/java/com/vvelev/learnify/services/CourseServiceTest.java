@@ -171,7 +171,7 @@ public class CourseServiceTest {
         assertEquals(courseDto.getUpdatedAt(), result.get(0).getUpdatedAt());
 
         verify(courseRepository, times(1)).findAll();
-        verify(courseMapper, times(1)).toDto(any(Course.class));
+        verify(courseMapper, times(1)).toDto(course);
     }
 
     @Test
