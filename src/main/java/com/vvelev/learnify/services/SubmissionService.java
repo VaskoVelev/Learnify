@@ -90,7 +90,7 @@ public class SubmissionService {
 
         Long userId = securityUtils.getCurrentUserId();
 
-        if (!isStudentEnrolled(userId, course.getId()) && !isSubmissionCreator(submission, userId)) {
+        if (!isStudentEnrolled(userId, course.getId()) && !isSubmissionCreator(submission, userId) && !isCourseCreator(course, userId)) {
             throw new AccessDeniedException();
         }
 
