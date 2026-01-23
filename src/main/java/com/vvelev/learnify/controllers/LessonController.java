@@ -1,5 +1,6 @@
 package com.vvelev.learnify.controllers;
 
+import com.vvelev.learnify.constants.ApiPaths;
 import com.vvelev.learnify.dtos.lesson.CreateLessonDto;
 import com.vvelev.learnify.dtos.lesson.LessonDto;
 import com.vvelev.learnify.dtos.lesson.UpdateLessonDto;
@@ -20,33 +21,33 @@ public class LessonController {
     private final LessonService lessonService;
 
     @PreAuthorize("hasRole(Role.TEACHER.name())")
-    @PostMapping("/courses/{id}/lessons")
+    @PostMapping(ApiPaths.COURSE_LESSONS)
     public ResponseEntity<LessonDto> createLesson(
             @PathVariable Long id,
             @Valid @RequestBody CreateLessonDto request,
             UriComponentsBuilder uriBuilder
     ) {
         LessonDto lessonDto = lessonService.createLesson(id, request);
-        URI uri = uriBuilder.path("/lessons/{id}").buildAndExpand(lessonDto.getId()).toUri();
+        URI uri = uriBuilder.path(ApiPaths.LESSON_BY_ID).buildAndExpand(lessonDto.getId()).toUri();
 
         return ResponseEntity.created(uri).body(lessonDto);
     }
 
     @PreAuthorize("hasAnyRole(Role.TEACHER.name(), Role.STUDENT.name())")
-    @GetMapping("/courses/{id}/lessons")
+    @GetMapping(ApiPaths.COURSE_LESSONS)
     public List<LessonDto> getCourseLessons(@PathVariable Long id) {
         return lessonService.getCourseLessons(id);
     }
 
     @PreAuthorize("hasAnyRole(Role.TEACHER.name(), Role.STUDENT.name())")
-    @GetMapping("/lessons/{id}")
+    @GetMapping(ApiPaths.LESSON_BY_ID)
     public ResponseEntity<LessonDto> getLesson(@PathVariable Long id) {
         LessonDto lessonDto = lessonService.getLesson(id);
         return ResponseEntity.ok(lessonDto);
     }
 
     @PreAuthorize("hasRole(Role.TEACHER.name())")
-    @PutMapping("/lessons/{id}")
+    @PutMapping(ApiPaths.LESSON_BY_ID)
     public ResponseEntity<LessonDto> updateLesson(
             @PathVariable Long id,
             @Valid @RequestBody UpdateLessonDto request
@@ -56,7 +57,7 @@ public class LessonController {
     }
 
     @PreAuthorize("hasRole(Role.TEACHER.name())")
-    @DeleteMapping("/lessons/{id}")
+    @DeleteMapping(ApiPaths.LESSON_BY_ID)
     public ResponseEntity<Void> deleteLesson(@PathVariable Long id) {
         lessonService.deleteLesson(id);
         return ResponseEntity.noContent().build();

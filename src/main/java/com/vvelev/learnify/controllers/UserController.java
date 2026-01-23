@@ -1,5 +1,6 @@
 package com.vvelev.learnify.controllers;
 
+import com.vvelev.learnify.constants.ApiPaths;
 import com.vvelev.learnify.dtos.user.RegisterUserDto;
 import com.vvelev.learnify.dtos.user.UpdateUserDto;
 import com.vvelev.learnify.dtos.user.UserDto;
@@ -19,38 +20,38 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
-    @PostMapping("/users")
+    @PostMapping(ApiPaths.USERS)
     public ResponseEntity<?> registerUser(
             @Valid @RequestBody RegisterUserDto request,
             UriComponentsBuilder uriBuilder
     ) {
         UserDto userDto = userService.registerUser(request);
-        URI uri = uriBuilder.path("/users/{id}").buildAndExpand(userDto.getId()).toUri();
+        URI uri = uriBuilder.path(ApiPaths.USER_BY_ID).buildAndExpand(userDto.getId()).toUri();
 
         return ResponseEntity.created(uri).body(userDto);
     }
 
     @PreAuthorize("Role.ADMIN.name()")
-    @GetMapping("/users")
+    @GetMapping(ApiPaths.USERS)
     public List<UserDto> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @PreAuthorize("Role.ADMIN.name()")
-    @GetMapping("/users/{id}")
+    @GetMapping(ApiPaths.USER_BY_ID)
     public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
         UserDto userDto = userService.getUser(id);
         return ResponseEntity.ok(userDto);
     }
 
-    @GetMapping("/me")
+    @GetMapping(ApiPaths.ME)
     public ResponseEntity<UserDto> getMe() {
         UserDto userDto = userService.getMe();
         return ResponseEntity.ok(userDto);
     }
 
     @PreAuthorize("Role.ADMIN.name()")
-    @PutMapping("/users/{id}")
+    @PutMapping(ApiPaths.USER_BY_ID)
     public ResponseEntity<UserDto> updateUser(
             @PathVariable Long id,
             @Valid @RequestBody UpdateUserDto request
@@ -59,13 +60,13 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
-    @PutMapping("/me")
+    @PutMapping(ApiPaths.ME)
     public ResponseEntity<UserDto> updateMe(@Valid @RequestBody UpdateUserDto request) {
         UserDto userDto = userService.updateMe(request);
         return ResponseEntity.ok(userDto);
     }
 
-    @DeleteMapping("/me")
+    @DeleteMapping(ApiPaths.ME)
     public ResponseEntity<Void> deleteMe() {
         userService.deleteMe();
         return ResponseEntity.noContent().build();

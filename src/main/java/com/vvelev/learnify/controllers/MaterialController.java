@@ -1,5 +1,6 @@
 package com.vvelev.learnify.controllers;
 
+import com.vvelev.learnify.constants.ApiPaths;
 import com.vvelev.learnify.dtos.material.CreateMaterialDto;
 import com.vvelev.learnify.dtos.material.MaterialDto;
 import com.vvelev.learnify.dtos.material.UpdateMaterialDto;
@@ -20,26 +21,26 @@ public class MaterialController {
     private final MaterialService materialService;
 
     @PreAuthorize("hasRole(Role.TEACHER.name())")
-    @PostMapping("/lessons/{id}/materials")
+    @PostMapping(ApiPaths.LESSON_MATERIALS)
     public ResponseEntity<MaterialDto> createMaterial(
             @PathVariable Long id,
             @RequestBody CreateMaterialDto request,
             UriComponentsBuilder uriBuilder
     ) {
         MaterialDto materialDto = materialService.createMaterial(id, request);
-        URI uri = uriBuilder.path("/materials/{id}").buildAndExpand(materialDto.getId()).toUri();
+        URI uri = uriBuilder.path(ApiPaths.MATERIAL_BY_ID).buildAndExpand(materialDto.getId()).toUri();
 
         return ResponseEntity.created(uri).body(materialDto);
     }
 
     @PreAuthorize("hasAnyRole(Role.TEACHER.name(), Role.STUDENT.name())")
-    @GetMapping("/lessons/{id}/materials")
+    @GetMapping(ApiPaths.LESSON_MATERIALS)
     List<MaterialDto> getLessonMaterials(@PathVariable Long id) {
         return materialService.getLessonMaterials(id);
     }
 
     @PreAuthorize("hasRole(Role.TEACHER.name())")
-    @PutMapping("/materials/{id}")
+    @PutMapping(ApiPaths.MATERIAL_BY_ID)
     public ResponseEntity<MaterialDto> updateMaterial(
             @PathVariable Long id,
             @Valid @RequestBody UpdateMaterialDto request
@@ -49,7 +50,7 @@ public class MaterialController {
     }
 
     @PreAuthorize("hasRole(Role.TEACHER.name())")
-    @DeleteMapping("/materials/{id}")
+    @DeleteMapping(ApiPaths.MATERIAL_BY_ID)
     public ResponseEntity<Void> deleteMaterial(@PathVariable Long id) {
         materialService.deleteMaterial(id);
         return ResponseEntity.noContent().build();

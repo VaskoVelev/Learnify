@@ -1,5 +1,6 @@
 package com.vvelev.learnify.controllers;
 
+import com.vvelev.learnify.constants.ApiPaths;
 import com.vvelev.learnify.dtos.course.CourseDto;
 import com.vvelev.learnify.dtos.course.CreateCourseDto;
 import com.vvelev.learnify.dtos.course.UpdateCourseDto;
@@ -23,49 +24,49 @@ public class CourseController {
     private StudentProgressionService studentProgressionService;
 
     @PreAuthorize("hasRole(Role.TEACHER.name())")
-    @PostMapping("/courses")
+    @PostMapping(ApiPaths.COURSES)
     public ResponseEntity<CourseDto> createCourse(
             @Valid @RequestBody CreateCourseDto request,
             UriComponentsBuilder uriBuilder
     ) {
         CourseDto courseDto = courseService.createCourse(request);
-        URI uri = uriBuilder.path("/courses/{id}").buildAndExpand(courseDto.getId()).toUri();
+        URI uri = uriBuilder.path(ApiPaths.COURSE_BY_ID).buildAndExpand(courseDto.getId()).toUri();
 
         return ResponseEntity.created(uri).body(courseDto);
     }
 
-    @GetMapping("/courses")
+    @GetMapping(ApiPaths.COURSES)
     public List<CourseDto> getAllCourses() {
         return courseService.getAllCourses();
     }
 
-    @GetMapping("/courses/{id}")
+    @GetMapping(ApiPaths.COURSE_BY_ID)
     public ResponseEntity<CourseDto> getCourse(@PathVariable Long id) {
         CourseDto courseDto = courseService.getCourse(id);
         return ResponseEntity.ok(courseDto);
     }
 
     @PreAuthorize("hasRole(Role.TEACHER.name())")
-    @GetMapping("/courses-created/me")
+    @GetMapping(ApiPaths.COURSES_CREATED_ME)
     public List<CourseDto> getMyCoursesCreated() {
         return courseService.getMyCoursesCreated();
     }
 
     @PreAuthorize("hasRole(Role.STUDENT.name())")
-    @GetMapping("/courses/{id}/progression/me")
+    @GetMapping(ApiPaths.COURSE_PROGRESSION_ME)
     public ResponseEntity<StudentProgressionDto> getMyProgression(@PathVariable Long id) {
         StudentProgressionDto studentProgressionDto = studentProgressionService.getMyProgression(id);
         return ResponseEntity.ok(studentProgressionDto);
     }
 
     @PreAuthorize("hasRole(Role.TEACHER.name())")
-    @GetMapping("/courses/{id}/progressions")
+    @GetMapping(ApiPaths.COURSE_PROGRESSIONS)
     public List<StudentProgressionDto> getCourseProgressions(@PathVariable Long id) {
         return studentProgressionService.getCourseProgressions(id);
     }
 
     @PreAuthorize("hasRole(Role.TEACHER.name())")
-    @PutMapping("/courses/{id}")
+    @PutMapping(ApiPaths.COURSE_BY_ID)
     public ResponseEntity<CourseDto> updateCourse(
             @PathVariable Long id,
             @Valid @RequestBody UpdateCourseDto request
@@ -75,7 +76,7 @@ public class CourseController {
     }
 
     @PreAuthorize("hasRole(Role.TEACHER.name())")
-    @DeleteMapping("/courses/{id}")
+    @DeleteMapping(ApiPaths.COURSE_BY_ID)
     public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
         courseService.deleteCourse(id);
         return ResponseEntity.noContent().build();

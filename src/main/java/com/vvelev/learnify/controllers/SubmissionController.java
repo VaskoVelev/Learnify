@@ -1,5 +1,6 @@
 package com.vvelev.learnify.controllers;
 
+import com.vvelev.learnify.constants.ApiPaths;
 import com.vvelev.learnify.dtos.submission.SubmissionDetailsDto;
 import com.vvelev.learnify.dtos.submission.SubmissionDto;
 import com.vvelev.learnify.dtos.submissionanswer.SubmissionAnswerDto;
@@ -18,7 +19,7 @@ public class SubmissionController {
     private final SubmissionService submissionService;
 
     @PreAuthorize("hasRole(Role.STUDENT.name())")
-    @PostMapping("/quizzes/{id}/submit")
+    @PostMapping(ApiPaths.QUIZ_SUBMIT)
     public ResponseEntity<SubmissionDto> submitQuiz(
             @PathVariable Long id,
             @RequestBody List<SubmissionAnswerDto> answers
@@ -28,19 +29,19 @@ public class SubmissionController {
     }
 
     @PreAuthorize("hasRole(Role.TEACHER.name())")
-    @GetMapping("/quizzes/{id}/submissions")
+    @GetMapping(ApiPaths.QUIZ_SUBMISSIONS)
     public List<SubmissionDto> getQuizSubmissions(@PathVariable Long id) {
         return submissionService.getQuizSubmissions(id);
     }
 
     @PreAuthorize("hasRole(Role.STUDENT.name())")
-    @GetMapping("/quizzes/{id}/submissions/me")
+    @GetMapping(ApiPaths.QUIZ_SUBMISSIONS_ME)
     public List<SubmissionDto> getMyQuizSubmissions(@PathVariable Long id) {
         return submissionService.getMyQuizSubmissions(id);
     }
 
     @PreAuthorize("hasAnyRole(Role.STUDENT.name(), Role.TEACHER.name())")
-    @GetMapping("/submissions/{id}")
+    @GetMapping(ApiPaths.SUBMISSION_BY_ID)
     public ResponseEntity<?> getSubmission(@PathVariable Long id) {
         SubmissionDetailsDto submissionDto = submissionService.getSubmission(id);
         return ResponseEntity.ok(submissionDto);

@@ -1,5 +1,6 @@
 package com.vvelev.learnify.controllers;
 
+import com.vvelev.learnify.constants.ApiPaths;
 import com.vvelev.learnify.dtos.answer.TeacherAnswerDto;
 import com.vvelev.learnify.dtos.answer.CreateAnswerDto;
 import com.vvelev.learnify.dtos.answer.UpdateAnswerDto;
@@ -20,26 +21,26 @@ public class AnswerController {
     private final AnswerService answerService;
 
     @PreAuthorize("hasRole(Role.TEACHER.name())")
-    @PostMapping("/questions/{id}/answers")
+    @PostMapping(ApiPaths.QUESTION_ANSWERS)
     public ResponseEntity<TeacherAnswerDto> createAnswer(
             @PathVariable Long id,
             @Valid @RequestBody CreateAnswerDto request,
             UriComponentsBuilder uriBuilder
     ) {
         TeacherAnswerDto answerDto = answerService.createAnswer(id, request);
-        URI uri = uriBuilder.path("/answers/{id}").buildAndExpand(answerDto.getId()).toUri();
+        URI uri = uriBuilder.path(ApiPaths.ANSWER_BY_ID).buildAndExpand(answerDto.getId()).toUri();
 
         return ResponseEntity.created(uri).body(answerDto);
     }
 
     @PreAuthorize("hasAnyRole(Role.TEACHER.name(), Role.STUDENT.name())")
-    @GetMapping("/questions/{id}/answers")
+    @GetMapping(ApiPaths.QUESTION_ANSWERS)
     public List<?> getQuestionAnswers(@PathVariable Long id) {
         return answerService.getQuestionAnswers(id);
     }
 
     @PreAuthorize("hasRole(Role.TEACHER.name())")
-    @PutMapping("/answers/{id}")
+    @PutMapping(ApiPaths.ANSWER_BY_ID)
     public ResponseEntity<TeacherAnswerDto> updateAnswer(
             @PathVariable Long id,
             @Valid @RequestBody UpdateAnswerDto request
@@ -49,7 +50,7 @@ public class AnswerController {
     }
 
     @PreAuthorize("hasRole(Role.TEACHER.name())")
-    @DeleteMapping("/answers/{id}")
+    @DeleteMapping(ApiPaths.ANSWER_BY_ID)
     public ResponseEntity<Void> deleteAnswer(@PathVariable Long id) {
         answerService.deleteAnswer(id);
         return ResponseEntity.noContent().build();

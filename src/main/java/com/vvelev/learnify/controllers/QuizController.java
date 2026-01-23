@@ -1,5 +1,6 @@
 package com.vvelev.learnify.controllers;
 
+import com.vvelev.learnify.constants.ApiPaths;
 import com.vvelev.learnify.dtos.quiz.CreateQuizDto;
 import com.vvelev.learnify.dtos.quiz.QuizDto;
 import com.vvelev.learnify.dtos.quiz.UpdateQuizDto;
@@ -20,33 +21,33 @@ public class QuizController {
     private final QuizService quizService;
 
     @PreAuthorize("hasRole(Role.TEACHER.name())")
-    @PostMapping("/courses/{id}/quizzes")
+    @PostMapping(ApiPaths.COURSE_QUIZZES)
     public ResponseEntity<QuizDto> createQuiz(
             @PathVariable Long id,
             @Valid @RequestBody CreateQuizDto request,
             UriComponentsBuilder uriBuilder
     ) {
         QuizDto quizDto = quizService.createQuiz(id, request);
-        URI uri = uriBuilder.path("/quizzes/{id}").buildAndExpand(quizDto.getId()).toUri();
+        URI uri = uriBuilder.path(ApiPaths.QUIZ_BY_ID).buildAndExpand(quizDto.getId()).toUri();
 
         return ResponseEntity.created(uri).body(quizDto);
     }
 
     @PreAuthorize("hasAnyRole(Role.TEACHER.name(), Role.STUDENT.name())")
-    @GetMapping("/courses/{id}/quizzes")
+    @GetMapping(ApiPaths.COURSE_QUIZZES)
     public List<QuizDto> getCourseQuizzes(@PathVariable Long id) {
         return quizService.getCourseQuizzes(id);
     }
 
     @PreAuthorize("hasAnyRole(Role.TEACHER.name(), Role.STUDENT.name())")
-    @GetMapping("/quizzes/{id}")
+    @GetMapping(ApiPaths.QUIZ_BY_ID)
     public ResponseEntity<QuizDto> getQuiz(@PathVariable Long id) {
         QuizDto quizDto = quizService.getQuiz(id);
         return ResponseEntity.ok(quizDto);
     }
 
     @PreAuthorize("hasRole(Role.TEACHER.name())")
-    @PutMapping("/quizzes/{id}")
+    @PutMapping(ApiPaths.QUIZ_BY_ID)
     public ResponseEntity<QuizDto> updateQuiz(
             @PathVariable Long id,
             @Valid @RequestBody UpdateQuizDto request
@@ -56,7 +57,7 @@ public class QuizController {
     }
 
     @PreAuthorize("hasRole(Role.TEACHER.name())")
-    @DeleteMapping("/quizzes/{id}")
+    @DeleteMapping(ApiPaths.QUIZ_BY_ID)
     public ResponseEntity<Void> deleteQuiz(@PathVariable Long id) {
         quizService.deleteQuiz(id);
         return ResponseEntity.noContent().build();
