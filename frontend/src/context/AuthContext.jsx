@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import * as authApi from "../api/auth.api";
+import { getMe } from "../api/user.api";
 
 const AuthContext = createContext(null);
 
@@ -7,8 +8,14 @@ export const AuthProvider = ({ children }) => {
     const [accessToken, setAccessToken] = useState(
         localStorage.getItem("accessToken")
     );
+    const [user, setUser] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(!!accessToken);
     const [loading, setLoading] = useState(true);
+
+    const loadUser = async () => {
+        const me = await getMe();
+        setUser(me);
+    };
 
     const login = async (credentials) => {
         const response = await authApi.login(credentials);
@@ -17,6 +24,8 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("accessToken", token);
         setAccessToken(token);
         setIsAuthenticated(true);
+
+        await loadUser();
     };
 
     const logout = async () => {
@@ -24,6 +33,7 @@ export const AuthProvider = ({ children }) => {
 
         localStorage.removeItem("accessToken");
         setAccessToken(null);
+        setUser(null);
         setIsAuthenticated(false);
     };
 
@@ -36,9 +46,12 @@ export const AuthProvider = ({ children }) => {
                 localStorage.setItem("accessToken", token);
                 setAccessToken(token);
                 setIsAuthenticated(true);
+
+                await loadUser();
             } catch {
                 localStorage.removeItem("accessToken");
                 setIsAuthenticated(false);
+                setUser(null);
             } finally {
                 setLoading(false);
             }
@@ -50,6 +63,7 @@ export const AuthProvider = ({ children }) => {
     const value = {
         accessToken,
         isAuthenticated,
+        user,
         login,
         logout,
     };
