@@ -40,7 +40,7 @@ public class EnrollmentController {
         return enrollmentService.getCourseEnrollments(id);
     }
 
-    @PreAuthorize("Role.ADMIN.name()")
+    @PreAuthorize("hasRole(Role.ADMIN.name())")
     @GetMapping(ApiPaths.ENROLLMENTS)
     public List<EnrollmentDto> getAllEnrollments() {
         return enrollmentService.getAllEnrollments();
