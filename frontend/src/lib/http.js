@@ -1,4 +1,5 @@
 import axios from "axios";
+import { normalizeError } from "./error";
 
 const http = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -18,7 +19,7 @@ http.interceptors.request.use(
 
         return config;
     },
-    (error) => Promise.reject(error)
+    (error) => Promise.reject(normalizeError(error))
 );
 
 http.interceptors.response.use(
@@ -42,27 +43,27 @@ http.interceptors.response.use(
             } catch (refreshError) {
                 localStorage.removeItem("accessToken");
                 window.location.href = "/login";
-                return Promise.reject(error);
+                return Promise.reject(normalizeError(error));
             }
         }
 
         if (status === 403) {
             alert(data?.message || "Access denied");
-            return Promise.reject(error);
+            return Promise.reject(normalizeError(error));
         }
 
         if (status === 400 || status === 404) {
             alert(data?.message || "Bad Request");
-            return Promise.reject(error);
+            return Promise.reject(normalizeError(error));
         }
 
         if (status >= 500) {
             alert("Server error. Please try again later.");
-            return Promise.reject(error);
+            return Promise.reject(normalizeError(error));
         }
 
         alert("Unexpected error");
-        return Promise.reject(error);
+        return Promise.reject(normalizeError(error));
     }
 );
 

@@ -1,4 +1,4 @@
-import http from "./http";
+import http from "../lib/http";
 
 export const createAnswer = async (id, data) => {
     const response = await http.post(`/questions/${id}/answers`, data);

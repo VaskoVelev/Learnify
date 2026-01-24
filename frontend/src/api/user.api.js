@@ -1,4 +1,4 @@
-import http from "./http";
+import http from "../lib/http";
 
 export const registerUser = async (data) => {
     const response = await http.post("/users", data);

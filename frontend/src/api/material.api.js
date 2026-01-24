@@ -1,4 +1,4 @@
-import http from "./http";
+import http from "../lib/http";
 
 export const createMaterial = async (id, data) => {
     const response = await http.post(`/lessons/${id}/materials`, data);

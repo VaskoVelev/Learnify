@@ -1,4 +1,4 @@
-import http from "./http";
+import http from "../lib/http";
 
 export const login = (data) => {
     return http.post("/auth/login", data);

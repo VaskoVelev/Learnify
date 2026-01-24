@@ -1,4 +1,4 @@
-import http from "./http";
+import http from "../lib/http";
 
 export const createCourse = async (data) => {
     const response = await http.post("/courses", data);
