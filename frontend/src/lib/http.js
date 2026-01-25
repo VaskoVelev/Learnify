@@ -29,6 +29,10 @@ http.interceptors.response.use(
         const status = error.response?.status;
         const data = error.response?.data;
 
+        if (originalRequest.url.includes("/auth/refresh")) {
+            return Promise.reject(normalizeError(error));
+        }
+
         if (status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
 

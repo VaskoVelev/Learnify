@@ -7,18 +7,18 @@ import RegisterPage from "../pages/RegisterPage";
 
 const AppRouter = () => {
     return (
-            <Routes>
+        <Routes>
 
-                <Route element={<PublicRoute />}>
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/register" element={<RegisterPage />} />
-                </Route>
+            <Route element={<PublicRoute />}>
+                <Route path="/login" element={<LoginPage />} />
+                <Route path="/register" element={<RegisterPage />} />
+            </Route>
 
-                <Route element={<ProtectedRoute />}>
-                    <Route path="/" element={<div>Home</div>} />
-                </Route>
+            <Route element={<ProtectedRoute />}>
+                <Route path="/" element={<div>Home</div>} />
+            </Route>
 
-            </Routes>
+        </Routes>
     );
 };
 
