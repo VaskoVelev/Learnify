@@ -1,13 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import PublicRoute from "./routes/PublicRoute";
-import ProtectedRoute from "./routes/ProtectedRoute";
+import PublicRoute from "./PublicRoute";
+import ProtectedRoute from "./ProtectedRoute";
 
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
+import LoginPage from "../pages/LoginPage";
+import RegisterPage from "../pages/RegisterPage";
 
 const AppRouter = () => {
     return (
-        <BrowserRouter>
             <Routes>
 
                 <Route element={<PublicRoute />}>
@@ -20,7 +19,6 @@ const AppRouter = () => {
                 </Route>
 
             </Routes>
-        </BrowserRouter>
     );
 };
 

@@ -4,11 +4,7 @@ import AppRouter from "./routes/AppRouter";
 
 function App() {
   return (
-      <BrowserRouter>
-          <AuthProvider>
               <AppRouter />
-          </AuthProvider>
-      </BrowserRouter>
   );
 }
 
