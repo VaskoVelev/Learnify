@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
 
     const login = async (credentials) => {
         const response = await authApi.login(credentials);
-        const token = response.data.accessToken;
+        const token = response.data.token;
 
         localStorage.setItem("accessToken", token);
         setAccessToken(token);
@@ -38,18 +38,19 @@ export const AuthProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        const tryRefresh = async () => {
+        const initAuth = async () => {
             try {
-                const response = await authApi.refresh();
-                const token = response.data.accessToken;
+                const token = localStorage.getItem("accessToken");
 
-                localStorage.setItem("accessToken", token);
-                setAccessToken(token);
-                setIsAuthenticated(true);
+                if (!token) {
+                    setIsAuthenticated(false);
+                    setUser(null);
+                    return;
+                }
 
                 await loadUser();
+                setIsAuthenticated(true);
             } catch {
-                localStorage.removeItem("accessToken");
                 setIsAuthenticated(false);
                 setUser(null);
             } finally {
@@ -57,7 +58,7 @@ export const AuthProvider = ({ children }) => {
             }
         };
 
-        tryRefresh();
+        initAuth();
     }, []);
 
     const value = {

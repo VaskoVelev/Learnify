@@ -8,7 +8,7 @@ const PublicRoute = () => {
         return null;
     }
 
-    if (!isAuthenticated) {
+    if (isAuthenticated) {
         return <Navigate to="/" replace />;
     }
 

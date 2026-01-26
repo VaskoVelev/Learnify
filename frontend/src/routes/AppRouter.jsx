@@ -4,6 +4,7 @@ import ProtectedRoute from "./ProtectedRoute";
 
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
+import HomePage from "../pages/HomePage";
 
 const AppRouter = () => {
     return (
@@ -15,7 +16,7 @@ const AppRouter = () => {
             </Route>
 
             <Route element={<ProtectedRoute />}>
-                <Route path="/" element={<div>Home</div>} />
+                <Route path="/" element={<HomePage />} />
             </Route>
 
         </Routes>

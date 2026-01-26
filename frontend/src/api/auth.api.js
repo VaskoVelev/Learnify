@@ -1,13 +1,13 @@
 import http from "../lib/http";
 
-export const login = (data) => {
-    return http.post("/auth/login", data);
+export const login = async (data) => {
+    return await http.post("/auth/login", data);
 };
 
-export const refresh = () => {
-    return http.post("/auth/refresh");
+export const refresh = async () => {
+    return await http.post("/auth/refresh");
 };
 
-export const logout = () => {
-    return http.post("/auth/logout");
+export const logout = async () => {
+    return await http.post("/auth/logout");
 };
