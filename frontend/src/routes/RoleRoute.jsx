@@ -4,12 +4,12 @@ import { useAuth } from "../context/AuthContext";
 const RoleRoute = ({ allowedRoles, children }) => {
     const { user, isAuthenticated, loading } = useAuth();
 
-    if (!isAuthenticated) {
-        return <Navigate to="/login" replace />;
-    }
-
     if (loading) {
         return null;
+    }
+
+    if (!isAuthenticated) {
+        return <Navigate to="/" replace />;
     }
 
     if (!allowedRoles.includes(user.role)) {

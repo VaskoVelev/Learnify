@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { registerUser } from "../api/user.api"
+import { Mail, Lock, User, ArrowRight, BookMarked } from "lucide-react";
+import AuthBrandPanel from "../components/auth/AuthBrandPanel";
 
 const RegisterPage = () => {
     const navigate = useNavigate();
@@ -26,6 +28,10 @@ const RegisterPage = () => {
         }
     };
 
+    const handleRoleChange = (role) => {
+        setForm({ ...form, role: role === "student" ? "STUDENT" : "TEACHER" });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsLoading(true);
@@ -43,83 +49,194 @@ const RegisterPage = () => {
         }
     };
 
-    const renderInput = (label, name, type = "text", placeholder) => (
-        <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-                {label}
-            </label>
-            <input
-                name={name}
-                type={type}
-                required
-                value={form[name]}
-                onChange={handleChange}
-                className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    fieldErrors[name] ? "border-red-500" : "border-gray-300"
-                }`}
-                placeholder={placeholder}
-            />
-            {fieldErrors[name] && (
-                <p className="mt-1 text-sm text-red-600">{fieldErrors[name]}</p>
-            )}
-        </div>
-    );
+    const inputStyle = "w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-500/50 focus:border-teal-500/50 transition-all";
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4">
-            <div className="max-w-md w-full">
-                <div className="text-center mb-8">
-                    <h2 className="text-3xl font-bold text-gray-900">Създаване на акаунт</h2>
-                    <p className="mt-2 text-gray-600">
-                        Вече имате акаунт?{" "}
-                        <a href="/login" className="text-blue-600 hover:text-blue-500 font-medium">
-                            Влезте тук
-                        </a>
-                    </p>
-                </div>
+        <div className="min-h-screen flex" style={{ background: "linear-gradient(135deg, hsl(220, 30%, 8%) 0%, hsl(220, 25%, 15%) 50%, hsl(200, 30%, 12%) 100%)" }}>
+            {/* Reusable Brand Panel */}
+            <AuthBrandPanel />
 
-                <form className="bg-white rounded-lg shadow-sm border border-gray-200 p-6" onSubmit={handleSubmit}>
-                    <div className="space-y-4">
+            {/* Form Panel - Right Side */}
+            <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
+                <div
+                    className="w-full max-w-md p-8 rounded-2xl backdrop-blur-xl border border-white/10"
+                    style={{
+                        background: "linear-gradient(145deg, hsla(0, 0%, 100%, 0.08) 0%, hsla(0, 0%, 100%, 0.02) 100%)",
+                        boxShadow: "0 8px 32px hsla(0, 0%, 0%, 0.4)"
+                    }}
+                >
+                    <div className="text-center mb-8">
+                        <h2 className="text-3xl font-bold text-white mb-2">Create account</h2>
+                        <p className="text-gray-400">Join thousands of learners today</p>
+                    </div>
 
-                        {globalError && (
-                            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-md text-sm">
-                                {globalError}
+                    {/* Global Error Display */}
+                    {globalError && (
+                        <div className="mb-4 p-3 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-sm">
+                            {globalError}
+                        </div>
+                    )}
+
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        {/* Role Selection */}
+                        <div className="mb-6">
+                            <label className="block text-sm font-medium text-gray-400 mb-2">I am a</label>
+                            <div className="flex gap-3">
+                                <button
+                                    type="button"
+                                    onClick={() => handleRoleChange("student")}
+                                    className={`flex-1 p-4 rounded-xl border-2 cursor-pointer transition-all text-center ${
+                                        form.role === "STUDENT"
+                                            ? "border-teal-500 bg-teal-500/10"
+                                            : "border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10"
+                                    }`}
+                                    style={form.role === "STUDENT" ? { boxShadow: "0 0 40px hsla(174, 72%, 46%, 0.3)" } : {}}
+                                >
+                                    <svg className={`w-6 h-6 mx-auto mb-2 ${form.role === "STUDENT" ? "text-teal-400" : "text-white/60"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14v6l9-5M12 20l-9-5"></path>
+                                    </svg>
+                                    <span className={`font-semibold ${form.role === "STUDENT" ? "text-teal-400" : "text-white/80"}`}>Student</span>
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => handleRoleChange("teacher")}
+                                    className={`flex-1 p-4 rounded-xl border-2 cursor-pointer transition-all text-center ${
+                                        form.role === "TEACHER"
+                                            ? "border-teal-500 bg-teal-500/10"
+                                            : "border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10"
+                                    }`}
+                                    style={form.role === "TEACHER" ? { boxShadow: "0 0 40px hsla(174, 72%, 46%, 0.3)" } : {}}
+                                >
+                                    <BookMarked className={`w-6 h-6 mx-auto mb-2 ${form.role === "TEACHER" ? "text-teal-400" : "text-white/60"}`} />
+                                    <span className={`font-semibold ${form.role === "TEACHER" ? "text-teal-400" : "text-white/80"}`}>Teacher</span>
+                                </button>
                             </div>
-                        )}
-
-                        <div className="grid grid-cols-2 gap-4">
-                            {renderInput("Име", "firstName", "text", "Иван")}
-                            {renderInput("Фамилия", "lastName", "text", "Иванов")}
                         </div>
 
-                        {renderInput("Имейл", "email", "email", "ваш@имейл.com")}
+                        {/* Name fields */}
+                        <div className="grid grid-cols-2 gap-3">
+                            <div>
+                                <label className="block text-sm font-medium text-gray-400 mb-2">First Name</label>
+                                <div className="relative">
+                                    <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                                    <input
+                                        type="text"
+                                        name="firstName"
+                                        value={form.firstName}
+                                        onChange={handleChange}
+                                        className={`${inputStyle} ${fieldErrors.firstName ? 'border-red-500/50 focus:border-red-500/50 focus:ring-red-500/50' : ''} pl-12`}
+                                        placeholder="John"
+                                    />
+                                </div>
+                                {fieldErrors.firstName && (
+                                    <p className="mt-1 text-sm text-red-400">{fieldErrors.firstName}</p>
+                                )}
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-400 mb-2">Last Name</label>
+                                <input
+                                    type="text"
+                                    name="lastName"
+                                    value={form.lastName}
+                                    onChange={handleChange}
+                                    className={`${inputStyle} ${fieldErrors.lastName ? 'border-red-500/50 focus:border-red-500/50 focus:ring-red-500/50' : ''}`}
+                                    placeholder="Doe"
+                                />
+                                {fieldErrors.lastName && (
+                                    <p className="mt-1 text-sm text-red-400">{fieldErrors.lastName}</p>
+                                )}
+                            </div>
+                        </div>
 
+                        {/* Email */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">Роля</label>
-                            <select
-                                name="role"
-                                value={form.role}
-                                onChange={handleChange}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                                <option value="STUDENT">Студент</option>
-                                <option value="TEACHER">Преподавател</option>
-                                <option value="ADMIN">Администратор</option>
-                            </select>
+                            <label className="block text-sm font-medium text-gray-400 mb-2">Email</label>
+                            <div className="relative">
+                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={form.email}
+                                    onChange={handleChange}
+                                    className={`${inputStyle} ${fieldErrors.email ? 'border-red-500/50 focus:border-red-500/50 focus:ring-red-500/50' : ''} pl-12`}
+                                    placeholder="john@example.com"
+                                />
+                            </div>
+                            {fieldErrors.email && (
+                                <p className="mt-1 text-sm text-red-400">{fieldErrors.email}</p>
+                            )}
                         </div>
 
-                        {renderInput("Парола", "password", "password", "••••••••")}
-                        {renderInput("Потвърдете паролата", "confirmPassword", "password", "••••••••")}
+                        {/* Password */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-400 mb-2">Password</label>
+                            <div className="relative">
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                                <input
+                                    type="password"
+                                    name="password"
+                                    value={form.password}
+                                    onChange={handleChange}
+                                    className={`${inputStyle} ${fieldErrors.password ? 'border-red-500/50 focus:border-red-500/50 focus:ring-red-500/50' : ''} pl-12`}
+                                    placeholder="Create a password"
+                                />
+                            </div>
+                            {fieldErrors.password && (
+                                <p className="mt-1 text-sm text-red-400">{fieldErrors.password}</p>
+                            )}
+                        </div>
+
+                        {/* Confirm Password */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-400 mb-2">Confirm Password</label>
+                            <div className="relative">
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
+                                <input
+                                    type="password"
+                                    name="confirmPassword"
+                                    value={form.confirmPassword}
+                                    onChange={handleChange}
+                                    className={`${inputStyle} ${fieldErrors.confirmPassword ? 'border-red-500/50 focus:border-red-500/50 focus:ring-red-500/50' : ''} pl-12`}
+                                    placeholder="Confirm your password"
+                                />
+                            </div>
+                            {fieldErrors.confirmPassword && (
+                                <p className="mt-1 text-sm text-red-400">{fieldErrors.confirmPassword}</p>
+                            )}
+                        </div>
 
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 transition-colors"
+                            className="w-full py-3.5 px-6 rounded-xl font-semibold text-gray-900 flex items-center justify-center gap-2 mt-6 transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed disabled:hover:scale-100"
+                            style={{
+                                background: "linear-gradient(135deg, hsl(174, 72%, 46%) 0%, hsl(199, 89%, 48%) 100%)",
+                                boxShadow: "0 0 40px hsla(174, 72%, 46%, 0.3)"
+                            }}
                         >
-                            {isLoading ? "Регистриране..." : "Създай акаунт"}
+                            {isLoading ? (
+                                <>
+                                    <div className="w-5 h-5 border-2 border-gray-900 border-t-transparent rounded-full animate-spin"></div>
+                                    Creating Account...
+                                </>
+                            ) : (
+                                <>
+                                    Create Account
+                                    <ArrowRight className="w-5 h-5" />
+                                </>
+                            )}
                         </button>
-                    </div>
-                </form>
+                    </form>
+
+                    <p className="text-center mt-6 text-gray-400">
+                        Already have an account?{" "}
+                        <Link to="/login" className="text-teal-400 hover:text-teal-300 font-semibold transition-colors">
+                            Sign in
+                        </Link>
+                    </p>
+                </div>
             </div>
         </div>
     );

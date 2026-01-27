@@ -9,7 +9,7 @@ const PublicRoute = () => {
     }
 
     if (isAuthenticated) {
-        return <Navigate to="/" replace />;
+        return <Navigate to="/home" replace />;
     }
 
     return <Outlet />;
