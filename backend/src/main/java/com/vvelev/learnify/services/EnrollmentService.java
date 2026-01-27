@@ -20,10 +20,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @Service
 public class EnrollmentService {
+    private final StudentProgressionService studentProgressionService;
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
     private final EnrollmentRepository enrollmentRepository;
@@ -52,10 +54,19 @@ public class EnrollmentService {
     public List<EnrollmentCourseSummaryDto> getMyEnrollments() {
         Long studentId = securityUtils.getCurrentUserId();
 
-        return enrollmentRepository
-                .findByIdStudentId(studentId)
+        List<Enrollment> enrollments = enrollmentRepository.findByIdStudentId(studentId);
+        Map<Long, Double> progressionMap = studentProgressionService.getMyProgressions();
+
+        return enrollments
                 .stream()
-                .map(enrollmentMapper::toCourseSummary)
+                .map(enrollment -> {
+                    EnrollmentCourseSummaryDto dto = enrollmentMapper.toCourseSummary(enrollment);
+
+                    Double progression = progressionMap.get(enrollment.getCourse().getId());
+                    dto.setProgressionPercent(progression != null ? progression : 0.0);
+
+                    return dto;
+                })
                 .toList();
     }
 

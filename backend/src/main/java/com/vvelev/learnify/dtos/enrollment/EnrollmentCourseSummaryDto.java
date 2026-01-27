@@ -15,4 +15,5 @@ public class EnrollmentCourseSummaryDto {
     private String firstName;
     private String lastName;
     private LocalDateTime enrolledAt;
+    private Double progressionPercent;
 }

@@ -29,7 +29,8 @@ public interface EnrollmentMapper {
                 enrollment.getCourse().getCreatedBy().getId(),
                 enrollment.getCourse().getCreatedBy().getFirstName(),
                 enrollment.getCourse().getCreatedBy().getLastName(),
-                enrollment.getEnrolledAt()
+                enrollment.getEnrolledAt(),
+                null
         );
     }
 

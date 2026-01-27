@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface StudentProgressionRepository extends JpaRepository<StudentProgression, Long> {
     Optional<StudentProgression> findByStudentIdAndCourseId(Long studentId, Long courseId);
     List<StudentProgression> findByCourseId(Long courseId);
+    List<StudentProgression> findByStudentId(Long studentId);
 }

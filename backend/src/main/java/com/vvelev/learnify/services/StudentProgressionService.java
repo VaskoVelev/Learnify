@@ -15,6 +15,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -55,6 +57,18 @@ public class StudentProgressionService {
         StudentProgression progression = getProgressionOrThrow(studentId, courseId);
 
         return studentProgressionMapper.toDto(progression);
+    }
+
+    public Map<Long, Double> getMyProgressions() {
+        Long studentId = securityUtils.getCurrentUserId();
+
+        return studentProgressionRepository
+                .findByStudentId(studentId)
+                .stream()
+                .collect(Collectors.toMap(
+                        progression -> progression.getCourse().getId(),
+                        StudentProgression::getProgressionPercent
+                ));
     }
 
     public List<StudentProgressionDto> getCourseProgressions(Long courseId) {
