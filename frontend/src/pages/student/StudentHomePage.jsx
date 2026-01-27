@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext"
-import { getMyEnrollments } from "../api/enrollment.api";
-import { getMyProgression } from "../api/course.api";
+import { useAuth } from "../../context/AuthContext.jsx"
+import { getMyEnrollments } from "../../api/enrollment.api.js";
+import { getMyProgression } from "../../api/course.api.js";
 import { GraduationCap, BookOpen, User, LogOut, Clock, ChevronRight, TrendingUp, Award, Calendar, Sparkles } from "lucide-react";
 
-const HomePage = () => {
+const StudentHomePage = () => {
     const { user, logout } = useAuth();
     const navigate = useNavigate();
 
@@ -363,4 +363,4 @@ const HomePage = () => {
     );
 };
 
-export default HomePage;
+export default StudentHomePage;

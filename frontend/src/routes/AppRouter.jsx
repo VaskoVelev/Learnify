@@ -1,11 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PublicRoute from "./PublicRoute";
 import ProtectedRoute from "./ProtectedRoute";
+import HomePageWrapper from "./HomePageWrapper";
 
 import IndexPage from "../pages/IndexPage";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
-import HomePage from "../pages/HomePage";
 
 const AppRouter = () => {
     return (
@@ -17,7 +17,7 @@ const AppRouter = () => {
             </Route>
 
             <Route element={<ProtectedRoute />}>
-                <Route path="/home" element={<HomePage />} />
+                <Route path="/home" element={<HomePageWrapper />} />
             </Route>
         </Routes>
     );
