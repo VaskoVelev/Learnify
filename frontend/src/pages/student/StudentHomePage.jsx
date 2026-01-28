@@ -10,7 +10,7 @@ const StudentHomePage = () => {
     const navigate = useNavigate();
 
     const [enrolledCourses, setEnrolledCourses] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -80,7 +80,7 @@ const StudentHomePage = () => {
             className="min-h-screen"
             style={{ background: "linear-gradient(135deg, hsl(220, 30%, 8%) 0%, hsl(220, 25%, 15%) 50%, hsl(200, 30%, 12%) 100%)" }}
         >
-            {/* Floating orbs - enhanced */}
+            {/* Floating orbs */}
             <div className="fixed w-[500px] h-[500px] bg-teal-500 rounded-full blur-[120px] opacity-15 -top-32 -left-32 pointer-events-none" />
             <div className="fixed w-80 h-80 bg-cyan-500 rounded-full blur-[100px] opacity-15 bottom-20 right-10 pointer-events-none" />
             <div className="fixed w-64 h-64 bg-teal-400 rounded-full blur-[80px] opacity-10 top-1/2 left-1/3 pointer-events-none" />
@@ -129,7 +129,7 @@ const StudentHomePage = () => {
 
             {/* Main Content */}
             <main className="relative z-10 max-w-7xl mx-auto px-6 py-8 lg:py-12">
-                {/* Welcome Section - Enhanced */}
+                {/* Welcome Section */}
                 <div className="mb-8 lg:mb-12">
                     <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
                         <div>
@@ -143,7 +143,7 @@ const StudentHomePage = () => {
                                 Hello, <span
                                 className="bg-clip-text text-transparent"
                                 style={{ backgroundImage: "linear-gradient(135deg, hsl(174, 72%, 56%) 0%, hsl(199, 89%, 58%) 100%)" }}
-                            >{user?.firstName || "Learner"}</span>!
+                            >{user?.firstName}</span>!
                             </h1>
                             <p className="text-white/60 text-base sm:text-lg max-w-xl">
                                 Continue your learning journey. You're making great progress!
@@ -265,10 +265,7 @@ const StudentHomePage = () => {
                                     {/* Teacher info */}
                                     <div className="flex items-center gap-2 mb-4">
                                         <div className="w-6 h-6 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center text-[10px] font-bold text-gray-900">
-                                            {course.teacherFirstName && course.teacherLastName
-                                                ? `${course.teacherFirstName[0]}${course.teacherLastName[0]}`
-                                                : "T"
-                                            }
+                                            {`${course.teacherFirstName[0]}${course.teacherLastName[0]}`}
                                         </div>
                                         <p className="text-white/60 text-sm">
                                             {course.teacherFirstName} {course.teacherLastName}
@@ -281,7 +278,7 @@ const StudentHomePage = () => {
                                         <span>Enrolled {formatDate(course.enrolledAt)}</span>
                                     </div>
 
-                                    {/* Progress bar - enhanced */}
+                                    {/* Progress bar */}
                                     <div className="space-y-2">
                                         <div className="flex justify-between text-xs">
                                             <span className="text-white/40">Progress</span>
@@ -347,17 +344,30 @@ const StudentHomePage = () => {
                     )}
                 </section>
 
-                {/* Footer section for visual fullness */}
-                <section className="mt-12 pt-8 border-t border-white/5">
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-white/40 text-sm">
-                        <p>© 2026 Learnify. Keep learning, keep growing.</p>
-                        <div className="flex items-center gap-4">
-                            <a href="#" className="hover:text-white/60 transition-colors">Help Center</a>
-                            <a href="#" className="hover:text-white/60 transition-colors">Terms</a>
-                            <a href="#" className="hover:text-white/60 transition-colors">Privacy</a>
+                {/* Footer section */}
+                <footer className="relative z-10 border-t border-white/10 mt-12">
+                    <div className="max-w-7xl mx-auto px-6 py-8">
+                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div className="flex items-center gap-2">
+                                <GraduationCap className="w-5 h-5 text-teal-400" />
+                                <span className="text-white/60 text-sm">
+                                © 2026 Learnify. Keep learning, keep growing.
+                            </span>
+                            </div>
+                            <div className="flex items-center gap-4">
+                                <a href="#" className="text-white/40 hover:text-white/80 text-sm transition-colors">
+                                    Help Center
+                                </a>
+                                <a href="#" className="text-white/40 hover:text-white/80 text-sm transition-colors">
+                                    Terms
+                                </a>
+                                <a href="#" className="text-white/40 hover:text-white/80 text-sm transition-colors">
+                                    Privacy
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </section>
+                </footer>
             </main>
         </div>
     );
