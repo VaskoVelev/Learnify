@@ -7,6 +7,7 @@ import IndexPage from "../pages/IndexPage";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import ProfilePage from "../pages/ProfilePage";
+import CoursesPage from "../pages/student/CoursesPage";
 
 const AppRouter = () => {
     return (
@@ -20,6 +21,7 @@ const AppRouter = () => {
             <Route element={<ProtectedRoute />}>
                 <Route path="/home" element={<HomePageWrapper />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/courses" element={<CoursesPage />} />
             </Route>
         </Routes>
     );
