@@ -76,7 +76,7 @@ public class CourseServiceTest {
                 "New Course",
                 "New Course Description",
                 Category.IT,
-                Difficulty.BASIC,
+                Difficulty.BEGINNER,
                 "/uploads/new-thumbnail.jpg"
         );
 
@@ -84,7 +84,7 @@ public class CourseServiceTest {
                 "Updated Course",
                 "Updated Course Description",
                 Category.MATH,
-                Difficulty.DISTINGUISHED,
+                Difficulty.ADVANCED,
                 "/uploads/updated-thumbnail.jpg"
         );
 

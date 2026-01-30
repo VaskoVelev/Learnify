@@ -1,9 +1,9 @@
 package com.vvelev.learnify.entities;
 
 public enum Difficulty {
-    BASIC,
-    PROFICIENT,
+    BEGINNER,
+    EASY,
+    INTERMEDIATE,
     ADVANCED,
-    DISTINGUISHED,
-    MASTERY
+    EXPERT
 }
