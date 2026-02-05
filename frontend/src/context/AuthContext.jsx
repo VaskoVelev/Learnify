@@ -37,6 +37,13 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(false);
     };
 
+    const updateUser = (updatedData) => {
+        setUser(prevUser => ({
+            ...prevUser,
+            ...updatedData
+        }));
+    };
+
     useEffect(() => {
         const initAuth = async () => {
             try {
@@ -68,6 +75,7 @@ export const AuthProvider = ({ children }) => {
         loading,
         login,
         logout,
+        updateUser,
     };
 
     if (loading) {

@@ -7,6 +7,7 @@ import IndexPage from "../pages/IndexPage";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import ProfilePage from "../pages/ProfilePage";
+import UpdateProfilePage from "../pages/UpdateProfilePage";
 import CoursesPage from "../pages/student/CoursesPage";
 
 const AppRouter = () => {
@@ -21,6 +22,7 @@ const AppRouter = () => {
             <Route element={<ProtectedRoute />}>
                 <Route path="/home" element={<HomePageWrapper />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/profile/edit" element={<UpdateProfilePage />} />
                 <Route path="/courses" element={<CoursesPage />} />
             </Route>
         </Routes>
