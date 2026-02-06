@@ -11,6 +11,9 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface CourseMapper {
     @Mapping(target = "createdById", source = "createdBy.id")
+    @Mapping(target = "creatorFirstName", source = "createdBy.firstName")
+    @Mapping(target = "creatorLastName", source = "createdBy.lastName")
+    @Mapping(target = "creatorEmail", source = "createdBy.email")
     CourseDto toDto(Course course);
 
     @Mapping(target = "createdBy", ignore = true)

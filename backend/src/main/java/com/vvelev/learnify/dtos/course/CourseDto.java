@@ -17,6 +17,9 @@ public class CourseDto {
     private Category category;
     private String thumbnail;
     private Long createdById;
+    private String creatorFirstName;
+    private String creatorLastName;
+    private String creatorEmail;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Difficulty difficulty;
