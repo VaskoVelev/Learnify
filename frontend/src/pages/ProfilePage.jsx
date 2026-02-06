@@ -12,7 +12,8 @@ import {
     CheckCircle,
     XCircle,
     Settings,
-    BookOpen
+    BookOpen,
+    AlertCircle
 } from "lucide-react";
 
 const ProfilePage = () => {
@@ -100,10 +101,9 @@ const ProfilePage = () => {
 
             {/* Error Display */}
             {error && (
-                <div className="relative z-10 max-w-4xl mx-auto px-6 py-4">
-                    <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 backdrop-blur-xl">
-                        <p className="text-red-400 text-sm text-center">{error}</p>
-                    </div>
+                <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 backdrop-blur-xl flex items-center justify-center gap-3 animate-in slide-in-from-top duration-300">
+                    <AlertCircle className="w-5 h-5 text-red-400" />
+                    <p className="text-red-400 text-sm">{error}</p>
                 </div>
             )}
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext"
-import { Mail, Lock, ArrowRight } from "lucide-react";
+import { Mail, Lock, ArrowRight, AlertCircle } from "lucide-react";
 import AuthBrandPanel from "../components/auth/AuthBrandPanel";
 
 const LoginPage = () => {
@@ -62,8 +62,9 @@ const LoginPage = () => {
 
                     {/* Global Error Display */}
                     {globalError && (
-                        <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20">
-                            <p className="text-red-400 text-sm text-center">{globalError}</p>
+                        <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 backdrop-blur-xl flex items-center justify-center gap-3 animate-in slide-in-from-top duration-300">
+                            <AlertCircle className="w-5 h-5 text-red-400" />
+                            <p className="text-red-400 text-sm">{globalError}</p>
                         </div>
                     )}
 

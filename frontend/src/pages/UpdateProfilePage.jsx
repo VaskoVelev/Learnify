@@ -13,7 +13,8 @@ import {
     CheckCircle,
     Save,
     X,
-    ArrowLeft
+    ArrowLeft,
+    AlertCircle
 } from "lucide-react";
 
 const UpdateProfilePage = () => {
@@ -172,8 +173,9 @@ const UpdateProfilePage = () => {
 
                 {/* Global Error Display */}
                 {globalError && (
-                    <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 backdrop-blur-xl">
-                        <p className="text-red-400 text-sm text-center">{globalError}</p>
+                    <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 backdrop-blur-xl flex items-center justify-center gap-3 animate-in slide-in-from-top duration-300">
+                        <AlertCircle className="w-5 h-5 text-red-400" />
+                        <p className="text-red-400 text-sm">{globalError}</p>
                     </div>
                 )}
 

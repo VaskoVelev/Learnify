@@ -1,7 +1,7 @@
 export const normalizeError = (error) => {
     if (!error.response) {
         return {
-            message: "Cannot connect to server. Please check your internet.",
+            message: "Cannot connect to server.",
             errors: {},
         };
     }
