@@ -223,7 +223,7 @@ const CoursePage = () => {
                                 </div>
 
                                 {/* Course title - Moved inside the box */}
-                                <h1 className="text-3xl font-bold text-white mb-4">
+                                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
                                     {course.title}
                                 </h1>
 
