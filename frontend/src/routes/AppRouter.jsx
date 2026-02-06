@@ -8,7 +8,9 @@ import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import ProfilePage from "../pages/ProfilePage";
 import UpdateProfilePage from "../pages/UpdateProfilePage";
+
 import CoursesPage from "../pages/student/CoursesPage";
+import CoursePage from "../pages/student/CoursePage";
 
 const AppRouter = () => {
     return (
@@ -24,6 +26,7 @@ const AppRouter = () => {
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/profile/edit" element={<UpdateProfilePage />} />
                 <Route path="/courses" element={<CoursesPage />} />
+                <Route path="/courses/:courseId" element={<CoursePage />} />
             </Route>
         </Routes>
     );

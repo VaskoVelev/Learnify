@@ -97,7 +97,9 @@ const CoursesPage = () => {
         try {
             setIsLoading(true);
             setError(null);
+
             const coursesData = await getAllCourses();
+
             setCourses(coursesData);
             setFilteredCourses(coursesData);
         } catch (err) {
@@ -416,7 +418,7 @@ const CoursesPage = () => {
                             <div className="flex justify-center">
                                 <div className="w-12 h-12 border-4 border-teal-400 border-t-transparent rounded-full animate-spin"></div>
                             </div>
-                            <p className="text-white/60 mt-4">Loading courses...</p>
+                            <p className="text-white/60 mt-4">Loading, wait a sec...</p>
                         </div>
                     ) : filteredCourses.length > 0 ? (
                         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3 items-start">
