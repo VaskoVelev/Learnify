@@ -215,21 +215,21 @@ const CoursePage = () => {
                                 {/* Category and difficulty badges - Top row like first example */}
                                 <div className="flex flex-wrap items-start gap-3 mb-4">
                                 <span className="px-3 py-1 rounded-full text-xs font-medium text-teal-400 bg-teal-500/15">
-                                    {course.category}
+                                    {course?.category}
                                 </span>
-                                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${difficultyColors[course.difficulty] || difficultyColors.BEGINNER}`}>
-                                    {course.difficulty}
+                                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${difficultyColors[course?.difficulty] || difficultyColors.BEGINNER}`}>
+                                    {course?.difficulty}
                                 </span>
                                 </div>
 
                                 {/* Course title - Moved inside the box */}
                                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4">
-                                    {course.title}
+                                    {course?.title}
                                 </h1>
 
                                 {/* Course description */}
                                 <p className="text-white/70 text-lg leading-relaxed mb-8">
-                                    {course.description}
+                                    {course?.description}
                                 </p>
 
                                 {/* Creator Info - Like first example page */}
@@ -241,23 +241,23 @@ const CoursePage = () => {
                                                 background: "linear-gradient(135deg, hsl(174, 72%, 46%) 0%, hsl(199, 89%, 48%) 100%)",
                                             }}
                                         >
-                                            {getInitials(course.creatorFirstName, course.creatorLastName)}
+                                            {getInitials(course?.creatorFirstName, course?.creatorLastName)}
                                         </div>
                                         <div>
                                             <p className="text-white font-medium">
-                                                {course.creatorFirstName} {course.creatorLastName}
+                                                {course?.creatorFirstName} {course?.creatorLastName}
                                             </p>
-                                            <p className="text-white/50 text-sm">{course.creatorEmail}</p>
+                                            <p className="text-white/50 text-sm">{course?.creatorEmail}</p>
                                         </div>
                                     </div>
                                     <div className="flex flex-wrap items-center gap-4 text-sm text-white/50">
                                         <div className="flex items-center gap-1.5">
                                             <Calendar className="w-4 h-4" />
-                                            <span>Created: {formatDate(course.createdAt)}</span>
+                                            <span>Created: {formatDate(course?.createdAt)}</span>
                                         </div>
                                         <div className="flex items-center gap-1.5">
                                             <Calendar className="w-4 h-4" />
-                                            <span>Updated: {formatDate(course.updatedAt)}</span>
+                                            <span>Updated: {formatDate(course?.updatedAt)}</span>
                                         </div>
                                     </div>
                                 </div>

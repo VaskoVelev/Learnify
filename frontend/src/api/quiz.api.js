@@ -1,12 +1,12 @@
 import http from "../lib/http";
 
 export const createQuiz = async (id, data) => {
-    const response = await http.post(`/courses/${id}/quizzes`, data);
+    const response = await http.post(`/lessons/${id}/quizzes`, data);
     return response.data;
 };
 
-export const getCourseQuizzes = async (id) => {
-    const response = await http.get(`/courses/${id}/quizzes`);
+export const getLessonQuizzes = async (id) => {
+    const response = await http.get(`/lessons/${id}/quizzes`);
     return response.data;
 };
 
