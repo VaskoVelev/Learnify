@@ -6,8 +6,8 @@ import com.vvelev.learnify.dtos.quiz.UpdateQuizDto;
 import com.vvelev.learnify.entities.*;
 import com.vvelev.learnify.exceptions.*;
 import com.vvelev.learnify.mappers.QuizMapper;
-import com.vvelev.learnify.repositories.CourseRepository;
 import com.vvelev.learnify.repositories.EnrollmentRepository;
+import com.vvelev.learnify.repositories.LessonRepository;
 import com.vvelev.learnify.repositories.QuizRepository;
 import com.vvelev.learnify.utils.SecurityUtils;
 import lombok.AllArgsConstructor;
@@ -19,13 +19,14 @@ import java.util.List;
 @Service
 public class QuizService {
     private final QuizRepository quizRepository;
-    private final CourseRepository courseRepository;
+    private final LessonRepository lessonRepository;
     private final EnrollmentRepository enrollmentRepository;
     private final QuizMapper quizMapper;
     private final SecurityUtils securityUtils;
 
-    public QuizDto createQuiz(Long courseId, CreateQuizDto request) {
-        Course course = getCourseOrThrow(courseId);
+    public QuizDto createQuiz(Long lessonId, CreateQuizDto request) {
+        Lesson lesson = getLessonOrThrow(lessonId);
+        Course course = lesson.getCourse();
 
         Long teacherId = securityUtils.getCurrentUserId();
         if (!isCourseCreator(course, teacherId)) {
@@ -33,22 +34,23 @@ public class QuizService {
         }
 
         Quiz quiz = quizMapper.toEntity(request);
-        quiz.setCourse(course);
+        quiz.setLesson(lesson);
         quizRepository.save(quiz);
 
         return quizMapper.toDto(quiz);
     }
 
-    public List<QuizDto> getCourseQuizzes(Long courseId) {
-        Course course = getCourseOrThrow(courseId);
+    public List<QuizDto> getLessonQuizzes(Long lessonId) {
+        Lesson lesson = getLessonOrThrow(lessonId);
+        Course course = lesson.getCourse();
 
         Long userId = securityUtils.getCurrentUserId();
-        if (!isCourseCreator(course, userId) && !isStudentEnrolled(userId, courseId)) {
+        if (!isCourseCreator(course, userId) && !isStudentEnrolled(userId, course.getId())) {
             throw new AccessDeniedException();
         }
 
         return quizRepository
-                .findByCourseId(courseId)
+                .findByLessonId(lessonId)
                 .stream()
                 .map(quizMapper::toDto)
                 .toList();
@@ -56,7 +58,7 @@ public class QuizService {
 
     public QuizDto getQuiz(Long quizId) {
         Quiz quiz = getQuizOrThrow(quizId);
-        Course course = quiz.getCourse();
+        Course course = quiz.getLesson().getCourse();
 
         Long userId = securityUtils.getCurrentUserId();
         if (!isCourseCreator(course, userId) && !isStudentEnrolled(userId, course.getId())) {
@@ -68,7 +70,7 @@ public class QuizService {
 
     public QuizDto updateQuiz(Long quizId, UpdateQuizDto request) {
         Quiz quiz = getQuizOrThrow(quizId);
-        Course course = quiz.getCourse();
+        Course course = quiz.getLesson().getCourse();
 
         Long teacherId = securityUtils.getCurrentUserId();
         if (!isCourseCreator(course, teacherId)) {
@@ -83,7 +85,7 @@ public class QuizService {
 
     public void deleteQuiz(Long quizId) {
         Quiz quiz = getQuizOrThrow(quizId);
-        Course course = quiz.getCourse();
+        Course course = quiz.getLesson().getCourse();
 
         Long teacherId = securityUtils.getCurrentUserId();
         if (!isCourseCreator(course, teacherId)) {
@@ -93,10 +95,10 @@ public class QuizService {
         quizRepository.delete(quiz);
     }
 
-    private Course getCourseOrThrow(Long courseId) {
-        return courseRepository
-                .findById(courseId)
-                .orElseThrow(CourseNotFoundException::new);
+    private Lesson getLessonOrThrow(Long lessonId) {
+        return lessonRepository
+                .findById(lessonId)
+                .orElseThrow(LessonNotFoundException::new);
     }
 
     private Quiz getQuizOrThrow(Long quizId) {

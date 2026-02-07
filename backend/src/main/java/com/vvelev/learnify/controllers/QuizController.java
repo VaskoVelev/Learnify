@@ -21,7 +21,7 @@ public class QuizController {
     private final QuizService quizService;
 
     @PreAuthorize("hasRole(Role.TEACHER.name())")
-    @PostMapping(ApiPaths.COURSE_QUIZZES)
+    @PostMapping(ApiPaths.LESSON_QUIZZES)
     public ResponseEntity<QuizDto> createQuiz(
             @PathVariable Long id,
             @Valid @RequestBody CreateQuizDto request,
@@ -34,9 +34,9 @@ public class QuizController {
     }
 
     @PreAuthorize("hasAnyRole(Role.TEACHER.name(), Role.STUDENT.name())")
-    @GetMapping(ApiPaths.COURSE_QUIZZES)
-    public List<QuizDto> getCourseQuizzes(@PathVariable Long id) {
-        return quizService.getCourseQuizzes(id);
+    @GetMapping(ApiPaths.LESSON_QUIZZES)
+    public List<QuizDto> getLessonQuizzes(@PathVariable Long id) {
+        return quizService.getLessonQuizzes(id);
     }
 
     @PreAuthorize("hasAnyRole(Role.TEACHER.name(), Role.STUDENT.name())")

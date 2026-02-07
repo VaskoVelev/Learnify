@@ -11,13 +11,20 @@ import java.util.List;
 public interface SubmissionRepository extends JpaRepository<Submission, Long> {
     List<Submission> findByQuizIdOrderBySubmittedAtDesc(Long quizId);
     List<Submission> findByQuizIdAndStudentIdOrderBySubmittedAtDesc(Long quizId, Long studentId);
-    long countDistinctQuizByStudentIdAndQuiz_Course_Id(Long studentId, Long courseId);
+
+    @Query("""
+        SELECT COUNT(DISTINCT s.quiz.id)
+        FROM Submission s
+        WHERE s.student.id = :studentId
+        AND s.quiz.lesson.course.id = :courseId
+    """)
+    long countDistinctQuizByStudentIdAndCourseId(Long studentId, Long courseId);
 
     @Query("""
         SELECT AVG(s.score)
         FROM Submission s
         WHERE s.student.id = :studentId
-        AND s.quiz.course.id = :courseId
+        AND s.quiz.lesson.course.id = :courseId
     """)
     Double findAverageScoreByStudentIdAndCourseId(Long studentId, Long courseId);
 }

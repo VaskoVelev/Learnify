@@ -36,4 +36,7 @@ public class Lesson {
 
     @OneToMany(mappedBy = "lesson")
     private Set<Material> materials = new HashSet<>();
+
+    @OneToMany(mappedBy = "lesson")
+    private Set<Quiz> quizzes = new HashSet<>();
 }

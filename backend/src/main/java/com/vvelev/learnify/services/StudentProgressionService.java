@@ -32,8 +32,8 @@ public class StudentProgressionService {
     public void updateProgression(User student, Course course) {
         StudentProgression progression = getOrCreateProgression(student, course);
 
-        long totalQuizzes = quizRepository.countByCourseId(course.getId());
-        long submittedQuizzes = submissionRepository.countDistinctQuizByStudentIdAndQuiz_Course_Id(student.getId(), course.getId());
+        long totalQuizzes = quizRepository.countByLessonCourseId(course.getId());
+        long submittedQuizzes = submissionRepository.countDistinctQuizByStudentIdAndCourseId(student.getId(), course.getId());
 
         double progressionPercent = calculateProgressionPercent(submittedQuizzes, totalQuizzes);
         double averageScore = calculateAverageScore(student.getId(), course.getId());

@@ -10,5 +10,5 @@ public class QuizDto {
     private Long id;
     private String title;
     private String description;
-    private Long courseId;
+    private Long lessonId;
 }

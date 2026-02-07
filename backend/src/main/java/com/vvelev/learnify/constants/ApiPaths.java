@@ -34,7 +34,7 @@ public final class ApiPaths {
 
     public static final String QUIZZES = API_BASE + "/quizzes";
     public static final String QUIZ_BY_ID = QUIZZES + "/{id}";
-    public static final String COURSE_QUIZZES = COURSES + "/{id}/quizzes";
+    public static final String LESSON_QUIZZES = LESSONS + "/{id}/quizzes";
 
     public static final String QUESTIONS = API_BASE + "/questions";
     public static final String QUESTION_BY_ID = QUESTIONS + "/{id}";

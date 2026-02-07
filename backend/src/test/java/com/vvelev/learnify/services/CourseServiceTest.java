@@ -95,6 +95,9 @@ public class CourseServiceTest {
                 Category.IT,
                 "/uploads/thumbnail.jpg",
                 1L,
+                "John",
+                "Doe",
+                "teacher@example.com",
                 earlier,
                 now,
                 Difficulty.ADVANCED

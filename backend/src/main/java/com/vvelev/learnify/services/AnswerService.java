@@ -31,7 +31,7 @@ public class AnswerService {
 
     public TeacherAnswerDto createAnswer(Long questionId, CreateAnswerDto request) {
         Question question = getQuestionOrThrow(questionId);
-        Course course = question.getQuiz().getCourse();
+        Course course = question.getQuiz().getLesson().getCourse();
 
         Long teacherId = securityUtils.getCurrentUserId();
         if (!isCourseCreator(course, teacherId)) {
@@ -47,7 +47,7 @@ public class AnswerService {
 
     public List<?> getQuestionAnswers(Long questionId) {
         Question question = getQuestionOrThrow(questionId);
-        Course course = question.getQuiz().getCourse();
+        Course course = question.getQuiz().getLesson().getCourse();
 
         Long userId = securityUtils.getCurrentUserId();
 
@@ -72,7 +72,7 @@ public class AnswerService {
 
     public TeacherAnswerDto updateAnswer(Long answerId, UpdateAnswerDto request) {
         Answer answer = getAnswerOrThrow(answerId);
-        Course course = answer.getQuestion().getQuiz().getCourse();
+        Course course = answer.getQuestion().getQuiz().getLesson().getCourse();
 
         Long teacherId = securityUtils.getCurrentUserId();
         if (!isCourseCreator(course, teacherId)) {
@@ -87,7 +87,7 @@ public class AnswerService {
 
     public void deleteAnswer(Long answerId) {
         Answer answer = getAnswerOrThrow(answerId);
-        Course course = answer.getQuestion().getQuiz().getCourse();
+        Course course = answer.getQuestion().getQuiz().getLesson().getCourse();
 
         Long teacherId = securityUtils.getCurrentUserId();
         if (!isCourseCreator(course, teacherId)) {

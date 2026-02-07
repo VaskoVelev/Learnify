@@ -79,10 +79,15 @@ public class SubmissionServiceTest {
         course.setDifficulty(Difficulty.ADVANCED);
         course.setCreatedBy(teacher);
 
+        Lesson lesson = new Lesson();
+        lesson.setId(1L);
+        lesson.setTitle("Test Lesson");
+        lesson.setCourse(course);
+
         quiz = new Quiz();
         quiz.setId(1L);
         quiz.setTitle("Test Quiz");
-        quiz.setCourse(course);
+        quiz.setLesson(lesson);
 
         question1 = new Question();
         question1.setId(1L);

@@ -28,8 +28,8 @@ public class Quiz {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "course_id")
-    private Course course;
+    @JoinColumn(name = "lesson_id")
+    private Lesson lesson;
 
     @OneToMany(mappedBy = "quiz")
     private Set<Question> questions = new HashSet<>();

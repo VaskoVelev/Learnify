@@ -85,8 +85,8 @@ public class StudentProgressionServiceTest {
 
         when(studentProgressionRepository.findByStudentIdAndCourseId(student.getId(), course.getId()))
                 .thenReturn(Optional.of(progression));
-        when(quizRepository.countByCourseId(course.getId())).thenReturn(totalQuizzes);
-        when(submissionRepository.countDistinctQuizByStudentIdAndQuiz_Course_Id(student.getId(), course.getId()))
+        when(quizRepository.countByLessonCourseId(course.getId())).thenReturn(totalQuizzes);
+        when(submissionRepository.countDistinctQuizByStudentIdAndCourseId(student.getId(), course.getId()))
                 .thenReturn(submittedQuizzes);
         when(submissionRepository.findAverageScoreByStudentIdAndCourseId(student.getId(), course.getId()))
                 .thenReturn(averageScore);
@@ -99,9 +99,9 @@ public class StudentProgressionServiceTest {
 
         verify(studentProgressionRepository, times(1))
                 .findByStudentIdAndCourseId(student.getId(), course.getId());
-        verify(quizRepository, times(1)).countByCourseId(course.getId());
+        verify(quizRepository, times(1)).countByLessonCourseId(course.getId());
         verify(submissionRepository, times(1))
-                .countDistinctQuizByStudentIdAndQuiz_Course_Id(student.getId(), course.getId());
+                .countDistinctQuizByStudentIdAndCourseId(student.getId(), course.getId());
         verify(submissionRepository, times(1))
                 .findAverageScoreByStudentIdAndCourseId(student.getId(), course.getId());
         verify(studentProgressionRepository, times(1)).save(progression);
@@ -115,8 +115,8 @@ public class StudentProgressionServiceTest {
 
         when(studentProgressionRepository.findByStudentIdAndCourseId(student.getId(), course.getId()))
                 .thenReturn(Optional.empty());
-        when(quizRepository.countByCourseId(course.getId())).thenReturn(totalQuizzes);
-        when(submissionRepository.countDistinctQuizByStudentIdAndQuiz_Course_Id(student.getId(), course.getId()))
+        when(quizRepository.countByLessonCourseId(course.getId())).thenReturn(totalQuizzes);
+        when(submissionRepository.countDistinctQuizByStudentIdAndCourseId(student.getId(), course.getId()))
                 .thenReturn(submittedQuizzes);
         when(submissionRepository.findAverageScoreByStudentIdAndCourseId(student.getId(), course.getId()))
                 .thenReturn(averageScore);
@@ -137,9 +137,9 @@ public class StudentProgressionServiceTest {
         ));
         verify(studentProgressionRepository, times(1))
                 .findByStudentIdAndCourseId(student.getId(), course.getId());
-        verify(quizRepository, times(1)).countByCourseId(course.getId());
+        verify(quizRepository, times(1)).countByLessonCourseId(course.getId());
         verify(submissionRepository, times(1))
-                .countDistinctQuizByStudentIdAndQuiz_Course_Id(student.getId(), course.getId());
+                .countDistinctQuizByStudentIdAndCourseId(student.getId(), course.getId());
         verify(submissionRepository, times(1))
                 .findAverageScoreByStudentIdAndCourseId(student.getId(), course.getId());
     }
@@ -151,8 +151,8 @@ public class StudentProgressionServiceTest {
 
         when(studentProgressionRepository.findByStudentIdAndCourseId(student.getId(), course.getId()))
                 .thenReturn(Optional.of(progression));
-        when(quizRepository.countByCourseId(course.getId())).thenReturn(totalQuizzes);
-        when(submissionRepository.countDistinctQuizByStudentIdAndQuiz_Course_Id(student.getId(), course.getId()))
+        when(quizRepository.countByLessonCourseId(course.getId())).thenReturn(totalQuizzes);
+        when(submissionRepository.countDistinctQuizByStudentIdAndCourseId(student.getId(), course.getId()))
                 .thenReturn(submittedQuizzes);
         when(submissionRepository.findAverageScoreByStudentIdAndCourseId(student.getId(), course.getId()))
                 .thenReturn(null);
@@ -163,9 +163,9 @@ public class StudentProgressionServiceTest {
         assertEquals(0.0, progression.getProgressionPercent(), 0.01);
         assertEquals(0.0, progression.getAverageScore(), 0.01);
 
-        verify(quizRepository, times(1)).countByCourseId(course.getId());
+        verify(quizRepository, times(1)).countByLessonCourseId(course.getId());
         verify(submissionRepository, times(1))
-                .countDistinctQuizByStudentIdAndQuiz_Course_Id(student.getId(), course.getId());
+                .countDistinctQuizByStudentIdAndCourseId(student.getId(), course.getId());
         verify(submissionRepository, times(1))
                 .findAverageScoreByStudentIdAndCourseId(student.getId(), course.getId());
         verify(studentProgressionRepository, times(1)).save(progression);
@@ -179,8 +179,8 @@ public class StudentProgressionServiceTest {
 
         when(studentProgressionRepository.findByStudentIdAndCourseId(student.getId(), course.getId()))
                 .thenReturn(Optional.of(progression));
-        when(quizRepository.countByCourseId(course.getId())).thenReturn(totalQuizzes);
-        when(submissionRepository.countDistinctQuizByStudentIdAndQuiz_Course_Id(student.getId(), course.getId()))
+        when(quizRepository.countByLessonCourseId(course.getId())).thenReturn(totalQuizzes);
+        when(submissionRepository.countDistinctQuizByStudentIdAndCourseId(student.getId(), course.getId()))
                 .thenReturn(submittedQuizzes);
         when(submissionRepository.findAverageScoreByStudentIdAndCourseId(student.getId(), course.getId()))
                 .thenReturn(averageScore);
@@ -191,9 +191,9 @@ public class StudentProgressionServiceTest {
         assertEquals(100.0, progression.getProgressionPercent(), 0.01);
         assertEquals(95.5, progression.getAverageScore(), 0.01);
 
-        verify(quizRepository, times(1)).countByCourseId(course.getId());
+        verify(quizRepository, times(1)).countByLessonCourseId(course.getId());
         verify(submissionRepository, times(1))
-                .countDistinctQuizByStudentIdAndQuiz_Course_Id(student.getId(), course.getId());
+                .countDistinctQuizByStudentIdAndCourseId(student.getId(), course.getId());
         verify(submissionRepository, times(1))
                 .findAverageScoreByStudentIdAndCourseId(student.getId(), course.getId());
         verify(studentProgressionRepository, times(1)).save(progression);

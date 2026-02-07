@@ -21,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,6 +35,7 @@ public class EnrollmentServiceTest {
     @Mock private EnrollmentRepository enrollmentRepository;
     @Mock private EnrollmentMapper enrollmentMapper;
     @Mock private SecurityUtils securityUtils;
+    @Mock private StudentProgressionService studentProgressionService;
 
     @InjectMocks
     private EnrollmentService enrollmentService;
@@ -103,7 +105,8 @@ public class EnrollmentServiceTest {
                 teacher.getId(),
                 teacher.getFirstName(),
                 teacher.getLastName(),
-                earlier
+                earlier,
+                50.0
         );
 
         studentSummaryDto = new EnrollmentStudentSummaryDto(
@@ -193,6 +196,7 @@ public class EnrollmentServiceTest {
         when(securityUtils.getCurrentUserId()).thenReturn(student.getId());
         when(enrollmentRepository.findByIdStudentId(student.getId())).thenReturn(List.of(enrollment));
         when(enrollmentMapper.toCourseSummary(enrollment)).thenReturn(courseSummaryDto);
+        when(studentProgressionService.getMyProgressions()).thenReturn(Map.of());
 
         List<EnrollmentCourseSummaryDto> result = enrollmentService.getMyEnrollments();
 
@@ -208,12 +212,14 @@ public class EnrollmentServiceTest {
         verify(securityUtils, times(1)).getCurrentUserId();
         verify(enrollmentRepository, times(1)).findByIdStudentId(student.getId());
         verify(enrollmentMapper, times(1)).toCourseSummary(enrollment);
+        verify(studentProgressionService, times(1)).getMyProgressions();
     }
 
     @Test
     void getMyEnrollments_ShouldReturnEmptyList_WhenStudentHasNoEnrollments() {
         when(securityUtils.getCurrentUserId()).thenReturn(student.getId());
         when(enrollmentRepository.findByIdStudentId(student.getId())).thenReturn(List.of());
+        when(studentProgressionService.getMyProgressions()).thenReturn(Map.of());
 
         List<EnrollmentCourseSummaryDto> result = enrollmentService.getMyEnrollments();
 
@@ -223,6 +229,7 @@ public class EnrollmentServiceTest {
         verify(securityUtils, times(1)).getCurrentUserId();
         verify(enrollmentRepository, times(1)).findByIdStudentId(student.getId());
         verify(enrollmentMapper, never()).toCourseSummary(any(Enrollment.class));
+        verify(studentProgressionService, times(1)).getMyProgressions();
     }
 
     /* -------------------- Get Course Enrollments -------------------- */

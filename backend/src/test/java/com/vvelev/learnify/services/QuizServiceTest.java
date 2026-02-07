@@ -5,11 +5,11 @@ import com.vvelev.learnify.dtos.quiz.QuizDto;
 import com.vvelev.learnify.dtos.quiz.UpdateQuizDto;
 import com.vvelev.learnify.entities.*;
 import com.vvelev.learnify.exceptions.AccessDeniedException;
-import com.vvelev.learnify.exceptions.CourseNotFoundException;
+import com.vvelev.learnify.exceptions.LessonNotFoundException;
 import com.vvelev.learnify.exceptions.QuizNotFoundException;
 import com.vvelev.learnify.mappers.QuizMapper;
-import com.vvelev.learnify.repositories.CourseRepository;
 import com.vvelev.learnify.repositories.EnrollmentRepository;
+import com.vvelev.learnify.repositories.LessonRepository;
 import com.vvelev.learnify.repositories.QuizRepository;
 import com.vvelev.learnify.utils.SecurityUtils;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +28,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class QuizServiceTest {
     @Mock private QuizRepository quizRepository;
-    @Mock private CourseRepository courseRepository;
+    @Mock private LessonRepository lessonRepository;
     @Mock private EnrollmentRepository enrollmentRepository;
     @Mock private QuizMapper quizMapper;
     @Mock private SecurityUtils securityUtils;
@@ -36,7 +36,7 @@ public class QuizServiceTest {
     @InjectMocks
     private QuizService quizService;
 
-    private Course course;
+    private Lesson lesson;
     private User teacher;
     private User student;
     private Quiz quiz;
@@ -60,17 +60,22 @@ public class QuizServiceTest {
         student.setLastName("Smith");
         student.setRole(Role.STUDENT);
 
-        course = new Course();
+        Course course = new Course();
         course.setId(1L);
         course.setTitle("Test Course");
         course.setDescription("Course Description");
         course.setCreatedBy(teacher);
 
+        lesson = new Lesson();
+        lesson.setId(1L);
+        lesson.setTitle("Test Lesson");
+        lesson.setCourse(course);
+
         quiz = new Quiz();
         quiz.setId(1L);
         quiz.setTitle("Test Quiz");
         quiz.setDescription("Quiz Description");
-        quiz.setCourse(course);
+        quiz.setLesson(lesson);
 
         createQuizDto = new CreateQuizDto("New Quiz", "New Quiz Description");
         updateQuizDto = new UpdateQuizDto("Updated Quiz", "Updated Quiz Description");
@@ -81,23 +86,23 @@ public class QuizServiceTest {
 
     @Test
     void createQuiz_ShouldCreateQuiz_WhenUserIsCourseCreator() {
-        when(courseRepository.findById(course.getId())).thenReturn(Optional.of(course));
+        when(lessonRepository.findById(lesson.getId())).thenReturn(Optional.of(lesson));
         when(securityUtils.getCurrentUserId()).thenReturn(teacher.getId());
         when(quizMapper.toEntity(createQuizDto)).thenReturn(quiz);
         when(quizRepository.save(quiz)).thenReturn(quiz);
         when(quizMapper.toDto(quiz)).thenReturn(quizDto);
 
-        QuizDto result = quizService.createQuiz(course.getId(), createQuizDto);
+        QuizDto result = quizService.createQuiz(lesson.getId(), createQuizDto);
 
         assertNotNull(result);
         assertEquals(quizDto.getId(), result.getId());
         assertEquals(quizDto.getTitle(), result.getTitle());
         assertEquals(quizDto.getDescription(), result.getDescription());
-        assertEquals(quizDto.getCourseId(), result.getCourseId());
+        assertEquals(quizDto.getLessonId(), result.getLessonId());
 
-        assertEquals(course, quiz.getCourse());
+        assertEquals(lesson, quiz.getLesson());
 
-        verify(courseRepository, times(1)).findById(course.getId());
+        verify(lessonRepository, times(1)).findById(lesson.getId());
         verify(securityUtils, times(1)).getCurrentUserId();
         verify(quizMapper, times(1)).toEntity(createQuizDto);
         verify(quizRepository, times(1)).save(quiz);
@@ -105,131 +110,131 @@ public class QuizServiceTest {
     }
 
     @Test
-    void createQuiz_ShouldThrowCourseNotFoundException_WhenCourseNotFound() {
-        Long nonExistentCourseId = 999L;
-        when(courseRepository.findById(nonExistentCourseId)).thenReturn(Optional.empty());
+    void createQuiz_ShouldThrowLessonNotFoundException_WhenLessonNotFound() {
+        Long nonExistentLessonId = 999L;
+        when(lessonRepository.findById(nonExistentLessonId)).thenReturn(Optional.empty());
 
         assertThrows(
-                CourseNotFoundException.class,
-                () -> quizService.createQuiz(nonExistentCourseId, createQuizDto)
+                LessonNotFoundException.class,
+                () -> quizService.createQuiz(nonExistentLessonId, createQuizDto)
         );
 
-        verify(courseRepository, times(1)).findById(nonExistentCourseId);
+        verify(lessonRepository, times(1)).findById(nonExistentLessonId);
         verifyNoInteractions(securityUtils, quizMapper, quizRepository);
     }
 
     @Test
     void createQuiz_ShouldThrowAccessDeniedException_WhenUserIsNotCourseCreator() {
-        when(courseRepository.findById(course.getId())).thenReturn(Optional.of(course));
+        when(lessonRepository.findById(lesson.getId())).thenReturn(Optional.of(lesson));
         when(securityUtils.getCurrentUserId()).thenReturn(student.getId());
 
         assertThrows(
                 AccessDeniedException.class,
-                () -> quizService.createQuiz(course.getId(), createQuizDto)
+                () -> quizService.createQuiz(lesson.getId(), createQuizDto)
         );
 
-        verify(courseRepository, times(1)).findById(course.getId());
+        verify(lessonRepository, times(1)).findById(lesson.getId());
         verify(securityUtils, times(1)).getCurrentUserId();
         verifyNoInteractions(quizMapper, quizRepository);
     }
 
-    /* -------------------- Get Course Quizzes -------------------- */
+    /* -------------------- Get Lesson Quizzes -------------------- */
 
     @Test
-    void getCourseQuizzes_ShouldReturnCourseQuizzes_WhenUserIsCourseCreator() {
-        when(courseRepository.findById(course.getId())).thenReturn(Optional.of(course));
+    void getLessonQuizzes_ShouldReturnCourseQuizzes_WhenUserIsCourseCreator() {
+        when(lessonRepository.findById(lesson.getId())).thenReturn(Optional.of(lesson));
         when(securityUtils.getCurrentUserId()).thenReturn(teacher.getId());
-        when(quizRepository.findByCourseId(course.getId())).thenReturn(List.of(quiz));
+        when(quizRepository.findByLessonId(lesson.getId())).thenReturn(List.of(quiz));
         when(quizMapper.toDto(quiz)).thenReturn(quizDto);
 
-        List<QuizDto> result = quizService.getCourseQuizzes(course.getId());
+        List<QuizDto> result = quizService.getLessonQuizzes(lesson.getId());
 
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(quizDto.getId(), result.get(0).getId());
         assertEquals(quizDto.getTitle(), result.get(0).getTitle());
         assertEquals(quizDto.getDescription(), result.get(0).getDescription());
-        assertEquals(quizDto.getCourseId(), result.get(0).getCourseId());
+        assertEquals(quizDto.getLessonId(), result.get(0).getLessonId());
 
-        verify(courseRepository, times(1)).findById(course.getId());
+        verify(lessonRepository, times(1)).findById(lesson.getId());
         verify(securityUtils, times(1)).getCurrentUserId();
-        verify(quizRepository, times(1)).findByCourseId(course.getId());
+        verify(quizRepository, times(1)).findByLessonId(lesson.getId());
         verify(quizMapper, times(1)).toDto(quiz);
         verify(enrollmentRepository, never()).existsById(any(EnrollmentId.class));
     }
 
     @Test
-    void getCourseQuizzes_ShouldReturnCourseQuizzes_WhenUserIsEnrolledInCourse() {
-        when(courseRepository.findById(course.getId())).thenReturn(Optional.of(course));
+    void getLessonQuizzes_ShouldReturnCourseQuizzes_WhenUserIsEnrolledInCourse() {
+        when(lessonRepository.findById(lesson.getId())).thenReturn(Optional.of(lesson));
         when(securityUtils.getCurrentUserId()).thenReturn(student.getId());
         when(enrollmentRepository.existsById(any(EnrollmentId.class))).thenReturn(true);
-        when(quizRepository.findByCourseId(course.getId())).thenReturn(List.of(quiz));
+        when(quizRepository.findByLessonId(lesson.getId())).thenReturn(List.of(quiz));
         when(quizMapper.toDto(quiz)).thenReturn(quizDto);
 
-        List<QuizDto> result = quizService.getCourseQuizzes(course.getId());
+        List<QuizDto> result = quizService.getLessonQuizzes(lesson.getId());
 
         assertNotNull(result);
         assertEquals(1, result.size());
         assertEquals(quizDto.getId(), result.get(0).getId());
         assertEquals(quizDto.getTitle(), result.get(0).getTitle());
         assertEquals(quizDto.getDescription(), result.get(0).getDescription());
-        assertEquals(quizDto.getCourseId(), result.get(0).getCourseId());
+        assertEquals(quizDto.getLessonId(), result.get(0).getLessonId());
 
-        verify(courseRepository, times(1)).findById(course.getId());
+        verify(lessonRepository, times(1)).findById(lesson.getId());
         verify(securityUtils, times(1)).getCurrentUserId();
         verify(enrollmentRepository, times(1)).existsById(any(EnrollmentId.class));
-        verify(quizRepository, times(1)).findByCourseId(course.getId());
+        verify(quizRepository, times(1)).findByLessonId(lesson.getId());
         verify(quizMapper, times(1)).toDto(quiz);
     }
 
     @Test
-    void getCourseQuizzes_ShouldThrowCourseNotFoundException_WhenCourseNotFound() {
-        Long nonExistentCourseId = 999L;
-        when(courseRepository.findById(nonExistentCourseId)).thenReturn(Optional.empty());
+    void getLessonQuizzes_ShouldThrowLessonNotFoundException_WhenLessonNotFound() {
+        Long nonExistentLessonId = 999L;
+        when(lessonRepository.findById(nonExistentLessonId)).thenReturn(Optional.empty());
 
         assertThrows(
-                CourseNotFoundException.class,
-                () -> quizService.getCourseQuizzes(nonExistentCourseId)
+                LessonNotFoundException.class,
+                () -> quizService.getLessonQuizzes(nonExistentLessonId)
         );
 
-        verify(courseRepository, times(1)).findById(nonExistentCourseId);
+        verify(lessonRepository, times(1)).findById(nonExistentLessonId);
         verifyNoInteractions(securityUtils, enrollmentRepository, quizRepository, quizMapper);
     }
 
     @Test
-    void getCourseQuizzes_ShouldThrowAccessDeniedException_WhenUserIsNotAuthorized() {
+    void getLessonQuizzes_ShouldThrowAccessDeniedException_WhenUserIsNotAuthorized() {
         User unauthorizedUser = new User();
         unauthorizedUser.setId(3L);
 
-        when(courseRepository.findById(course.getId())).thenReturn(Optional.of(course));
+        when(lessonRepository.findById(lesson.getId())).thenReturn(Optional.of(lesson));
         when(securityUtils.getCurrentUserId()).thenReturn(unauthorizedUser.getId());
         when(enrollmentRepository.existsById(any(EnrollmentId.class))).thenReturn(false);
 
         assertThrows(
                 AccessDeniedException.class,
-                () -> quizService.getCourseQuizzes(course.getId())
+                () -> quizService.getLessonQuizzes(lesson.getId())
         );
 
-        verify(courseRepository, times(1)).findById(course.getId());
+        verify(lessonRepository, times(1)).findById(lesson.getId());
         verify(securityUtils, times(1)).getCurrentUserId();
         verify(enrollmentRepository, times(1)).existsById(any(EnrollmentId.class));
         verifyNoInteractions(quizRepository, quizMapper);
     }
 
     @Test
-    void getCourseQuizzes_ShouldReturnEmptyList_WhenNoQuizzesExist() {
-        when(courseRepository.findById(course.getId())).thenReturn(Optional.of(course));
+    void getLessonQuizzes_ShouldReturnEmptyList_WhenNoQuizzesExist() {
+        when(lessonRepository.findById(lesson.getId())).thenReturn(Optional.of(lesson));
         when(securityUtils.getCurrentUserId()).thenReturn(teacher.getId());
-        when(quizRepository.findByCourseId(course.getId())).thenReturn(List.of());
+        when(quizRepository.findByLessonId(lesson.getId())).thenReturn(List.of());
 
-        List<QuizDto> result = quizService.getCourseQuizzes(course.getId());
+        List<QuizDto> result = quizService.getLessonQuizzes(lesson.getId());
 
         assertNotNull(result);
         assertTrue(result.isEmpty());
 
-        verify(courseRepository, times(1)).findById(course.getId());
+        verify(lessonRepository, times(1)).findById(lesson.getId());
         verify(securityUtils, times(1)).getCurrentUserId();
-        verify(quizRepository, times(1)).findByCourseId(course.getId());
+        verify(quizRepository, times(1)).findByLessonId(lesson.getId());
         verify(quizMapper, never()).toDto(any(Quiz.class));
     }
 
@@ -247,7 +252,7 @@ public class QuizServiceTest {
         assertEquals(quizDto.getId(), result.getId());
         assertEquals(quizDto.getTitle(), result.getTitle());
         assertEquals(quizDto.getDescription(), result.getDescription());
-        assertEquals(quizDto.getCourseId(), result.getCourseId());
+        assertEquals(quizDto.getLessonId(), result.getLessonId());
 
         verify(quizRepository, times(1)).findById(quiz.getId());
         verify(securityUtils, times(1)).getCurrentUserId();
@@ -268,7 +273,7 @@ public class QuizServiceTest {
         assertEquals(quizDto.getId(), result.getId());
         assertEquals(quizDto.getTitle(), result.getTitle());
         assertEquals(quizDto.getDescription(), result.getDescription());
-        assertEquals(quizDto.getCourseId(), result.getCourseId());
+        assertEquals(quizDto.getLessonId(), result.getLessonId());
 
         verify(quizRepository, times(1)).findById(quiz.getId());
         verify(securityUtils, times(1)).getCurrentUserId();
@@ -327,7 +332,7 @@ public class QuizServiceTest {
         assertEquals(quizDto.getId(), result.getId());
         assertEquals(quizDto.getTitle(), result.getTitle());
         assertEquals(quizDto.getDescription(), result.getDescription());
-        assertEquals(quizDto.getCourseId(), result.getCourseId());
+        assertEquals(quizDto.getLessonId(), result.getLessonId());
 
         verify(quizRepository, times(1)).findById(quiz.getId());
         verify(securityUtils, times(1)).getCurrentUserId();

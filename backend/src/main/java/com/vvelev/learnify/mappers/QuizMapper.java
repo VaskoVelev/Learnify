@@ -10,10 +10,10 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface QuizMapper {
-    @Mapping(target = "courseId", source = "course.id")
+    @Mapping(target = "lessonId", source = "lesson.id")
     QuizDto toDto(Quiz quiz);
 
-    @Mapping(target = "course", ignore = true)
+    @Mapping(target = "lesson", ignore = true)
     Quiz toEntity(CreateQuizDto dto);
 
     void update(UpdateQuizDto request, @MappingTarget Quiz quiz);

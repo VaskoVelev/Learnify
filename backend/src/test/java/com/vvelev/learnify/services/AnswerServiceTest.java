@@ -68,10 +68,15 @@ public class AnswerServiceTest {
         course.setDescription("Course Description");
         course.setCreatedBy(teacher);
 
+        Lesson lesson = new Lesson();
+        lesson.setId(1L);
+        lesson.setTitle("Test Lesson");
+        lesson.setCourse(course);
+
         Quiz quiz = new Quiz();
         quiz.setId(1L);
         quiz.setTitle("Test Quiz");
-        quiz.setCourse(course);
+        quiz.setLesson(lesson);
 
         question = new Question();
         question.setId(1L);

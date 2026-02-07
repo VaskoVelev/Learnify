@@ -28,7 +28,7 @@ public class QuestionService {
 
     public QuestionDto createQuestion(Long quizId, CreateQuestionDto request) {
         Quiz quiz = getQuizOrThrow(quizId);
-        Course course = quiz.getCourse();
+        Course course = quiz.getLesson().getCourse();
 
         Long teacherId = securityUtils.getCurrentUserId();
         if (!isCourseCreator(course, teacherId)) {
@@ -44,7 +44,7 @@ public class QuestionService {
 
     public List<QuestionDto> getQuizQuestions(Long quizId) {
         Quiz quiz = getQuizOrThrow(quizId);
-        Course course = quiz.getCourse();
+        Course course = quiz.getLesson().getCourse();
 
         Long userId = securityUtils.getCurrentUserId();
         if (!isCourseCreator(course, userId) && !isStudentEnrolled(userId, course.getId())) {
@@ -60,7 +60,7 @@ public class QuestionService {
 
     public QuestionDto updateQuestion(Long questionId, UpdateQuestionDto request) {
         Question question = getQuestionOrThrow(questionId);
-        Course course = question.getQuiz().getCourse();
+        Course course = question.getQuiz().getLesson().getCourse();
 
         Long teacherId = securityUtils.getCurrentUserId();
         if (!isCourseCreator(course, teacherId)) {
@@ -75,7 +75,7 @@ public class QuestionService {
 
     public void deleteQuestion(Long questionId) {
         Question question = getQuestionOrThrow(questionId);
-        Course course = question.getQuiz().getCourse();
+        Course course = question.getQuiz().getLesson().getCourse();
 
         Long teacherId = securityUtils.getCurrentUserId();
         if (!isCourseCreator(course, teacherId)) {

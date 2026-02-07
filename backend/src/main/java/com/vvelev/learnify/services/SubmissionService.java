@@ -31,7 +31,7 @@ public class SubmissionService {
 
     public SubmissionDto submitQuiz(Long quizId, List<SubmissionAnswerDto> answers) {
         Quiz quiz = getQuizOrThrow(quizId);
-        Course course = quiz.getCourse();
+        Course course = quiz.getLesson().getCourse();
 
         Long studentId = securityUtils.getCurrentUserId();
         if (!isStudentEnrolled(studentId, course.getId())) {
@@ -57,7 +57,7 @@ public class SubmissionService {
         Quiz quiz = getQuizOrThrow(quizId);
 
         Long teacherId = securityUtils.getCurrentUserId();
-        if (!isCourseCreator(quiz.getCourse(), teacherId)) {
+        if (!isCourseCreator(quiz.getLesson().getCourse(), teacherId)) {
             throw new AccessDeniedException();
         }
 
@@ -70,7 +70,7 @@ public class SubmissionService {
 
     public List<SubmissionDto> getMyQuizSubmissions(Long quizId) {
         Quiz quiz = getQuizOrThrow(quizId);
-        Course course = quiz.getCourse();
+        Course course = quiz.getLesson().getCourse();
 
         Long studentId = securityUtils.getCurrentUserId();
         if (!isStudentEnrolled(studentId, course.getId())) {
@@ -86,7 +86,7 @@ public class SubmissionService {
 
     public SubmissionDetailsDto getSubmission(Long id) {
         Submission submission = getSubmissionOrThrow(id);
-        Course course = submission.getQuiz().getCourse();
+        Course course = submission.getQuiz().getLesson().getCourse();
 
         Long userId = securityUtils.getCurrentUserId();
 
