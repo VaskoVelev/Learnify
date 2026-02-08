@@ -18,12 +18,6 @@ const GlobalError = ({ error, onDismiss, type = "error", className = "" }) => {
             text: "text-amber-400",
             icon: "text-amber-400"
         },
-        info: {
-            bg: "bg-blue-500/10",
-            border: "border-blue-500/20",
-            text: "text-blue-400",
-            icon: "text-blue-400"
-        },
         success: {
             bg: "bg-emerald-500/10",
             border: "border-emerald-500/20",

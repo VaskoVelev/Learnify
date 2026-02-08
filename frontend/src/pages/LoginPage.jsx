@@ -44,7 +44,7 @@ const LoginPage = () => {
 
         try {
             await login(form);
-            navigate("/");
+            navigate("/home");
         } catch (err) {
             setGlobalError(err.message);
             setFieldErrors(err.errors || {});
@@ -60,10 +60,8 @@ const LoginPage = () => {
 
     return (
         <div className="min-h-screen flex" style={{ background: "linear-gradient(135deg, hsl(220, 30%, 8%) 0%, hsl(220, 25%, 15%) 50%, hsl(200, 30%, 12%) 100%)" }}>
-            {/* Reusable Brand Panel */}
             <AuthBrandPanel />
 
-            {/* Form Panel - Right Side */}
             <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
                 <AuthFormContainer>
                     <AuthFormHeader
