@@ -99,7 +99,18 @@ const LessonPage = () => {
     };
 
     const getFileName = (filePath) => {
-        return filePath?.split("/").pop();
+        try {
+            const url = new URL(filePath);
+            const pathname = url.pathname;
+            const fileName = pathname.split('/').pop();
+
+            return fileName || 'document';
+        } catch {
+            const parts = filePath.split(/[\\/]/);
+            const lastPart = parts.pop();
+
+            return lastPart || 'document';
+        }
     };
 
     const getFileTypeLabel = (fileType) => {
@@ -112,19 +123,26 @@ const LessonPage = () => {
         const trimmedUrl = lesson.videoUrl.trim();
         if (!trimmedUrl) return false;
 
-        if (trimmedUrl === "null" ||
-            trimmedUrl === "undefined" ||
-            trimmedUrl === "N/A" ||
-            trimmedUrl === "none") {
+        const invalidValues = ["null", "undefined", "N/A", "none", "#", ""];
+        if (invalidValues.includes(trimmedUrl.toLowerCase())) {
             return false;
         }
 
         return true;
     };
 
+    const isValidFileUrl = (filePath) => {
+        try {
+            const url = new URL(filePath);
+            return ['http:', 'https:'].includes(url.protocol);
+        } catch {
+            return false;
+        }
+    };
+
     const handleMaterialDownload = async (material) => {
-        if (!material?.filePath) {
-            setDownloadError("Download link is not available for this material.");
+        if (!isValidFileUrl(material.filePath)) {
+            setDownloadError(`"${getFileName(material.filePath)}" has an invalid download URL.`);
             return;
         }
 
@@ -132,25 +150,80 @@ const LessonPage = () => {
         setDownloadError(null);
 
         try {
-            const response = await fetch(material.filePath, { method: 'HEAD' });
-
-            if (!response.ok) {
-                setError(`Unable to download "${getFileName(material.filePath)}".`);
+            if (material.fileType?.toLowerCase() === 'pdf') {
+                window.open(material.filePath, '_blank', 'noopener,noreferrer');
+                setDownloadingMaterialId(null);
+                return;
             }
 
+            const response = await fetch(material.filePath, {
+                method: 'GET',
+                mode: 'cors',
+                cache: 'no-cache'
+            });
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    setDownloadError(`"${getFileName(material.filePath)}" was not found on the server.`);
+                } else if (response.status === 403) {
+                    setDownloadError(`You don't have permission to download "${getFileName(material.filePath)}".`);
+                } else if (response.status >= 500) {
+                    setDownloadError(`Server error while downloading "${getFileName(material.filePath)}".`);
+                } else {
+                    setDownloadError(`Unable to download "${getFileName(material.filePath)}" (Error: ${response.status}).`);
+                }
+                setDownloadingMaterialId(null);
+                return;
+            }
+
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('text/html')) {
+                setDownloadError(`"${getFileName(material.filePath)}" appears to be unavailable or corrupted.`);
+                setDownloadingMaterialId(null);
+                return;
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
-            link.href = material.filePath;
+            link.href = url;
             link.download = getFileName(material.filePath);
             document.body.appendChild(link);
             link.click();
-            document.body.removeChild(link);
 
-            setDownloadingMaterialId(null);
+            setTimeout(() => {
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(link);
+                setDownloadingMaterialId(null);
+            }, 100);
 
         } catch (err) {
             setDownloadingMaterialId(null);
-            setDownloadError(`Unable to download "${getFileName(material.filePath)}".`);
+
+            if (err.name === 'TypeError' && err.message.includes('Failed to fetch')) {
+                setDownloadError(`Cannot connect to download server for "${getFileName(material.filePath)}".`);
+            } else {
+                setDownloadError(`An unexpected error occurred while downloading "${getFileName(material.filePath)}".`);
+            }
         }
+    };
+
+    const getYouTubeVideoId = (url) => {
+        if (!url) return null;
+
+        const patterns = [
+            /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&\n?#]+)/,
+            /youtube\.com\/v\/([^&\n?#]+)/,
+        ];
+
+        for (const pattern of patterns) {
+            const match = url.match(pattern);
+            if (match && match[1]) {
+                return match[1];
+            }
+        }
+
+        return null;
     };
 
     return (
@@ -214,22 +287,28 @@ const LessonPage = () => {
 
             {/* Main Content */}
             <main className="relative z-10 max-w-7xl mx-auto px-6 py-8 lg:py-12">
-                {/* Error Display */}
+                {/* General Error Display */}
                 {error && (
                     <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 backdrop-blur-xl flex items-center justify-center gap-3 animate-in slide-in-from-top duration-300">
                         <AlertCircle className="w-5 h-5 text-red-400" />
                         <p className="text-red-400 text-sm">{error}</p>
+                        <button
+                            onClick={() => setError(null)}
+                            className="ml-auto text-red-400 hover:text-red-300"
+                        >
+                            <XCircle className="w-4 h-4" />
+                        </button>
                     </div>
                 )}
 
                 {/* Download Error Display */}
                 {downloadError && (
-                    <div className="mb-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 backdrop-blur-xl flex items-center justify-center gap-3 animate-in slide-in-from-top duration-300">
-                        <AlertCircle className="w-5 h-5 text-amber-400" />
-                        <p className="text-amber-400 text-sm">{downloadError}</p>
+                    <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 backdrop-blur-xl flex items-center justify-center gap-3 animate-in slide-in-from-top duration-300">
+                        <AlertCircle className="w-5 h-5 text-red-400" />
+                        <p className="text-red-400 text-sm">{downloadError}</p>
                         <button
                             onClick={() => setDownloadError(null)}
-                            className="ml-auto text-amber-400 hover:text-amber-300"
+                            className="ml-auto text-red-400 hover:text-red-300"
                         >
                             <XCircle className="w-4 h-4" />
                         </button>
@@ -247,9 +326,9 @@ const LessonPage = () => {
                         <div className="flex justify-center">
                             <div className="w-12 h-12 border-4 border-teal-400 border-t-transparent rounded-full animate-spin"></div>
                         </div>
-                        <p className="text-white/60 mt-4">Loading lesson...</p>
+                        <p className="text-white/60 mt-4">Loading, wait a sec...</p>
                     </div>
-                ) : lesson ? (
+                ) : (
                     <>
                         {/* Back Link */}
                         <div className="mb-8">
@@ -278,7 +357,7 @@ const LessonPage = () => {
                                 </div>
 
                                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-2">
-                                    {lesson.title}
+                                    {lesson?.title}
                                 </h1>
                             </div>
                         </div>
@@ -302,13 +381,35 @@ const LessonPage = () => {
 
                                     {isVideoAvailable() ? (
                                         <div className="aspect-video">
-                                            <iframe
-                                                src={lesson.videoUrl}
-                                                title={lesson.title}
-                                                className="w-full h-full"
-                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                allowFullScreen
-                                            />
+                                            {/* Handle YouTube videos specially */}
+                                            {(() => {
+                                                const videoId = getYouTubeVideoId(lesson?.videoUrl);
+                                                if (videoId) {
+                                                    // YouTube video - use embed format
+                                                    return (
+                                                        <iframe
+                                                            src={`https://www.youtube.com/embed/${videoId}`}
+                                                            title={lesson?.title}
+                                                            className="w-full h-full"
+                                                            frameBorder="0"
+                                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                                            allowFullScreen
+                                                            referrerPolicy="strict-origin-when-cross-origin"
+                                                        />
+                                                    );
+                                                } else {
+                                                    // Other video URLs
+                                                    return (
+                                                        <iframe
+                                                            src={lesson?.videoUrl}
+                                                            title={lesson?.title}
+                                                            className="w-full h-full"
+                                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                            allowFullScreen
+                                                        />
+                                                    );
+                                                }
+                                            })()}
                                         </div>
                                     ) : (
                                         <div className="aspect-video flex flex-col items-center justify-center p-8 text-center">
@@ -318,6 +419,7 @@ const LessonPage = () => {
                                             <h4 className="text-xl font-semibold text-white mb-2">Video Not Available</h4>
                                             <p className="text-white/60 max-w-md">
                                                 The video lesson for this content is currently unavailable.
+                                                Please check back later or contact support if this issue persists.
                                             </p>
                                         </div>
                                     )}
@@ -335,7 +437,7 @@ const LessonPage = () => {
                                         Lesson Content
                                     </h3>
                                     <div className="prose prose-invert max-w-none">
-                                        {lesson.content?.split("\n\n").map((paragraph, index) => (
+                                        {lesson?.content?.split("\n\n").map((paragraph, index) => (
                                             <p key={index} className="text-white/70 leading-relaxed mb-4 whitespace-pre-line">
                                                 {paragraph}
                                             </p>
@@ -359,37 +461,58 @@ const LessonPage = () => {
                                     </h3>
                                     <div className="space-y-2">
                                         {materials.length > 0 ? (
-                                            materials.map((material) => (
-                                                <button
-                                                    key={material.id}
-                                                    onClick={() => handleMaterialDownload(material)}
-                                                    disabled={downloadingMaterialId === material.id}
-                                                    className="w-full text-left flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-teal-500/30 transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
-                                                >
-                                                    <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-teal-500/15 text-teal-400">
-                                                        {downloadingMaterialId === material.id ? (
-                                                            <div className="w-5 h-5 border-2 border-teal-400 border-t-transparent rounded-full animate-spin"></div>
-                                                        ) : (
-                                                            getFileIcon(material.fileType)
-                                                        )}
-                                                    </div>
-                                                    <div className="flex-1 min-w-0">
-                                                        <p className="text-white/80 text-sm truncate group-hover:text-white transition-colors">
-                                                            {getFileName(material.filePath)}
-                                                        </p>
-                                                        <p className="text-white/40 text-xs">
-                                                            {getFileTypeLabel(material.fileType)}
-                                                        </p>
-                                                    </div>
-                                                    {downloadingMaterialId === material.id ? (
-                                                        <div className="text-teal-400">
-                                                            <div className="w-4 h-4 border-2 border-teal-400 border-t-transparent rounded-full animate-spin"></div>
+                                            materials.map((material) => {
+                                                const isValid = isValidFileUrl(material?.filePath);
+                                                const fileName = getFileName(material?.filePath);
+                                                const isDownloading = downloadingMaterialId === material?.id;
+
+                                                return (
+                                                    <button
+                                                        key={material?.id}
+                                                        onClick={() => handleMaterialDownload(material)}
+                                                        disabled={isDownloading || !isValid}
+                                                        className="w-full text-left flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-teal-500/30 transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
+                                                        title={!isValid ? `Invalid URL: ${material?.filePath}` : `Download ${fileName}`}
+                                                    >
+                                                        <div className="w-10 h-10 rounded-lg flex items-center justify-center bg-teal-500/15 text-teal-400 relative">
+                                                            {isDownloading ? (
+                                                                <div className="w-5 h-5 border-2 border-teal-400 border-t-transparent rounded-full animate-spin"></div>
+                                                            ) : (
+                                                                <>
+                                                                    {getFileIcon(material?.fileType)}
+                                                                    {!isValid && (
+                                                                        <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-500 rounded-full flex items-center justify-center">
+                                                                            <AlertCircle className="w-3 h-3 text-white" />
+                                                                        </div>
+                                                                    )}
+                                                                </>
+                                                            )}
                                                         </div>
-                                                    ) : (
-                                                        <Download className="w-4 h-4 text-white/40 group-hover:text-teal-400 group-hover:translate-y-0.5 transition-all" />
-                                                    )}
-                                                </button>
-                                            ))
+                                                        <div className="flex-1 min-w-0">
+                                                            <p className="text-white/80 text-sm truncate group-hover:text-white transition-colors">
+                                                                {fileName}
+                                                            </p>
+                                                            <div className="flex items-center justify-between">
+                                                                <p className="text-white/40 text-xs">
+                                                                    {getFileTypeLabel(material?.fileType)}
+                                                                </p>
+                                                                {!isValid && (
+                                                                    <span className="text-red-400 text-xs">Invalid URL</span>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        {isDownloading ? (
+                                                            <div className="text-teal-400">
+                                                                <div className="w-4 h-4 border-2 border-teal-400 border-t-transparent rounded-full animate-spin"></div>
+                                                            </div>
+                                                        ) : (
+                                                            <Download className={`w-4 h-4 transition-all ${
+                                                                isValid ? 'text-white/40 group-hover:text-teal-400 group-hover:translate-y-0.5' : 'text-red-400/50'
+                                                            }`} />
+                                                        )}
+                                                    </button>
+                                                );
+                                            })
                                         ) : (
                                             <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-center">
                                                 <FileText className="w-8 h-8 text-white/30 mx-auto mb-2" />
@@ -414,17 +537,17 @@ const LessonPage = () => {
                                         {quizzes.length > 0 ? (
                                             quizzes.map((quiz) => (
                                                 <button
-                                                    key={quiz.id}
-                                                    onClick={() => handleQuizClick(quiz.id)}
+                                                    key={quiz?.id}
+                                                    onClick={() => handleQuizClick(quiz?.id)}
                                                     className="w-full text-left p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-amber-500/30 transition-all group"
                                                 >
                                                     <div className="flex items-start justify-between gap-3">
                                                         <div className="flex-1">
                                                             <h4 className="text-white font-medium group-hover:text-amber-400 transition-colors">
-                                                                {quiz.title}
+                                                                {quiz?.title}
                                                             </h4>
                                                             <p className="text-white/50 text-sm mt-1">
-                                                                {quiz.description}
+                                                                {quiz?.description}
                                                             </p>
                                                         </div>
                                                         <ChevronRight className="w-5 h-5 text-white/40 group-hover:text-amber-400 group-hover:translate-x-1 transition-all mt-1" />
@@ -442,29 +565,6 @@ const LessonPage = () => {
                             </div>
                         </div>
                     </>
-                ) : (
-                    /* Fallback when lesson is null after loading */
-                    <div
-                        className="p-12 rounded-2xl border border-white/10 text-center backdrop-blur-xl"
-                        style={{
-                            background: "linear-gradient(145deg, hsla(0, 0%, 100%, 0.08) 0%, hsla(0, 0%, 100%, 0.02) 100%)",
-                        }}
-                    >
-                        <div className="flex justify-center">
-                            <AlertCircle className="w-12 h-12 text-red-400" />
-                        </div>
-                        <p className="text-white text-lg mt-4">Unable to load lesson data</p>
-                        <button
-                            onClick={() => navigate(`/courses/${courseId}`)}
-                            className="mt-4 inline-flex items-center gap-2 py-2.5 px-6 rounded-xl font-semibold text-white transition-all transform hover:scale-[1.02] active:scale-[0.98]"
-                            style={{
-                                background: "linear-gradient(135deg, hsl(174, 72%, 46%) 0%, hsl(199, 89%, 48%) 100%)",
-                                boxShadow: "0 0 30px hsla(174, 72%, 46%, 0.25)"
-                            }}
-                        >
-                            Back to Course
-                        </button>
-                    </div>
                 )}
 
                 {/* Footer section */}
