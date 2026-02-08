@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx"
 import { getMyEnrollments } from "../../api/enrollment.api.js";
 import { getMyProgression } from "../../api/course.api.js";
-import { GraduationCap, BookOpen, User, LogOut, Clock, ChevronRight, TrendingUp, Award, Calendar, Sparkles, AlertCircle } from "lucide-react";
+import { GraduationCap, BookOpen, User, LogOut, Clock, ChevronRight, TrendingUp, Award, Calendar, Sparkles, AlertCircle, XCircle } from "lucide-react";
 
 const StudentHomePage = () => {
     const { user, logout } = useAuth();
@@ -191,6 +191,12 @@ const StudentHomePage = () => {
                     <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 backdrop-blur-xl flex items-center justify-center gap-3 animate-in slide-in-from-top duration-300">
                         <AlertCircle className="w-5 h-5 text-red-400" />
                         <p className="text-red-400 text-sm">{error}</p>
+                        <button
+                            onClick={() => setError(null)}
+                            className="ml-auto text-red-400 hover:text-red-300"
+                        >
+                            <XCircle className="w-4 h-4" />
+                        </button>
                     </div>
                 )}
 

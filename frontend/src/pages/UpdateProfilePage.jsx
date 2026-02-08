@@ -14,7 +14,8 @@ import {
     Save,
     X,
     ArrowLeft,
-    AlertCircle
+    AlertCircle,
+    XCircle
 } from "lucide-react";
 
 const UpdateProfilePage = () => {
@@ -47,17 +48,11 @@ const UpdateProfilePage = () => {
     };
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setForm(prev => ({
-            ...prev,
-            [name]: value
-        }));
+        setForm({ ...form, [e.target.name]: e.target.value });
 
-        if (fieldErrors[name]) {
-            setFieldErrors(prev => ({ ...prev, [name]: null }));
+        if (fieldErrors[e.target.name]) {
+            setFieldErrors({ ...fieldErrors, [e.target.name]: null });
         }
-
-        setGlobalError(null);
     };
 
     const handleSubmit = async (e) => {
@@ -176,6 +171,15 @@ const UpdateProfilePage = () => {
                     <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 backdrop-blur-xl flex items-center justify-center gap-3 animate-in slide-in-from-top duration-300">
                         <AlertCircle className="w-5 h-5 text-red-400" />
                         <p className="text-red-400 text-sm">{globalError}</p>
+                        <button
+                            onClick={() => {
+                                setGlobalError(null);
+                                setFieldErrors({});
+                            }}
+                            className="ml-auto text-red-400 hover:text-red-300"
+                        >
+                            <XCircle className="w-4 h-4" />
+                        </button>
                     </div>
                 )}
 
