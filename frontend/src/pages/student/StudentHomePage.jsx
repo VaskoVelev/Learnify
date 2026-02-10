@@ -2,8 +2,22 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext.jsx"
 import { getMyEnrollments } from "../../api/enrollment.api.js";
-import { getMyProgression } from "../../api/course.api.js";
-import { GraduationCap, BookOpen, User, LogOut, Clock, ChevronRight, TrendingUp, Award, Calendar, Sparkles, AlertCircle, XCircle } from "lucide-react";
+import {
+    Navbar,
+    Footer,
+    GradientBackground,
+    FloatingOrbs
+} from "../../components/layout";
+import {
+    GlobalError,
+    LoadingState,
+    EmptyState,
+    WelcomeBadge,
+    WelcomeSection,
+    StatsCard,
+    SectionHeader
+} from "../../components/ui";
+import { BookOpen, Clock, ChevronRight, TrendingUp, Award, Calendar, Sparkles } from "lucide-react";
 
 const StudentHomePage = () => {
     const { user, logout } = useAuth();
@@ -76,56 +90,15 @@ const StudentHomePage = () => {
     const completedCourses = enrolledCourses.filter(c => c.progress >= 100).length;
 
     return (
-        <div
-            className="min-h-screen"
-            style={{ background: "linear-gradient(135deg, hsl(220, 30%, 8%) 0%, hsl(220, 25%, 15%) 50%, hsl(200, 30%, 12%) 100%)" }}
-        >
-            {/* Floating orbs */}
-            <div className="fixed w-[500px] h-[500px] bg-teal-500 rounded-full blur-[120px] opacity-15 -top-32 -left-32 pointer-events-none" />
-            <div className="fixed w-80 h-80 bg-cyan-500 rounded-full blur-[100px] opacity-15 bottom-20 right-10 pointer-events-none" />
-            <div className="fixed w-64 h-64 bg-teal-400 rounded-full blur-[80px] opacity-10 top-1/2 left-1/3 pointer-events-none" />
-            <div className="fixed w-48 h-48 bg-blue-500 rounded-full blur-[60px] opacity-10 top-1/4 right-1/4 pointer-events-none" />
+        <GradientBackground>
+            <FloatingOrbs />
 
-            {/* Header */}
-            <header className="relative z-10 border-b border-white/10 backdrop-blur-xl bg-white/5">
-                <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-                    <Link to="/" className="flex items-center gap-3 group">
-                        <div className="p-2.5 rounded-xl bg-white/10 border border-white/20 group-hover:bg-white/15 group-hover:border-teal-500/30 transition-all duration-300">
-                            <GraduationCap className="w-6 h-6 text-teal-400" />
-                        </div>
-                        <span className="text-2xl font-bold text-white">
-                            Learn<span
-                            className="bg-clip-text text-transparent"
-                            style={{ backgroundImage: "linear-gradient(135deg, hsl(174, 72%, 46%) 0%, hsl(199, 89%, 48%) 100%)" }}
-                        >ify</span>
-                        </span>
-                    </Link>
-
-                    <nav className="flex items-center gap-1 sm:gap-2">
-                        <Link
-                            to="/courses"
-                            className="px-3 sm:px-4 py-2.5 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 flex items-center gap-2"
-                        >
-                            <BookOpen className="w-4 h-4" />
-                            <span className="hidden sm:inline">Courses</span>
-                        </Link>
-                        <Link
-                            to="/profile"
-                            className="px-3 sm:px-4 py-2.5 rounded-xl text-white/70 hover:text-white hover:bg-white/10 transition-all duration-300 flex items-center gap-2"
-                        >
-                            <User className="w-4 h-4" />
-                            <span className="hidden sm:inline">Profile</span>
-                        </Link>
-                        <button
-                            onClick={handleLogout}
-                            className="px-3 sm:px-4 py-2.5 rounded-xl text-white/70 hover:text-red-400 hover:bg-red-500/10 transition-all duration-300 flex items-center gap-2"
-                        >
-                            <LogOut className="w-4 h-4" />
-                            <span className="hidden sm:inline">Logout</span>
-                        </button>
-                    </nav>
-                </div>
-            </header>
+            <Navbar
+                onLogout={handleLogout}
+                showHome={false}
+                showCourses={true}
+                showProfile={true}
+            />
 
             {/* Main Content */}
             <main className="relative z-10 max-w-7xl mx-auto px-6 py-8 lg:py-12">
@@ -133,96 +106,60 @@ const StudentHomePage = () => {
                 <div className="mb-8 lg:mb-12">
                     <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
                         <div>
-                            <div className="flex items-center gap-3 mb-3">
-                                <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20">
-                                    <Sparkles className="w-3.5 h-3.5 text-teal-400" />
-                                    <span className="text-xs font-medium text-teal-400">Welcome back</span>
-                                </div>
-                            </div>
-                            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-3">
-                                Hello, <span
-                                className="bg-clip-text text-transparent"
-                                style={{ backgroundImage: "linear-gradient(135deg, hsl(174, 72%, 56%) 0%, hsl(199, 89%, 58%) 100%)" }}
-                            >{user?.firstName}</span>!
-                            </h1>
-                            <p className="text-white/60 text-base sm:text-lg max-w-xl">
-                                Continue your learning journey. You're making great progress!
-                            </p>
+                            <WelcomeBadge text="Welcome back" icon={Sparkles} className="mb-3" />
+                            <WelcomeSection
+                                user={user}
+                                title="Hello"
+                                subtitle="Continue your learning journey. You're making great progress!"
+                            />
                         </div>
 
                         {/* Quick Stats Cards */}
                         <div className="flex gap-3 sm:gap-4">
-                            <div
-                                className="flex-1 sm:flex-none sm:w-36 p-4 rounded-2xl border border-white/10 backdrop-blur-xl"
-                                style={{ background: "linear-gradient(145deg, hsla(174, 70%, 40%, 0.15) 0%, hsla(174, 70%, 40%, 0.05) 100%)" }}
-                            >
-                                <div className="flex items-center gap-2 mb-2">
-                                    <BookOpen className="w-4 h-4 text-teal-400" />
-                                    <span className="text-xs text-white/50 uppercase tracking-wide">Courses</span>
-                                </div>
-                                <p className="text-2xl sm:text-3xl font-bold text-white">{totalCourses}</p>
-                            </div>
-                            <div
-                                className="flex-1 sm:flex-none sm:w-36 p-4 rounded-2xl border border-white/10 backdrop-blur-xl"
-                                style={{ background: "linear-gradient(145deg, hsla(199, 85%, 45%, 0.15) 0%, hsla(199, 85%, 45%, 0.05) 100%)" }}
-                            >
-                                <div className="flex items-center gap-2 mb-2">
-                                    <TrendingUp className="w-4 h-4 text-cyan-400" />
-                                    <span className="text-xs text-white/50 uppercase tracking-wide">Progress</span>
-                                </div>
-                                <p className="text-2xl sm:text-3xl font-bold text-white">{averageProgress}%</p>
-                            </div>
-                            <div
-                                className="hidden sm:block flex-none w-36 p-4 rounded-2xl border border-white/10 backdrop-blur-xl"
-                                style={{ background: "linear-gradient(145deg, hsla(45, 85%, 50%, 0.15) 0%, hsla(45, 85%, 50%, 0.05) 100%)" }}
-                            >
-                                <div className="flex items-center gap-2 mb-2">
-                                    <Award className="w-4 h-4 text-amber-400" />
-                                    <span className="text-xs text-white/50 uppercase tracking-wide">Completed</span>
-                                </div>
-                                <p className="text-2xl sm:text-3xl font-bold text-white">{completedCourses}</p>
-                            </div>
+                            <StatsCard
+                                icon={BookOpen}
+                                label="Courses"
+                                value={totalCourses}
+                                color="teal"
+                                gradient="linear-gradient(145deg, hsla(174, 70%, 40%, 0.15) 0%, hsla(174, 70%, 40%, 0.05) 100%)"
+                            />
+
+                            <StatsCard
+                                icon={TrendingUp}
+                                label="Progress"
+                                value={`${averageProgress}%`}
+                                color="cyan"
+                                gradient="linear-gradient(145deg, hsla(199, 85%, 45%, 0.15) 0%, hsla(199, 85%, 45%, 0.05) 100%)"
+                            />
+
+                            <StatsCard
+                                icon={Award}
+                                label="Completed"
+                                value={completedCourses}
+                                color="amber"
+                                gradient="linear-gradient(145deg, hsla(45, 85%, 50%, 0.15) 0%, hsla(45, 85%, 50%, 0.05) 100%)"
+                                hiddenOnMobile={true}
+                            />
                         </div>
                     </div>
                 </div>
 
                 {/* Error Display */}
-                {error && (
-                    <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 backdrop-blur-xl flex items-center justify-center gap-3 animate-in slide-in-from-top duration-300">
-                        <AlertCircle className="w-5 h-5 text-red-400" />
-                        <p className="text-red-400 text-sm">{error}</p>
-                        <button
-                            onClick={() => setError(null)}
-                            className="ml-auto text-red-400 hover:text-red-300"
-                        >
-                            <XCircle className="w-4 h-4" />
-                        </button>
-                    </div>
-                )}
+                <GlobalError
+                    error={error}
+                    onDismiss={() => setError(null)}
+                    type="error"
+                />
 
                 {/* Enrolled Courses Section */}
                 <section>
-                    <div className="flex items-center justify-between mb-6">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2 rounded-lg bg-white/5 border border-white/10">
-                                <BookOpen className="w-5 h-5 text-teal-400" />
-                            </div>
-                            <h2 className="text-xl sm:text-2xl font-semibold text-white">My Courses</h2>
-                        </div>
-                    </div>
+                    <SectionHeader
+                        icon={BookOpen}
+                        title="My Courses"
+                    />
 
                     {isLoading ? (
-                        <div
-                            className="p-12 rounded-2xl border border-white/10 text-center backdrop-blur-xl"
-                            style={{
-                                background: "linear-gradient(145deg, hsla(0, 0%, 100%, 0.08) 0%, hsla(0, 0%, 100%, 0.02) 100%)",
-                            }}
-                        >
-                            <div className="flex justify-center">
-                                <div className="w-12 h-12 border-4 border-teal-400 border-t-transparent rounded-full animate-spin"></div>
-                            </div>
-                            <p className="text-white/60 mt-4">Loading, wait a sec...</p>
-                        </div>
+                        <LoadingState message="Loading your courses..." />
                     ) : enrolledCourses.length > 0 ? (
                         <div className="grid gap-4 sm:gap-5 md:grid-cols-2 xl:grid-cols-3">
                             {enrolledCourses.map((course, index) => (
@@ -318,65 +255,19 @@ const StudentHomePage = () => {
                             ))}
                         </div>
                     ) : (
-                        <div
-                            className="p-12 sm:p-16 rounded-2xl border border-white/10 text-center backdrop-blur-xl relative overflow-hidden"
-                            style={{
-                                background: "linear-gradient(145deg, hsla(0, 0%, 100%, 0.08) 0%, hsla(0, 0%, 100%, 0.02) 100%)",
-                            }}
-                        >
-                            {/* Decorative elements */}
-                            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-32 bg-teal-500/10 blur-3xl rounded-full" />
-
-                            <div className="relative">
-                                <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center">
-                                    <BookOpen className="w-10 h-10 text-white/30" />
-                                </div>
-                                <h3 className="text-2xl font-semibold text-white mb-3">No courses yet</h3>
-                                <p className="text-white/60 mb-8 max-w-sm mx-auto">
-                                    Start your learning journey by exploring our catalog and enrolling in a course
-                                </p>
-                                <Link
-                                    to="/courses"
-                                    className="inline-flex items-center gap-2 py-3.5 px-8 rounded-xl font-semibold text-gray-900 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
-                                    style={{
-                                        background: "linear-gradient(135deg, hsl(174, 72%, 46%) 0%, hsl(199, 89%, 48%) 100%)",
-                                        boxShadow: "0 0 40px hsla(174, 72%, 46%, 0.3)"
-                                    }}
-                                >
-                                    Browse Courses
-                                    <ChevronRight className="w-5 h-5" />
-                                </Link>
-                            </div>
-                        </div>
+                        <EmptyState
+                            icon={BookOpen}
+                            title="No courses yet"
+                            description="Start your learning journey by exploring our catalog and enrolling in a course"
+                            actionText="Browse Courses"
+                            actionLink="/courses"
+                        />
                     )}
                 </section>
 
-                {/* Footer section */}
-                <footer className="relative z-10 border-t border-white/10 mt-12">
-                    <div className="max-w-7xl mx-auto px-6 py-8">
-                        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-                            <div className="flex items-center gap-2">
-                                <GraduationCap className="w-5 h-5 text-teal-400" />
-                                <span className="text-white/60 text-sm">
-                                © 2026 Learnify. Keep learning, keep growing.
-                            </span>
-                            </div>
-                            <div className="flex items-center gap-4">
-                                <a href="#" className="text-white/40 hover:text-white/80 text-sm transition-colors">
-                                    Help Center
-                                </a>
-                                <a href="#" className="text-white/40 hover:text-white/80 text-sm transition-colors">
-                                    Terms
-                                </a>
-                                <a href="#" className="text-white/40 hover:text-white/80 text-sm transition-colors">
-                                    Privacy
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
+                <Footer />
             </main>
-        </div>
+        </GradientBackground>
     );
 };
 
