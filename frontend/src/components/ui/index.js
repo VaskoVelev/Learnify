@@ -6,3 +6,4 @@ export { default as WelcomeBadge } from './WelcomeBadge';
 export { default as WelcomeSection } from './WelcomeSection';
 export { default as StatsCard } from './StatsCard';
 export { default as SectionHeader } from './SectionHeader';
+export { default as CourseCard } from './CourseCard';
