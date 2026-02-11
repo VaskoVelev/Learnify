@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { registerUser } from "../api/user.api";
 import { Mail, Lock, User } from "lucide-react";
 import {
+    GlobalError,
+    FieldError,
     AuthBrandPanel,
     AuthButton,
     AuthInput,
@@ -10,11 +12,7 @@ import {
     AuthFormContainer,
     AuthFormHeader,
     AuthLink
-} from "../components/auth";
-import {
-    GlobalError,
-    FieldError
-} from "../components/ui";
+} from "../components";
 
 const RegisterPage = () => {
     const navigate = useNavigate();

@@ -6,9 +6,7 @@ import {
     Navbar,
     Footer,
     GradientBackground,
-    FloatingOrbs
-} from "../../components/layout";
-import {
+    FloatingOrbs,
     GlobalError,
     LoadingState,
     EmptyState,
@@ -17,7 +15,7 @@ import {
     StatsCard,
     SectionHeader,
     CourseCard
-} from "../../components/ui";
+} from "../../components";
 import { BookOpen, TrendingUp, Award, Sparkles } from "lucide-react";
 
 const StudentHomePage = () => {
@@ -98,9 +96,14 @@ const StudentHomePage = () => {
                 <div className="mb-8 lg:mb-12">
                     <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
                         <div>
-                            <WelcomeBadge text="Welcome back" icon={Sparkles} className="mb-3" />
+                            <WelcomeBadge
+                                text="Welcome back"
+                                icon={Sparkles}
+                                className="mb-3"
+                            />
+
                             <WelcomeSection
-                                user={user}
+                                coloredText={user?.firstName}
                                 title="Hello"
                                 subtitle="Continue your learning journey. You're making great progress!"
                             />

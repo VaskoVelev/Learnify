@@ -3,17 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { Mail, Lock } from "lucide-react";
 import {
+    GlobalError,
+    FieldError,
     AuthBrandPanel,
     AuthButton,
     AuthInput,
     AuthFormContainer,
     AuthFormHeader,
     AuthLink
-} from "../components/auth";
-import {
-    GlobalError,
-    FieldError
-} from "../components/ui";
+} from "../components";
 
 const LoginPage = () => {
     const { login } = useAuth();
