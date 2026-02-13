@@ -7,7 +7,7 @@ const WelcomeSection = ({
     return (
         <div className={className}>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-3">
-                {title}, <span
+                {title} <span
                 className="bg-clip-text text-transparent"
                 style={{ backgroundImage: "linear-gradient(135deg, hsl(174, 72%, 56%) 0%, hsl(199, 89%, 58%) 100%)" }}
             >{coloredText}</span>!

@@ -104,7 +104,7 @@ const StudentHomePage = () => {
 
                             <WelcomeSection
                                 coloredText={user?.firstName}
-                                title="Hello"
+                                title="Hello,"
                                 subtitle="Continue your learning journey. You're making great progress!"
                             />
                         </div>

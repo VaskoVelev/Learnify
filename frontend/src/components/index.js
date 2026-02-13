@@ -19,6 +19,10 @@ export { default as ClearFiltersButton } from './ui/ClearFiltersButton';
 
 export { default as CourseCard } from './courses/CourseCard';
 export { default as CourseCatalogCard } from './courses/CourseCatalogCard';
+export { default as CourseHeader } from './courses/CourseHeader';
+export { default as ProgressCard } from './courses/ProgressCard';
+export { default as AverageScoreCard } from './courses/AverageScoreCard';
+export { default as LessonsList } from './courses/LessonsList';
 
 export { default as AuthBrandPanel } from './auth/AuthBrandPanel';
 export { default as AuthButton } from './auth/AuthButton';
