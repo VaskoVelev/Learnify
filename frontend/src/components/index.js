@@ -24,6 +24,14 @@ export { default as ProgressCard } from './courses/ProgressCard';
 export { default as AverageScoreCard } from './courses/AverageScoreCard';
 export { default as LessonsList } from './courses/LessonsList';
 
+export { default as BackButton } from './lessons/BackButton';
+export { default as LessonHeader } from './lessons/LessonHeader';
+export { default as VideoPlayer } from './lessons/VideoPlayer';
+export { default as LessonContent } from './lessons/LessonContent';
+export { default as MaterialsList } from './lessons/MaterialsList';
+export { default as QuizzesList } from './lessons/QuizzesList';
+export { default as SidebarCard } from './lessons/SidebarCard';
+
 export { default as AuthBrandPanel } from './auth/AuthBrandPanel';
 export { default as AuthButton } from './auth/AuthButton';
 export { default as AuthInput } from './auth/AuthInput';
