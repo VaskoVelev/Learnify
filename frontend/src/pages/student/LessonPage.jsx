@@ -4,6 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import { getLesson } from "../../api/lesson.api";
 import { getLessonMaterials } from "../../api/material.api";
 import { getLessonQuizzes } from "../../api/quiz.api";
+import { getMyQuizSubmissions } from "../../api/submission.api";
 import {
     Navbar,
     Footer,
@@ -29,6 +30,7 @@ const LessonPage = () => {
     const [lesson, setLesson] = useState(null);
     const [materials, setMaterials] = useState([]);
     const [quizzes, setQuizzes] = useState([]);
+    const [quizSubmissions, setQuizSubmissions] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [downloadError, setDownloadError] = useState(null);
@@ -47,6 +49,22 @@ const LessonPage = () => {
 
             const quizzesData = await getLessonQuizzes(lessonId);
             setQuizzes(quizzesData);
+
+            if (quizzesData.length > 0) {
+                const submissionsMap = {};
+                await Promise.all(
+                    quizzesData.map(async (quiz) => {
+                        try {
+                            const submissions = await getMyQuizSubmissions(quiz.id);
+                            submissionsMap[quiz.id] = submissions.length > 0;
+                        } catch (err) {
+                            setError(err);
+                            submissionsMap[quiz.id] = false;
+                        }
+                    })
+                );
+                setQuizSubmissions(submissionsMap);
+            }
         } catch (err) {
             setError(err.message);
             setMaterials([]);
@@ -190,7 +208,10 @@ const LessonPage = () => {
                     <LoadingState message="Loading lesson..." />
                 ) : (
                     <>
-                        <BackButton onClick={() => navigate(`/courses/${courseId}`)} />
+                        <BackButton
+                            onClick={() => navigate(`/courses/${courseId}`)}
+                            text="Back to Course"
+                        />
 
                         <LessonHeader title={lesson?.title} />
 
@@ -219,6 +240,7 @@ const LessonPage = () => {
                                     <QuizzesList
                                         quizzes={quizzes}
                                         onQuizClick={handleQuizClick}
+                                        quizSubmissions={quizSubmissions}
                                     />
                                 </SidebarCard>
                             </div>

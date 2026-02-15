@@ -46,6 +46,7 @@ const CoursePage = () => {
 
             try {
                 const progressionData = await getMyProgression(courseId);
+                console.log("Progression data from API:", progressionData);
                 setProgress(progressionData);
             } catch (progressionError) {
                 setProgress({

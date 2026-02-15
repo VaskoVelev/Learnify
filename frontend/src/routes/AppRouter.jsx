@@ -12,6 +12,8 @@ import UpdateProfilePage from "../pages/UpdateProfilePage";
 import CoursesPage from "../pages/student/CoursesPage";
 import CoursePage from "../pages/student/CoursePage";
 import LessonPage from "../pages/student/LessonPage";
+import QuizPage from "../pages/student/QuizPage";
+import QuizReviewPage from "../pages/student/QuizReviewPage";
 
 const AppRouter = () => {
     return (
@@ -29,6 +31,8 @@ const AppRouter = () => {
                 <Route path="/courses" element={<CoursesPage />} />
                 <Route path="/courses/:courseId" element={<CoursePage />} />
                 <Route path="/courses/:courseId/lessons/:lessonId" element={<LessonPage />} />
+                <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId" element={<QuizPage />} />
+                <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId/submissions/:submissionId/review" element={<QuizReviewPage />} />
             </Route>
         </Routes>
     );

@@ -16,13 +16,13 @@ const ProgressCard = ({ progress }) => {
                 <div>
                     <div className="flex justify-between text-sm mb-2">
                         <span className="text-white/60">Completion</span>
-                        <span className="text-white font-medium">{progress?.progressPercent || 0}%</span>
+                        <span className="text-white font-medium">{progress?.progressionPercent || 0}%</span>
                     </div>
                     <div className="h-2 rounded-full bg-white/10 overflow-hidden">
                         <div
                             className="h-full rounded-full transition-all duration-500"
                             style={{
-                                width: `${progress?.progressPercent || 0}%`,
+                                width: `${progress?.progressionPercent || 0}%`,
                                 background: "linear-gradient(135deg, hsl(174, 72%, 46%) 0%, hsl(199, 89%, 48%) 100%)"
                             }}
                         ></div>

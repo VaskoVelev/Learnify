@@ -1,6 +1,6 @@
 import { ChevronRight } from "lucide-react";
 
-const BackButton = ({ onClick, className = "" }) => {
+const BackButton = ({ onClick, text = "Back", className = "" }) => {
     return (
         <div className={`mb-8 ${className}`}>
             <button
@@ -8,7 +8,7 @@ const BackButton = ({ onClick, className = "" }) => {
                 className="inline-flex items-center gap-2 text-white/60 hover:text-white transition-colors group"
             >
                 <ChevronRight className="w-4 h-4 rotate-180 group-hover:translate-x-1 transition-transform" />
-                Back to Course
+                {text}
             </button>
         </div>
     );

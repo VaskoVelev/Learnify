@@ -16,6 +16,7 @@ export { default as StatsCard } from './ui/StatsCard';
 export { default as SearchBar } from './ui/SearchBar';
 export { default as FilterDropdown } from './ui/FilterDropdown';
 export { default as ClearFiltersButton } from './ui/ClearFiltersButton';
+export { default as BackButton } from './ui/BackButton';
 
 export { default as CourseCard } from './courses/CourseCard';
 export { default as CourseCatalogCard } from './courses/CourseCatalogCard';
@@ -24,13 +25,21 @@ export { default as ProgressCard } from './courses/ProgressCard';
 export { default as AverageScoreCard } from './courses/AverageScoreCard';
 export { default as LessonsList } from './courses/LessonsList';
 
-export { default as BackButton } from './lessons/BackButton';
 export { default as LessonHeader } from './lessons/LessonHeader';
 export { default as VideoPlayer } from './lessons/VideoPlayer';
 export { default as LessonContent } from './lessons/LessonContent';
 export { default as MaterialsList } from './lessons/MaterialsList';
 export { default as QuizzesList } from './lessons/QuizzesList';
 export { default as SidebarCard } from './lessons/SidebarCard';
+
+export { default as QuizHeader } from './quizzes/QuizHeader';
+export { default as QuestionCard } from './quizzes/QuestionCard';
+export { default as QuizSubmissionBanner } from './quizzes/QuizSubmissionBanner';
+export { default as QuizResultCard } from './quizzes/QuizResultCard';
+export { default as SubmitButton } from './quizzes/SubmitButton';
+export { default as ReturnToLessonButton } from './quizzes/ReturnToLessonButton';
+export { default as ReviewResultCard } from './quizzes/ReviewResultCard';
+export { default as ReviewQuestionCard } from './quizzes/ReviewQuestionCard';
 
 export { default as AuthBrandPanel } from './auth/AuthBrandPanel';
 export { default as AuthButton } from './auth/AuthButton';
@@ -39,3 +48,9 @@ export { default as AuthRoleSelector } from './auth/AuthRoleSelector';
 export { default as AuthFormContainer } from './auth/AuthFormContainer';
 export { default as AuthFormHeader } from './auth/AuthFormHeader';
 export { default as AuthLink } from './auth/AuthLink';
+
+export { default as ProfileHeader } from './profile/ProfileHeader';
+export { default as ProfileDetails } from './profile/ProfileDetails';
+export { default as ProfileDetailItem } from './profile/ProfileDetailItem';
+export { default as ProfileForm } from './profile/ProfileForm';
+export { default as PageHeader } from './profile/PageHeader';
