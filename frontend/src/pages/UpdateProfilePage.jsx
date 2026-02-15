@@ -9,7 +9,7 @@ import {
     FloatingOrbs,
     GlobalError,
     PageHeader,
-    BackLink,
+    BackButton,
     ProfileHeader,
     ProfileForm
 } from "../components";
@@ -79,19 +79,6 @@ const UpdateProfilePage = () => {
         navigate("/profile");
     };
 
-    const formatDate = (dateStr) => {
-        const date = new Date(dateStr);
-        return date.toLocaleDateString("en-US", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-        });
-    };
-
-    const getInitials = (firstName, lastName) => {
-        return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
-    };
-
     return (
         <GradientBackground>
             <FloatingOrbs />
@@ -104,7 +91,10 @@ const UpdateProfilePage = () => {
             />
 
             <main className="relative z-10 max-w-2xl mx-auto px-6 py-12">
-                <BackLink to="/profile" text="Back to Profile" />
+                <BackButton
+                    onClick={() => navigate(`/profile`)}
+                    text="Back to Profile"
+                />
 
                 <PageHeader
                     title="Update Profile"
@@ -123,14 +113,11 @@ const UpdateProfilePage = () => {
                 <div
                     className="rounded-2xl border border-white/10 backdrop-blur-xl overflow-hidden"
                     style={{
-                        background:
-                            "linear-gradient(145deg, hsla(0, 0%, 100%, 0.08) 0%, hsla(0, 0%, 100%, 0.02) 100%)",
+                        background: "linear-gradient(145deg, hsla(0, 0%, 100%, 0.08) 0%, hsla(0, 0%, 100%, 0.02) 100%)",
                     }}
                 >
-                    <ProfileHeader
-                        user={{ ...user, firstName: form.firstName, lastName: form.lastName }}
-                        getInitials={getInitials}
-                    />
+                    <ProfileHeader user={{ ...user, firstName: form.firstName, lastName: form.lastName }} />
+
                     <ProfileForm
                         form={form}
                         fieldErrors={fieldErrors}

@@ -1,50 +1,14 @@
 import { useState } from "react";
-import { Download, FileText, FileImage, Film, File, AlertCircle } from "lucide-react";
+import { Download, AlertCircle } from "lucide-react";
+import {
+    getFileName,
+    getFileIcon,
+    getFileTypeLabel,
+    isValidFileUrl
+} from "../../utils";
 
 const MaterialsList = ({ materials, onDownload }) => {
     const [downloadingId, setDownloadingId] = useState(null);
-
-    const getFileIcon = (fileType) => {
-        switch (fileType?.toLowerCase()) {
-            case "pdf":
-            case "docx":
-                return <FileText className="w-5 h-5" />;
-            case "png":
-            case "jpg":
-            case "jpeg":
-                return <FileImage className="w-5 h-5" />;
-            case "mp4":
-                return <Film className="w-5 h-5" />;
-            default:
-                return <File className="w-5 h-5" />;
-        }
-    };
-
-    const getFileName = (filePath) => {
-        try {
-            const url = new URL(filePath);
-            const pathname = url.pathname;
-            const fileName = pathname.split('/').pop();
-            return fileName || 'document';
-        } catch {
-            const parts = filePath.split(/[\\/]/);
-            const lastPart = parts.pop();
-            return lastPart || 'document';
-        }
-    };
-
-    const getFileTypeLabel = (fileType) => {
-        return fileType?.toUpperCase();
-    };
-
-    const isValidFileUrl = (filePath) => {
-        try {
-            const url = new URL(filePath);
-            return ['http:', 'https:'].includes(url.protocol);
-        } catch {
-            return false;
-        }
-    };
 
     const handleDownload = async (material) => {
         setDownloadingId(material.id);
@@ -55,7 +19,9 @@ const MaterialsList = ({ materials, onDownload }) => {
     if (materials.length === 0) {
         return (
             <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-center">
-                <FileText className="w-8 h-8 text-white/30 mx-auto mb-2" />
+                <div className="w-8 h-8 text-white/30 mx-auto mb-2">
+                    {getFileIcon('')}
+                </div>
                 <p className="text-white/60 text-sm">No materials available</p>
             </div>
         );

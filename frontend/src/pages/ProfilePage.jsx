@@ -33,19 +33,6 @@ const ProfilePage = () => {
         }
     };
 
-    const formatDate = (dateStr) => {
-        const date = new Date(dateStr);
-        return date.toLocaleDateString("en-US", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-        });
-    };
-
-    const getInitials = (firstName, lastName) => {
-        return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
-    };
-
     const handleEdit = () => {
         navigate("/profile/edit");
     };
@@ -83,12 +70,9 @@ const ProfilePage = () => {
                     <ProfileHeader
                         user={user}
                         onEdit={handleEdit}
-                        getInitials={getInitials}
                     />
-                    <ProfileDetails
-                        user={user}
-                        formatDate={formatDate}
-                    />
+
+                    <ProfileDetails user={user} />
                 </div>
             </main>
 

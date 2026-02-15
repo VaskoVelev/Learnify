@@ -3,7 +3,6 @@ import { GraduationCap, BookOpen, Users } from "lucide-react";
 const AuthBrandPanel = () => {
     return (
         <div className="hidden lg:flex lg:w-1/2 flex-col justify-center items-center p-12 relative overflow-hidden">
-            {/* Floating orbs */}
             <div className="absolute w-96 h-96 bg-teal-500 rounded-full blur-3xl opacity-30 -top-20 -left-20 animate-pulse" />
             <div className="absolute w-64 h-64 bg-cyan-500 rounded-full blur-3xl opacity-30 bottom-20 right-10 animate-pulse" />
             <div className="absolute w-48 h-48 bg-teal-400 rounded-full blur-3xl opacity-30 top-1/3 right-1/4 animate-pulse" />
@@ -23,7 +22,6 @@ const AuthBrandPanel = () => {
                     Unlock your potential with world-class courses from industry experts
                 </p>
 
-                {/* Feature cards */}
                 <div className="space-y-4">
                     <div className="flex items-center gap-4 p-4 rounded-xl bg-white/5 backdrop-blur-sm border border-white/10">
                         <div className="p-2 rounded-lg bg-teal-500/20 text-teal-400">

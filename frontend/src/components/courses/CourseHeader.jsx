@@ -1,6 +1,8 @@
 import { Calendar } from "lucide-react";
+import { formatDate, getInitials } from "../../utils";
+import { DIFFICULTY_COLORS } from "../../constants";
 
-const CourseHeader = ({ course, difficultyColors, formatDate, getInitials }) => {
+const CourseHeader = ({ course }) => {
     return (
         <div
             className="rounded-2xl border border-white/10 backdrop-blur-xl overflow-hidden mb-8"
@@ -14,7 +16,7 @@ const CourseHeader = ({ course, difficultyColors, formatDate, getInitials }) => 
                     <span className="px-3 py-1 rounded-full text-xs font-medium text-teal-400 bg-teal-500/15">
                         {course?.category}
                     </span>
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${difficultyColors[course?.difficulty] || difficultyColors?.BEGINNER}`}>
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${DIFFICULTY_COLORS[course?.difficulty] || DIFFICULTY_COLORS?.BEGINNER}`}>
                         {course?.difficulty}
                     </span>
                 </div>

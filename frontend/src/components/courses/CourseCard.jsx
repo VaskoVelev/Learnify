@@ -1,4 +1,5 @@
 import { BookOpen, Clock, Calendar, ChevronRight } from "lucide-react";
+import { formatDate, getInitials, getProgressBadgeColor } from "../../utils";
 
 const CourseCard = ({ course, onClick, className = "", index = 0 }) => {
     const {
@@ -9,32 +10,6 @@ const CourseCard = ({ course, onClick, className = "", index = 0 }) => {
         enrolledAt,
         progress
     } = course;
-
-    const formatDate = (dateStr) => {
-        if (!dateStr) return "";
-        try {
-            const date = new Date(dateStr);
-            return date.toLocaleDateString("en-US", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-            });
-        } catch (error) {
-            console.error("Error formatting date:", error);
-            return "";
-        }
-    };
-
-    const getInitials = (firstName, lastName) => {
-        if (!firstName && !lastName) return "??";
-        return `${firstName?.charAt(0) || ""}${lastName?.charAt(0) || ""}`.toUpperCase();
-    };
-
-    const getProgressBadgeColor = (progress) => {
-        if (progress >= 80) return 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/20';
-        if (progress >= 40) return 'bg-amber-500/20 text-amber-400 border border-amber-500/20';
-        return 'bg-white/10 text-white/60 border border-white/10';
-    };
 
     return (
         <div

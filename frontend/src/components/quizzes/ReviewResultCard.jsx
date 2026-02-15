@@ -1,6 +1,7 @@
 import { Award, Calendar } from "lucide-react";
+import { formatDateTime } from "../../utils";
 
-const ReviewResultCard = ({ submission, formatDate }) => {
+const ReviewResultCard = ({ submission }) => {
     if (!submission) return null;
 
     const answers = submission?.answers || [];
@@ -26,7 +27,7 @@ const ReviewResultCard = ({ submission, formatDate }) => {
                 </div>
                 <div className="flex items-center gap-2 text-white/40 text-sm">
                     <Calendar className="w-4 h-4" />
-                    <span>{formatDate(submission.submittedAt)}</span>
+                    <span>{formatDateTime(submission.submittedAt)}</span>
                 </div>
             </div>
         </div>

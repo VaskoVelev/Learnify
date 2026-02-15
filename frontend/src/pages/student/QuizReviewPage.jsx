@@ -55,19 +55,6 @@ const QuizReviewPage = () => {
             setIsLoading(false);
         }
     };
-
-    const formatDate = (dateStr) => {
-        if (!dateStr) return "";
-        const date = new Date(dateStr);
-        return date.toLocaleDateString("en-US", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-        });
-    };
-
     const answers = submission?.answers;
 
     return (
@@ -97,10 +84,7 @@ const QuizReviewPage = () => {
                     <LoadingState message="Loading review..." />
                 ) : submission ? (
                     <>
-                        <ReviewResultCard
-                            submission={submission}
-                            formatDate={formatDate}
-                        />
+                        <ReviewResultCard submission={submission} />
 
                         <div className="space-y-8">
                             {answers.map((answer, index) => (

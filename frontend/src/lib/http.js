@@ -1,5 +1,6 @@
 import axios from "axios";
 import { normalizeError } from "./error";
+import { API_PATHS } from "../constants";
 
 const http = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -28,7 +29,7 @@ http.interceptors.response.use(
         const originalRequest = error.config;
         const status = error.response?.status;
 
-        if (originalRequest.url.includes("/auth/refresh")) {
+        if (originalRequest.url.includes(API_PATHS.AUTH_REFRESH)) {
             localStorage.removeItem("accessToken");
             return Promise.reject(normalizeError(error));
         }
@@ -37,7 +38,7 @@ http.interceptors.response.use(
             originalRequest._retry = true;
 
             try {
-                const response = await http.post("/auth/refresh");
+                const response = await http.post(API_PATHS.AUTH_REFRESH);
                 const newAccessToken = await response.data.token;
 
                 localStorage.setItem("accessToken", newAccessToken);

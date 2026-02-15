@@ -1,18 +1,13 @@
 import { CheckCircle } from "lucide-react";
 
 const QuestionCard = ({
-                          question,
-                          index,
-                          selectedAnswer,
-                          onSelectAnswer,
-                          isSubmitted = false,
-                          letters = ["A", "B", "C", "D"]
-                      }) => {
-    // Safety check - if question or answers is undefined, don't render
-    if (!question || !question.answers || !Array.isArray(question.answers)) {
-        return null;
-    }
-
+    question,
+    index,
+    selectedAnswer,
+    onSelectAnswer,
+    isSubmitted = false,
+    letters = ["A", "B", "C", "D"]
+}) => {
     const isAnswered = !!selectedAnswer;
 
     return (

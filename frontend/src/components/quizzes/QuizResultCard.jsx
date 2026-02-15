@@ -1,18 +1,8 @@
 import { Award, Calendar, CheckCircle } from "lucide-react";
+import { formatDateTime } from "../../utils";
 
 const QuizResultCard = ({ submission, onCheckAnswers }) => {
     if (!submission) return null;
-
-    const formatDate = (dateStr) => {
-        const date = new Date(dateStr);
-        return date.toLocaleDateString("en-US", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-        });
-    };
 
     return (
         <div
@@ -73,7 +63,7 @@ const QuizResultCard = ({ submission, onCheckAnswers }) => {
                                 <Calendar className="w-5 h-5 text-teal-400" />
                                 <div>
                                     <p className="text-white/40 text-xs">Submitted</p>
-                                    <p className="text-white text-sm">{formatDate(submission.submittedAt)}</p>
+                                    <p className="text-white text-sm">{formatDateTime(submission.submittedAt)}</p>
                                 </div>
                             </div>
 

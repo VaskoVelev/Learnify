@@ -17,9 +17,11 @@ import {
     SearchBar,
     FilterDropdown,
     ClearFiltersButton,
-    CourseCatalogCard, WelcomeSection
+    CourseCatalogCard,
+    WelcomeSection
 } from "../../components";
 import { BookOpen, Sparkles, Tag, BarChart3 } from "lucide-react";
+import { ALL_CATEGORIES, ALL_DIFFICULTIES } from "../../constants";
 
 const CoursesPage = () => {
     const { logout } = useAuth();
@@ -36,15 +38,6 @@ const CoursesPage = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("all");
     const [selectedDifficulty, setSelectedDifficulty] = useState("all");
-
-    const allCategories = [
-        "all", "MATH", "CHEMISTRY", "PHYSICS", "HISTORY", "LANGUAGE",
-        "LITERATURE", "IT", "BUSINESS", "MUSIC"
-    ];
-
-    const allDifficulties = [
-        "all", "BEGINNER", "EASY", "INTERMEDIATE", "ADVANCED", "EXPERT"
-    ];
 
     const fetchCourses = async () => {
         try {
@@ -214,7 +207,7 @@ const CoursesPage = () => {
                             icon={Tag}
                             value={selectedCategory}
                             onChange={setSelectedCategory}
-                            options={allCategories}
+                            options={ALL_CATEGORIES}
                             placeholder="All Categories"
                             iconColor="text-teal-400"
                         />
@@ -223,7 +216,7 @@ const CoursesPage = () => {
                             icon={BarChart3}
                             value={selectedDifficulty}
                             onChange={setSelectedDifficulty}
-                            options={allDifficulties}
+                            options={ALL_DIFFICULTIES}
                             placeholder="All Difficulties"
                             iconColor="text-cyan-400"
                         />

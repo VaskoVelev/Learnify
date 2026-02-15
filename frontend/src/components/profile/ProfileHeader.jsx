@@ -1,6 +1,7 @@
-import { Settings } from "lucide-react";
+import { Settings, CheckCircle } from "lucide-react";
+import { getInitials } from "../../utils";
 
-const ProfileHeader = ({ user, onEdit, getInitials }) => {
+const ProfileHeader = ({ user, onEdit }) => {
     return (
         <div className="p-8 border-b border-white/10 flex flex-col sm:flex-row items-center gap-6">
             <div
@@ -29,7 +30,7 @@ const ProfileHeader = ({ user, onEdit, getInitials }) => {
                         {user?.role}
                     </span>
                     <span className="px-3 py-1 rounded-lg text-sm font-medium bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 flex items-center gap-1.5">
-                        <span className="w-3.5 h-3.5 rounded-full bg-emerald-400 animate-pulse" />
+                        <CheckCircle className="w-3.5 h-3.5" />
                         Active
                     </span>
                 </div>

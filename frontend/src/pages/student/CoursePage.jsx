@@ -28,14 +28,6 @@ const CoursePage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const difficultyColors = {
-        BEGINNER: "bg-emerald-500/20 text-emerald-400 border-emerald-500/20",
-        EASY: "bg-cyan-500/20 text-cyan-400 border-cyan-500/20",
-        INTERMEDIATE: "bg-amber-500/20 text-amber-400 border-amber-500/20",
-        ADVANCED: "bg-rose-500/20 text-rose-400 border-rose-500/20",
-        EXPERT: "bg-purple-500/20 text-purple-400 border-purple-500/20",
-    };
-
     const fetchCourseData = async () => {
         try {
             setIsLoading(true);
@@ -46,7 +38,6 @@ const CoursePage = () => {
 
             try {
                 const progressionData = await getMyProgression(courseId);
-                console.log("Progression data from API:", progressionData);
                 setProgress(progressionData);
             } catch (progressionError) {
                 setProgress({
@@ -89,19 +80,6 @@ const CoursePage = () => {
         navigate(`/courses/${courseId}/lessons/${lessonId}`);
     };
 
-    const formatDate = (dateStr) => {
-        const date = new Date(dateStr);
-        return date.toLocaleDateString("en-US", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-        });
-    };
-
-    const getInitials = (firstName, lastName) => {
-        return `${firstName?.charAt(0) || ""}${lastName?.charAt(0) || ""}`.toUpperCase();
-    };
-
     return (
         <GradientBackground>
             <FloatingOrbs />
@@ -126,12 +104,7 @@ const CoursePage = () => {
                     <LoadingState message="Loading course details..." />
                 ) : (
                     <>
-                        <CourseHeader
-                            course={course}
-                            difficultyColors={difficultyColors}
-                            formatDate={formatDate}
-                            getInitials={getInitials}
-                        />
+                        <CourseHeader course={course} />
 
                         <div className="grid lg:grid-cols-3 gap-8">
                             <div className="lg:col-span-1 space-y-6">

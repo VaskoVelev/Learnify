@@ -21,6 +21,7 @@ import {
     SidebarCard
 } from "../../components";
 import { Download, HelpCircle } from "lucide-react";
+import { getFileName, isValidFileUrl, getFileDownloadError, isVideoAvailable } from "../../utils";
 
 const LessonPage = () => {
     const { logout } = useAuth();
@@ -97,8 +98,10 @@ const LessonPage = () => {
     };
 
     const handleMaterialDownload = async (material) => {
+        const fileName = getFileName(material.filePath);
+
         if (!isValidFileUrl(material.filePath)) {
-            setDownloadError(`"${getFileName(material.filePath)}" has an invalid download URL.`);
+            setDownloadError(`"${fileName}" has an invalid download URL.`);
             return;
         }
 
@@ -119,22 +122,14 @@ const LessonPage = () => {
             });
 
             if (!response.ok) {
-                if (response.status === 404) {
-                    setDownloadError(`"${getFileName(material.filePath)}" was not found on the server.`);
-                } else if (response.status === 403) {
-                    setDownloadError(`You don't have permission to download "${getFileName(material.filePath)}".`);
-                } else if (response.status >= 500) {
-                    setDownloadError(`Server error while downloading "${getFileName(material.filePath)}".`);
-                } else {
-                    setDownloadError(`Unable to download "${getFileName(material.filePath)}" (Error: ${response.status}).`);
-                }
+                setDownloadError(getFileDownloadError(fileName, response.status));
                 setDownloadingMaterialId(null);
                 return;
             }
 
             const contentType = response.headers.get('content-type');
             if (contentType && contentType.includes('text/html')) {
-                setDownloadError(`"${getFileName(material.filePath)}" appears to be unavailable or corrupted.`);
+                setDownloadError(`"${fileName}" appears to be unavailable or corrupted.`);
                 setDownloadingMaterialId(null);
                 return;
             }
@@ -143,7 +138,7 @@ const LessonPage = () => {
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = getFileName(material.filePath);
+            link.download = fileName;
             document.body.appendChild(link);
             link.click();
 
@@ -162,20 +157,6 @@ const LessonPage = () => {
                 setDownloadError(`An unexpected error occurred while downloading "${getFileName(material.filePath)}".`);
             }
         }
-    };
-
-    const isVideoAvailable = () => {
-        if (!lesson?.videoUrl) return false;
-
-        const trimmedUrl = lesson.videoUrl.trim();
-        if (!trimmedUrl) return false;
-
-        const invalidValues = ["null", "undefined", "N/A", "none", "#", ""];
-        if (invalidValues.includes(trimmedUrl.toLowerCase())) {
-            return false;
-        }
-
-        return true;
     };
 
     return (
@@ -221,7 +202,7 @@ const LessonPage = () => {
                                 <VideoPlayer
                                     videoUrl={lesson?.videoUrl}
                                     title={lesson?.title}
-                                    isAvailable={isVideoAvailable()}
+                                    isAvailable={isVideoAvailable(lesson?.videoUrl)}
                                 />
 
                                 <LessonContent content={lesson?.content} />

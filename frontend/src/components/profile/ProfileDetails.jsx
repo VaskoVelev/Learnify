@@ -1,7 +1,8 @@
 import { User, Mail, Shield, Calendar, CheckCircle } from "lucide-react";
 import ProfileDetailItem from "./ProfileDetailItem";
+import { formatDate } from "../../utils";
 
-const ProfileDetails = ({ user, formatDate }) => {
+const ProfileDetails = ({ user }) => {
     return (
         <div className="p-8">
             <h3 className="text-lg font-semibold text-white mb-6">
