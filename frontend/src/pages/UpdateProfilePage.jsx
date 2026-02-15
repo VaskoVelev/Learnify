@@ -9,7 +9,6 @@ import {
     FloatingOrbs,
     GlobalError,
     PageHeader,
-    BackButton,
     ProfileHeader,
     ProfileForm
 } from "../components";
@@ -91,11 +90,6 @@ const UpdateProfilePage = () => {
             />
 
             <main className="relative z-10 max-w-2xl mx-auto px-6 py-12">
-                <BackButton
-                    onClick={() => navigate(`/profile`)}
-                    text="Back to Profile"
-                />
-
                 <PageHeader
                     title="Update Profile"
                     subtitle="Edit your account information"
@@ -127,9 +121,9 @@ const UpdateProfilePage = () => {
                         onCancel={handleCancel}
                     />
                 </div>
-            </main>
 
-            <Footer />
+                <Footer />
+            </main>
         </GradientBackground>
     );
 };

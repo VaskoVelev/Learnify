@@ -74,9 +74,9 @@ const ProfilePage = () => {
 
                     <ProfileDetails user={user} />
                 </div>
-            </main>
 
-            <Footer />
+                <Footer />
+            </main>
         </GradientBackground>
     );
 };
