@@ -50,7 +50,7 @@ public class QuizService {
         }
 
         return quizRepository
-                .findByLessonId(lessonId)
+                .findByLessonIdOrderById(lessonId)
                 .stream()
                 .map(quizMapper::toDto)
                 .toList();

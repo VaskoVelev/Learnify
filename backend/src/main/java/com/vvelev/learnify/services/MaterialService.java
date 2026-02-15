@@ -55,7 +55,7 @@ public class MaterialService {
         }
 
         return materialRepository
-                .findByLessonId(lessonId)
+                .findByLessonIdOrderById(lessonId)
                 .stream()
                 .map(materialMapper::toDto)
                 .toList();

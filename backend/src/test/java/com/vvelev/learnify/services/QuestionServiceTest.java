@@ -147,7 +147,7 @@ public class QuestionServiceTest {
     void getQuizQuestions_ShouldReturnQuizQuestions_WhenUserIsCourseCreator() {
         when(quizRepository.findById(quiz.getId())).thenReturn(Optional.of(quiz));
         when(securityUtils.getCurrentUserId()).thenReturn(teacher.getId());
-        when(questionRepository.findByQuizId(quiz.getId())).thenReturn(List.of(question));
+        when(questionRepository.findByQuizIdOrderById(quiz.getId())).thenReturn(List.of(question));
         when(questionMapper.toDto(question)).thenReturn(questionDto);
 
         List<QuestionDto> result = questionService.getQuizQuestions(quiz.getId());
@@ -160,7 +160,7 @@ public class QuestionServiceTest {
 
         verify(quizRepository, times(1)).findById(quiz.getId());
         verify(securityUtils, times(1)).getCurrentUserId();
-        verify(questionRepository, times(1)).findByQuizId(quiz.getId());
+        verify(questionRepository, times(1)).findByQuizIdOrderById(quiz.getId());
         verify(questionMapper, times(1)).toDto(question);
         verify(enrollmentRepository, never()).existsById(any(EnrollmentId.class));
     }
@@ -170,7 +170,7 @@ public class QuestionServiceTest {
         when(quizRepository.findById(quiz.getId())).thenReturn(Optional.of(quiz));
         when(securityUtils.getCurrentUserId()).thenReturn(student.getId());
         when(enrollmentRepository.existsById(any(EnrollmentId.class))).thenReturn(true);
-        when(questionRepository.findByQuizId(quiz.getId())).thenReturn(List.of(question));
+        when(questionRepository.findByQuizIdOrderById(quiz.getId())).thenReturn(List.of(question));
         when(questionMapper.toDto(question)).thenReturn(questionDto);
 
         List<QuestionDto> result = questionService.getQuizQuestions(quiz.getId());
@@ -184,7 +184,7 @@ public class QuestionServiceTest {
         verify(quizRepository, times(1)).findById(quiz.getId());
         verify(securityUtils, times(1)).getCurrentUserId();
         verify(enrollmentRepository, times(1)).existsById(any(EnrollmentId.class));
-        verify(questionRepository, times(1)).findByQuizId(quiz.getId());
+        verify(questionRepository, times(1)).findByQuizIdOrderById(quiz.getId());
         verify(questionMapper, times(1)).toDto(question);
     }
 
@@ -226,7 +226,7 @@ public class QuestionServiceTest {
     void getQuizQuestions_ShouldReturnEmptyList_WhenNoQuestionsExist() {
         when(quizRepository.findById(quiz.getId())).thenReturn(Optional.of(quiz));
         when(securityUtils.getCurrentUserId()).thenReturn(teacher.getId());
-        when(questionRepository.findByQuizId(quiz.getId())).thenReturn(List.of());
+        when(questionRepository.findByQuizIdOrderById(quiz.getId())).thenReturn(List.of());
 
         List<QuestionDto> result = questionService.getQuizQuestions(quiz.getId());
 
@@ -235,7 +235,7 @@ public class QuestionServiceTest {
 
         verify(quizRepository, times(1)).findById(quiz.getId());
         verify(securityUtils, times(1)).getCurrentUserId();
-        verify(questionRepository, times(1)).findByQuizId(quiz.getId());
+        verify(questionRepository, times(1)).findByQuizIdOrderById(quiz.getId());
         verify(questionMapper, never()).toDto(any(Question.class));
     }
 

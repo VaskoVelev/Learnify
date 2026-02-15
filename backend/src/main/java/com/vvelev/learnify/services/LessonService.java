@@ -52,7 +52,7 @@ public class LessonService {
         }
 
         return lessonRepository
-                .findByCourseId(courseId)
+                .findByCourseIdOrderById(courseId)
                 .stream()
                 .map(lessonMapper::toDto)
                 .toList();

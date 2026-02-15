@@ -3,11 +3,13 @@ package com.vvelev.learnify.mappers;
 import com.vvelev.learnify.dtos.submission.SubmissionDetailsDto;
 import com.vvelev.learnify.dtos.submission.SubmissionDto;
 import com.vvelev.learnify.dtos.submissionanswer.SubmissionAnswerDetailsDto;
+import com.vvelev.learnify.entities.Answer;
 import com.vvelev.learnify.entities.Submission;
 import com.vvelev.learnify.entities.SubmissionAnswer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.Comparator;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
@@ -22,12 +24,19 @@ public interface SubmissionMapper {
     SubmissionDetailsDto toDetailsDto(Submission submission);
 
     default SubmissionAnswerDetailsDto toAnswerDetailsDto(SubmissionAnswer sa) {
+        Answer correctAnswer = sa.getQuestion().getAnswers().stream()
+                .filter(Answer::isCorrect)
+                .findFirst()
+                .orElse(null);
+
         return new SubmissionAnswerDetailsDto(
                 sa.getQuestion().getId(),
                 sa.getQuestion().getText(),
                 sa.getAnswer().getId(),
                 sa.getAnswer().getText(),
-                sa.getAnswer().isCorrect()
+                sa.getAnswer().isCorrect(),
+                correctAnswer != null ? correctAnswer.getId() : null,
+                correctAnswer != null ? correctAnswer.getText() : "Correct answer not found"
         );
     }
 
@@ -36,6 +45,7 @@ public interface SubmissionMapper {
     ) {
         return answers.stream()
                 .map(this::toAnswerDetailsDto)
+                .sorted(Comparator.comparing(SubmissionAnswerDetailsDto::getQuestionId))
                 .toList();
     }
 }

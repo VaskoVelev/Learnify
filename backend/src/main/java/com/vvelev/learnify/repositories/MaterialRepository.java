@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface MaterialRepository extends JpaRepository<Material, Long> {
-    List<Material> findByLessonId(Long lessonId);
+    List<Material> findByLessonIdOrderById(Long lessonId);
 }

@@ -43,10 +43,12 @@ public class SubmissionService {
         validateAnswers(quizId, answers);
 
         Submission submission = createSubmission(quiz, student);
+        Submission savedSubmission = submissionRepository.save(submission);
+
         double score = processAnswers(submission, quizId, answers);
 
-        submission.setScore(score);
-        submissionRepository.save(submission);
+        savedSubmission.setScore(score);
+        submissionRepository.save(savedSubmission);
 
         studentProgressionService.updateProgression(student, course);
 
@@ -174,6 +176,12 @@ public class SubmissionService {
 
     private void createSubmissionAnswer(Submission submission, Answer answer) {
         SubmissionAnswer submissionAnswer = new SubmissionAnswer();
+
+        SubmissionAnswerId id =  new SubmissionAnswerId();
+        id.setSubmissionId(submission.getId());
+        id.setQuestionId(answer.getQuestion().getId());
+        submissionAnswer.setId(id);
+
         submissionAnswer.setSubmission(submission);
         submissionAnswer.setQuestion(answer.getQuestion());
         submissionAnswer.setAnswer(answer);

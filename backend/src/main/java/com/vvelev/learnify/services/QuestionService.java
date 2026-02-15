@@ -52,7 +52,7 @@ public class QuestionService {
         }
 
         return questionRepository
-                .findByQuizId(quizId)
+                .findByQuizIdOrderById(quizId)
                 .stream()
                 .map(questionMapper::toDto)
                 .toList();

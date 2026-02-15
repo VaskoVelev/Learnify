@@ -53,7 +53,7 @@ public class AnswerService {
 
         if (isCourseCreator(course, userId)) {
             return answerRepository
-                    .findByQuestionId(questionId)
+                    .findByQuestionIdOrderById(questionId)
                     .stream()
                     .map(answerMapper::toTeacherDto)
                     .toList();
@@ -61,7 +61,7 @@ public class AnswerService {
 
         if (isStudentEnrolled(userId, course.getId())) {
             return answerRepository
-                    .findByQuestionId(questionId)
+                    .findByQuestionIdOrderById(questionId)
                     .stream()
                     .map(answerMapper::toStudentDto)
                     .toList();

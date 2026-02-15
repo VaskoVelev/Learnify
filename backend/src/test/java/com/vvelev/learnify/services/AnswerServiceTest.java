@@ -157,7 +157,7 @@ public class AnswerServiceTest {
     void getQuestionAnswers_ShouldReturnTeacherDtos_WhenUserIsCourseCreator() {
         when(questionRepository.findById(question.getId())).thenReturn(Optional.of(question));
         when(securityUtils.getCurrentUserId()).thenReturn(teacher.getId());
-        when(answerRepository.findByQuestionId(question.getId())).thenReturn(List.of(answer));
+        when(answerRepository.findByQuestionIdOrderById(question.getId())).thenReturn(List.of(answer));
         when(answerMapper.toTeacherDto(answer)).thenReturn(teacherAnswerDto);
 
         List<?> result = answerService.getQuestionAnswers(question.getId());
@@ -174,7 +174,7 @@ public class AnswerServiceTest {
 
         verify(questionRepository, times(1)).findById(question.getId());
         verify(securityUtils, times(1)).getCurrentUserId();
-        verify(answerRepository, times(1)).findByQuestionId(question.getId());
+        verify(answerRepository, times(1)).findByQuestionIdOrderById(question.getId());
         verify(answerMapper, times(1)).toTeacherDto(answer);
         verify(enrollmentRepository, never()).existsById(any(EnrollmentId.class));
     }
@@ -184,7 +184,7 @@ public class AnswerServiceTest {
         when(questionRepository.findById(question.getId())).thenReturn(Optional.of(question));
         when(securityUtils.getCurrentUserId()).thenReturn(student.getId());
         when(enrollmentRepository.existsById(any(EnrollmentId.class))).thenReturn(true);
-        when(answerRepository.findByQuestionId(question.getId())).thenReturn(List.of(answer));
+        when(answerRepository.findByQuestionIdOrderById(question.getId())).thenReturn(List.of(answer));
         when(answerMapper.toStudentDto(answer)).thenReturn(studentAnswerDto);
 
         List<?> result = answerService.getQuestionAnswers(question.getId());
@@ -201,7 +201,7 @@ public class AnswerServiceTest {
         verify(questionRepository, times(1)).findById(question.getId());
         verify(securityUtils, times(1)).getCurrentUserId();
         verify(enrollmentRepository, times(1)).existsById(any(EnrollmentId.class));
-        verify(answerRepository, times(1)).findByQuestionId(question.getId());
+        verify(answerRepository, times(1)).findByQuestionIdOrderById(question.getId());
         verify(answerMapper, times(1)).toStudentDto(answer);
         verify(answerMapper, never()).toTeacherDto(any(Answer.class));
     }
@@ -244,7 +244,7 @@ public class AnswerServiceTest {
     void getQuestionAnswers_ShouldReturnEmptyList_WhenNoAnswersExist() {
         when(questionRepository.findById(question.getId())).thenReturn(Optional.of(question));
         when(securityUtils.getCurrentUserId()).thenReturn(teacher.getId());
-        when(answerRepository.findByQuestionId(question.getId())).thenReturn(List.of());
+        when(answerRepository.findByQuestionIdOrderById(question.getId())).thenReturn(List.of());
 
         List<?> result = answerService.getQuestionAnswers(question.getId());
 
@@ -253,7 +253,7 @@ public class AnswerServiceTest {
 
         verify(questionRepository, times(1)).findById(question.getId());
         verify(securityUtils, times(1)).getCurrentUserId();
-        verify(answerRepository, times(1)).findByQuestionId(question.getId());
+        verify(answerRepository, times(1)).findByQuestionIdOrderById(question.getId());
         verify(answerMapper, never()).toTeacherDto(any(Answer.class));
         verify(answerMapper, never()).toStudentDto(any(Answer.class));
     }

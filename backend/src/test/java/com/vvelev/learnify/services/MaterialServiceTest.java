@@ -146,7 +146,7 @@ public class MaterialServiceTest {
     void getLessonMaterials_ShouldReturnLessonMaterials_WhenUserIsCourseCreator() {
         when(lessonRepository.findById(lesson.getId())).thenReturn(Optional.of(lesson));
         when(securityUtils.getCurrentUserId()).thenReturn(teacher.getId());
-        when(materialRepository.findByLessonId(lesson.getId())).thenReturn(List.of(material));
+        when(materialRepository.findByLessonIdOrderById(lesson.getId())).thenReturn(List.of(material));
         when(materialMapper.toDto(material)).thenReturn(materialDto);
 
         List<MaterialDto> result = materialService.getLessonMaterials(lesson.getId());
@@ -160,7 +160,7 @@ public class MaterialServiceTest {
 
         verify(lessonRepository, times(1)).findById(lesson.getId());
         verify(securityUtils, times(1)).getCurrentUserId();
-        verify(materialRepository, times(1)).findByLessonId(lesson.getId());
+        verify(materialRepository, times(1)).findByLessonIdOrderById(lesson.getId());
         verify(materialMapper, times(1)).toDto(material);
         verify(enrollmentRepository, never()).existsById(any(EnrollmentId.class));
     }
@@ -170,7 +170,7 @@ public class MaterialServiceTest {
         when(lessonRepository.findById(lesson.getId())).thenReturn(Optional.of(lesson));
         when(securityUtils.getCurrentUserId()).thenReturn(student.getId());
         when(enrollmentRepository.existsById(any(EnrollmentId.class))).thenReturn(true);
-        when(materialRepository.findByLessonId(lesson.getId())).thenReturn(List.of(material));
+        when(materialRepository.findByLessonIdOrderById(lesson.getId())).thenReturn(List.of(material));
         when(materialMapper.toDto(material)).thenReturn(materialDto);
 
         List<MaterialDto> result = materialService.getLessonMaterials(lesson.getId());
@@ -185,7 +185,7 @@ public class MaterialServiceTest {
         verify(enrollmentRepository, times(1)).existsById(any(EnrollmentId.class));
         verify(lessonRepository, times(1)).findById(lesson.getId());
         verify(securityUtils, times(1)).getCurrentUserId();
-        verify(materialRepository, times(1)).findByLessonId(lesson.getId());
+        verify(materialRepository, times(1)).findByLessonIdOrderById(lesson.getId());
         verify(materialMapper, times(1)).toDto(material);
     }
 
@@ -227,7 +227,7 @@ public class MaterialServiceTest {
     void getLessonMaterials_ShouldReturnEmptyList_WhenNoMaterialsExist() {
         when(lessonRepository.findById(lesson.getId())).thenReturn(Optional.of(lesson));
         when(securityUtils.getCurrentUserId()).thenReturn(teacher.getId());
-        when(materialRepository.findByLessonId(lesson.getId())).thenReturn(List.of());
+        when(materialRepository.findByLessonIdOrderById(lesson.getId())).thenReturn(List.of());
 
         List<MaterialDto> result = materialService.getLessonMaterials(lesson.getId());
 
@@ -236,7 +236,7 @@ public class MaterialServiceTest {
 
         verify(lessonRepository, times(1)).findById(lesson.getId());
         verify(securityUtils, times(1)).getCurrentUserId();
-        verify(materialRepository, times(1)).findByLessonId(lesson.getId());
+        verify(materialRepository, times(1)).findByLessonIdOrderById(lesson.getId());
         verify(materialMapper, never()).toDto(any(Material.class));
     }
 

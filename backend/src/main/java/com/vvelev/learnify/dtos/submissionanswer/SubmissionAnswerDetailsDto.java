@@ -12,4 +12,6 @@ public class SubmissionAnswerDetailsDto {
     private Long chosenAnswerId;
     private String chosenAnswerText;
     private boolean isCorrect;
+    private Long correctAnswerId;
+    private String correctAnswerText;
 }
