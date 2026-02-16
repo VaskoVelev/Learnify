@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PublicRoute from "./PublicRoute";
 import ProtectedRoute from "./ProtectedRoute";
 import HomePageWrapper from "./HomePageWrapper";
+import CoursesPageWrapper from "./CoursesPageWrapper";
 
 import IndexPage from "../pages/IndexPage";
 import LoginPage from "../pages/LoginPage";
@@ -9,7 +10,6 @@ import RegisterPage from "../pages/RegisterPage";
 import ProfilePage from "../pages/ProfilePage";
 import UpdateProfilePage from "../pages/UpdateProfilePage";
 
-import CoursesPage from "../pages/student/CoursesPage";
 import CoursePage from "../pages/student/CoursePage";
 import LessonPage from "../pages/student/LessonPage";
 import QuizPage from "../pages/student/QuizPage";
@@ -28,7 +28,7 @@ const AppRouter = () => {
                 <Route path="/home" element={<HomePageWrapper />} />
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/profile/edit" element={<UpdateProfilePage />} />
-                <Route path="/courses" element={<CoursesPage />} />
+                <Route path="/courses" element={<CoursesPageWrapper />} />
                 <Route path="/courses/:courseId" element={<CoursePage />} />
                 <Route path="/courses/:courseId/lessons/:lessonId" element={<LessonPage />} />
                 <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId" element={<QuizPage />} />

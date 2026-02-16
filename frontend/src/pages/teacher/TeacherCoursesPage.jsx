@@ -1,0 +1,235 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { getAllCourses } from "../../api/course.api";
+import {
+    Navbar,
+    Footer,
+    GradientBackground,
+    FloatingOrbs,
+    GlobalError,
+    LoadingState,
+    EmptyState,
+    WelcomeBadge,
+    StatsCard,
+    SectionHeader,
+    SearchBar,
+    FilterDropdown,
+    ClearFiltersButton,
+    TeacherCourseCatalogCard,
+    WelcomeSection
+} from "../../components";
+import { BookOpen, Sparkles, Tag, BarChart3 } from "lucide-react";
+import { ALL_CATEGORIES, ALL_DIFFICULTIES } from "../../constants";
+
+const TeacherCoursesPage = () => {
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
+
+    const [courses, setCourses] = useState([]);
+    const [filteredCourses, setFilteredCourses] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [expandedCourseId, setExpandedCourseId] = useState(null);
+
+    const [searchTerm, setSearchTerm] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState("all");
+    const [selectedDifficulty, setSelectedDifficulty] = useState("all");
+
+    const fetchCourses = async () => {
+        try {
+            setIsLoading(true);
+            setError(null);
+
+            const coursesData = await getAllCourses();
+
+            setCourses(coursesData);
+            setFilteredCourses(coursesData);
+        } catch (err) {
+            setError(err.message);
+            setCourses([]);
+            setFilteredCourses([]);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchCourses();
+    }, []);
+
+    const filterCourses = () => {
+        let filtered = courses;
+
+        if (searchTerm) {
+            filtered = filtered.filter(course =>
+                course.title.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        }
+
+        if (selectedCategory !== "all") {
+            filtered = filtered.filter(course =>
+                course.category === selectedCategory
+            );
+        }
+
+        if (selectedDifficulty !== "all") {
+            filtered = filtered.filter(course =>
+                course.difficulty === selectedDifficulty
+            );
+        }
+
+        setFilteredCourses(filtered);
+    };
+
+    useEffect(() => {
+        filterCourses();
+    }, [courses, searchTerm, selectedCategory, selectedDifficulty]);
+
+    const handleLogout = async () => {
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            await logout();
+            navigate("/");
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        if (searchTerm || selectedCategory !== "all" || selectedDifficulty !== "all") {
+            setError(null);
+        }
+    }, [searchTerm, selectedCategory, selectedDifficulty]);
+
+    const clearFilters = () => {
+        setSearchTerm("");
+        setSelectedCategory("all");
+        setSelectedDifficulty("all");
+    };
+
+    const hasActiveFilters = searchTerm || selectedCategory !== "all" || selectedDifficulty !== "all";
+
+    return (
+        <GradientBackground>
+            <FloatingOrbs />
+
+            <Navbar
+                onLogout={handleLogout}
+                showHome={true}
+                showCourses={false}
+                showProfile={true}
+            />
+
+            <main className="relative z-10 max-w-7xl mx-auto px-6 py-8 lg:py-12">
+                <div className="mb-8 lg:mb-12">
+                    <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+                        <div>
+                            <WelcomeBadge
+                                text="Course Catalog"
+                                icon={Sparkles}
+                                className="mb-3"
+                            />
+
+                            <WelcomeSection
+                                coloredText="All Courses"
+                                title="Explore"
+                                subtitle="Browse available courses to see what others are teaching."
+                            />
+                        </div>
+
+                        <StatsCard
+                            icon={BookOpen}
+                            label="Courses"
+                            value={filteredCourses.length}
+                            color="teal"
+                            gradient="linear-gradient(145deg, hsla(174, 70%, 40%, 0.15) 0%, hsla(174, 70%, 40%, 0.05) 100%)"
+                            className="flex-none sm:w-36"
+                        />
+                    </div>
+                </div>
+
+                <div className="space-y-4 mb-6">
+                    <GlobalError
+                        error={error}
+                        onDismiss={() => setError(null)}
+                        type="error"
+                    />
+                </div>
+
+                <div className="mb-8 flex flex-col lg:flex-row gap-4">
+                    <SearchBar
+                        value={searchTerm}
+                        onChange={setSearchTerm}
+                        placeholder="Search courses by title or description..."
+                    />
+
+                    <div className="flex gap-3">
+                        <FilterDropdown
+                            icon={Tag}
+                            value={selectedCategory}
+                            onChange={setSelectedCategory}
+                            options={ALL_CATEGORIES}
+                            placeholder="All Categories"
+                            iconColor="text-teal-400"
+                        />
+
+                        <FilterDropdown
+                            icon={BarChart3}
+                            value={selectedDifficulty}
+                            onChange={setSelectedDifficulty}
+                            options={ALL_DIFFICULTIES}
+                            placeholder="All Difficulties"
+                            iconColor="text-cyan-400"
+                        />
+
+                        {hasActiveFilters && (
+                            <ClearFiltersButton onClick={clearFilters} />
+                        )}
+                    </div>
+                </div>
+
+                <section>
+                    <SectionHeader
+                        icon={BookOpen}
+                        title="Available Courses"
+                    />
+
+                    {isLoading ? (
+                        <LoadingState message="Loading courses..." />
+                    ) : filteredCourses.length > 0 ? (
+                        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3 items-start">
+                            {filteredCourses.map((course) => (
+                                <TeacherCourseCatalogCard
+                                    key={course.id}
+                                    course={course}
+                                    isExpanded={expandedCourseId === course.id}
+                                    onMouseEnter={() => setExpandedCourseId(course.id)}
+                                    onMouseLeave={() => setExpandedCourseId(null)}
+                                />
+                            ))}
+                        </div>
+                    ) : (
+                        <EmptyState
+                            icon={BookOpen}
+                            title="No courses found"
+                            description={hasActiveFilters
+                                ? "Try adjusting your search or filters to find what you're looking for."
+                                : "There are no courses available at the moment. Please check back later."}
+                            actionText={hasActiveFilters ? "Clear Filters" : undefined}
+                            onActionClick={hasActiveFilters ? clearFilters : undefined}
+                        />
+                    )}
+                </section>
+
+                <Footer />
+            </main>
+        </GradientBackground>
+    );
+};
+
+export default TeacherCoursesPage;

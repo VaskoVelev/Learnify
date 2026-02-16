@@ -17,9 +17,12 @@ export { default as SearchBar } from './ui/SearchBar';
 export { default as FilterDropdown } from './ui/FilterDropdown';
 export { default as ClearFiltersButton } from './ui/ClearFiltersButton';
 export { default as BackButton } from './ui/BackButton';
+export { default as CreateCourseButton } from './ui/CreateCourseButton';
 
 export { default as CourseCard } from './courses/CourseCard';
+export { default as TeacherCourseCard } from './courses/TeacherCourseCard';
 export { default as CourseCatalogCard } from './courses/CourseCatalogCard';
+export { default as TeacherCourseCatalogCard } from './courses/TeacherCourseCatalogCard';
 export { default as CourseHeader } from './courses/CourseHeader';
 export { default as ProgressCard } from './courses/ProgressCard';
 export { default as AverageScoreCard } from './courses/AverageScoreCard';

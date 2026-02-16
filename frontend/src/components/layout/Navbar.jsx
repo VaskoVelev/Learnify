@@ -3,7 +3,7 @@ import { GraduationCap } from "lucide-react";
 import NavButton from "./NavButton";
 import LogoutButton from "./LogoutButton";
 
-const Navbar = ({ onLogout, showHome = true, showCourses = true, showProfile = true }) => {
+const Navbar = ({ onLogout, showHome = true, showCourses = true, showProfile = true, showCreateCourse = false }) => {
     return (
         <header className="relative z-10 border-b border-white/10 backdrop-blur-xl bg-white/5">
             <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -23,6 +23,7 @@ const Navbar = ({ onLogout, showHome = true, showCourses = true, showProfile = t
                     {showHome && <NavButton to="/home" icon="Home" label="Home" />}
                     {showCourses && <NavButton to="/courses" icon="BookOpen" label="Courses" />}
                     {showProfile && <NavButton to="/profile" icon="User" label="Profile" />}
+
                     <LogoutButton onLogout={onLogout} />
                 </nav>
             </div>
