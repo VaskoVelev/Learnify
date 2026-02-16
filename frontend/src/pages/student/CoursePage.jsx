@@ -4,6 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import { getCourse } from "../../api/course.api";
 import { getMyProgression } from "../../api/course.api";
 import { getCourseLessons } from "../../api/lesson.api";
+import { getCourseEnrollments } from "../../api/enrollment.api";
 import {
     Navbar,
     Footer,
@@ -14,7 +15,8 @@ import {
     CourseHeader,
     ProgressCard,
     AverageScoreCard,
-    LessonsList
+    LessonsList,
+    EnrolledStudentsList
 } from "../../components";
 
 const CoursePage = () => {
@@ -25,6 +27,7 @@ const CoursePage = () => {
     const [course, setCourse] = useState(null);
     const [progress, setProgress] = useState(null);
     const [lessons, setLessons] = useState([]);
+    const [enrolledStudents, setEnrolledStudents] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -49,10 +52,14 @@ const CoursePage = () => {
             const lessonsData = await getCourseLessons(courseId);
             setLessons(lessonsData);
 
+            const studentsData = await getCourseEnrollments(courseId);
+            setEnrolledStudents(studentsData);
+
             setIsLoading(false);
         } catch (err) {
             setError(err.message);
             setLessons([]);
+            setEnrolledStudents([]);
         } finally {
             setIsLoading(false);
         }
@@ -103,23 +110,33 @@ const CoursePage = () => {
                 {isLoading ? (
                     <LoadingState message="Loading course details..." />
                 ) : (
-                    <>
-                        <CourseHeader course={course} />
+                    <div className="flex gap-8">
+                        {/* Left Side - Main Content */}
+                        <div className="flex-1">
+                            <CourseHeader course={course} />
 
-                        <div className="grid lg:grid-cols-3 gap-8">
-                            <div className="lg:col-span-1 space-y-6">
-                                <ProgressCard progress={progress} />
-                                <AverageScoreCard averageScore={progress?.averageScore} />
-                            </div>
+                            <div className="grid grid-cols-3 gap-8 mt-8">
+                                {/* Progress Stats - takes 1 column */}
+                                <div className="col-span-1 space-y-6">
+                                    <ProgressCard progress={progress} />
+                                    <AverageScoreCard averageScore={progress?.averageScore} />
+                                </div>
 
-                            <div className="lg:col-span-2">
-                                <LessonsList
-                                    lessons={lessons}
-                                    onLessonClick={handleLessonClick}
-                                />
+                                {/* Lessons - takes 2 columns */}
+                                <div className="col-span-2">
+                                    <LessonsList
+                                        lessons={lessons}
+                                        onLessonClick={handleLessonClick}
+                                    />
+                                </div>
                             </div>
                         </div>
-                    </>
+
+                        {/* Right Side - Enrolled Students List (fixed width) */}
+                        <div className="w-80 flex-shrink-0">
+                            <EnrolledStudentsList students={enrolledStudents} />
+                        </div>
+                    </div>
                 )}
 
                 <Footer />

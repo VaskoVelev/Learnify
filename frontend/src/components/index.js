@@ -27,6 +27,7 @@ export { default as CourseHeader } from './courses/CourseHeader';
 export { default as ProgressCard } from './courses/ProgressCard';
 export { default as AverageScoreCard } from './courses/AverageScoreCard';
 export { default as LessonsList } from './courses/LessonsList';
+export { default as EnrolledStudentsList } from './courses/EnrolledStudentsList';
 
 export { default as LessonHeader } from './lessons/LessonHeader';
 export { default as VideoPlayer } from './lessons/VideoPlayer';
