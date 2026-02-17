@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Download, AlertCircle } from "lucide-react";
+import { Download, AlertCircle, HelpCircle } from "lucide-react";
 import {
     getFileName,
     getFileIcon,
@@ -19,9 +19,7 @@ const MaterialsList = ({ materials, onDownload }) => {
     if (materials.length === 0) {
         return (
             <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-center">
-                <div className="w-8 h-8 text-white/30 mx-auto mb-2">
-                    {getFileIcon('')}
-                </div>
+                <HelpCircle className="w-8 h-8 text-white/30 mx-auto mb-2" />
                 <p className="text-white/60 text-sm">No materials available</p>
             </div>
         );

@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { createCourse } from "../../api/course.api";
+import { getCourse, updateCourse } from "../../api/course.api";
 import {
     Navbar,
     Footer,
@@ -14,9 +14,10 @@ import {
 } from "../../components";
 import { BookOpen } from "lucide-react";
 
-const CreateCoursePage = () => {
+const EditCoursePage = () => {
     const { logout } = useAuth();
     const navigate = useNavigate();
+    const { courseId } = useParams();
 
     const [form, setForm] = useState({
         title: "",
@@ -26,8 +27,31 @@ const CreateCoursePage = () => {
     });
 
     const [globalError, setGlobalError] = useState(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const fetchCourse = async () => {
+        try {
+            setIsLoading(true);
+            setGlobalError(null);
+
+            const courseData = await getCourse(courseId);
+            setForm({
+                title: courseData.title,
+                description: courseData.description,
+                category: courseData.category,
+                difficulty: courseData.difficulty
+            });
+        } catch (err) {
+            setGlobalError(err.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchCourse();
+    }, [courseId]);
 
     const handleLogout = async () => {
         setIsLoading(true);
@@ -61,8 +85,8 @@ const CreateCoursePage = () => {
         setGlobalError(null);
 
         try {
-            const newCourse = await createCourse(form);
-            navigate(`/courses/${newCourse.id}`);
+            await updateCourse(courseId, form);
+            navigate(`/courses/${courseId}`);
         } catch (err) {
             setGlobalError(err.message);
         } finally {
@@ -71,7 +95,7 @@ const CreateCoursePage = () => {
     };
 
     const handleCancel = () => {
-        navigate("/home");
+        navigate(`/courses/${courseId}`);
     };
 
     return (
@@ -87,8 +111,8 @@ const CreateCoursePage = () => {
 
             <main className="relative z-10 max-w-3xl mx-auto px-6 py-12">
                 <PageHeader
-                    title="Create New Course"
-                    subtitle="Share your knowledge by creating a new course"
+                    title="Edit Course"
+                    subtitle="Update your course information"
                 />
 
                 <GlobalError
@@ -117,8 +141,8 @@ const CreateCoursePage = () => {
                                 onSubmit={handleSubmit}
                                 onCancel={handleCancel}
                                 isSubmitting={isSubmitting}
-                                submitButtonText="Create Course"
-                                loadingText="Creating Course..."
+                                submitButtonText="Update Course"
+                                loadingText="Updating Course..."
                             />
                         </div>
                     </div>
@@ -130,4 +154,4 @@ const CreateCoursePage = () => {
     );
 };
 
-export default CreateCoursePage;
+export default EditCoursePage;

@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { createCourse } from "../../api/course.api";
+import { createLesson } from "../../api/lesson.api";
 import {
     Navbar,
     Footer,
@@ -9,20 +9,20 @@ import {
     FloatingOrbs,
     GlobalError,
     PageHeader,
-    CourseForm,
+    BackButton,
+    LessonForm,
     LoadingState
 } from "../../components";
-import { BookOpen } from "lucide-react";
 
-const CreateCoursePage = () => {
+const CreateLessonPage = () => {
     const { logout } = useAuth();
     const navigate = useNavigate();
+    const { courseId } = useParams();
 
     const [form, setForm] = useState({
         title: "",
-        description: "",
-        category: "",
-        difficulty: ""
+        content: "",
+        videoUrl: ""
     });
 
     const [globalError, setGlobalError] = useState(null);
@@ -48,21 +48,13 @@ const CreateCoursePage = () => {
         setForm({ ...form, [name]: value });
     };
 
-    const handleCategoryChange = (value) => {
-        setForm({ ...form, category: value });
-    };
-
-    const handleDifficultyChange = (value) => {
-        setForm({ ...form, difficulty: value });
-    };
-
     const handleSubmit = async () => {
         setIsSubmitting(true);
         setGlobalError(null);
 
         try {
-            const newCourse = await createCourse(form);
-            navigate(`/courses/${newCourse.id}`);
+            const newLesson = await createLesson(courseId, form);
+            navigate(`/courses/${courseId}/lessons/${newLesson.id}`);
         } catch (err) {
             setGlobalError(err.message);
         } finally {
@@ -71,7 +63,7 @@ const CreateCoursePage = () => {
     };
 
     const handleCancel = () => {
-        navigate("/home");
+        navigate(`/courses/${courseId}`);
     };
 
     return (
@@ -87,8 +79,8 @@ const CreateCoursePage = () => {
 
             <main className="relative z-10 max-w-3xl mx-auto px-6 py-12">
                 <PageHeader
-                    title="Create New Course"
-                    subtitle="Share your knowledge by creating a new course"
+                    title="Create New Lesson"
+                    subtitle="Add a new lesson to your course"
                 />
 
                 <GlobalError
@@ -108,17 +100,16 @@ const CreateCoursePage = () => {
                     >
                         {/* Form */}
                         <div className="p-8">
-                            <CourseForm
+                            <LessonForm
                                 form={form}
                                 onTitleChange={handleChange}
-                                onDescriptionChange={handleChange}
-                                onCategoryChange={handleCategoryChange}
-                                onDifficultyChange={handleDifficultyChange}
+                                onContentChange={handleChange}
+                                onVideoUrlChange={handleChange}
                                 onSubmit={handleSubmit}
                                 onCancel={handleCancel}
                                 isSubmitting={isSubmitting}
-                                submitButtonText="Create Course"
-                                loadingText="Creating Course..."
+                                submitButtonText="Create Lesson"
+                                loadingText="Creating Lesson..."
                             />
                         </div>
                     </div>
@@ -130,4 +121,4 @@ const CreateCoursePage = () => {
     );
 };
 
-export default CreateCoursePage;
+export default CreateLessonPage;

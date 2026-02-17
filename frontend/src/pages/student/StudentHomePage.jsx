@@ -154,7 +154,7 @@ const StudentHomePage = () => {
                     />
 
                     {isLoading ? (
-                        <LoadingState message="Loading your courses..." />
+                        <LoadingState message="Loading, wait a sec..." />
                     ) : enrolledCourses.length > 0 ? (
                         <div className="grid gap-4 sm:gap-5 md:grid-cols-2 xl:grid-cols-3">
                             {enrolledCourses.map((course, index) => (

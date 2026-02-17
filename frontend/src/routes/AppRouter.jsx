@@ -3,6 +3,7 @@ import PublicRoute from "./PublicRoute";
 import ProtectedRoute from "./ProtectedRoute";
 import HomePageWrapper from "./HomePageWrapper";
 import CoursesPageWrapper from "./CoursesPageWrapper";
+import CoursePageWrapper from "./CoursePageWrapper";
 
 import IndexPage from "../pages/IndexPage";
 import LoginPage from "../pages/LoginPage";
@@ -10,11 +11,12 @@ import RegisterPage from "../pages/RegisterPage";
 import ProfilePage from "../pages/ProfilePage";
 import UpdateProfilePage from "../pages/UpdateProfilePage";
 
-import CoursePage from "../pages/student/CoursePage";
 import LessonPage from "../pages/student/LessonPage";
 import QuizPage from "../pages/student/QuizPage";
 import QuizReviewPage from "../pages/student/QuizReviewPage";
 import CreateCoursePage from "../pages/teacher/CreateCoursePage";
+import EditCoursePage from "../pages/teacher/EditCoursePage";
+import CreateLessonPage from "../pages/teacher/CreateLessonPage";
 
 const AppRouter = () => {
     return (
@@ -30,7 +32,9 @@ const AppRouter = () => {
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/profile/edit" element={<UpdateProfilePage />} />
                 <Route path="/courses" element={<CoursesPageWrapper />} />
-                <Route path="/courses/:courseId" element={<CoursePage />} />
+                <Route path="/courses/:courseId" element={<CoursePageWrapper />} />
+                <Route path="/courses/:courseId/edit" element={<EditCoursePage />} />
+                <Route path="/courses/:courseId/lessons/create" element={<CreateLessonPage />} />
                 <Route path="/courses/:courseId/lessons/:lessonId" element={<LessonPage />} />
                 <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId" element={<QuizPage />} />
                 <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId/submissions/:submissionId/review" element={<QuizReviewPage />} />

@@ -186,7 +186,7 @@ const LessonPage = () => {
 
                 {/* Loading State */}
                 {isLoading ? (
-                    <LoadingState message="Loading lesson..." />
+                    <LoadingState message="Loading, wait a sec..." />
                 ) : (
                     <>
                         <BackButton

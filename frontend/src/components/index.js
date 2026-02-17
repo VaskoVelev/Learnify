@@ -36,6 +36,7 @@ export { default as LessonContent } from './lessons/LessonContent';
 export { default as MaterialsList } from './lessons/MaterialsList';
 export { default as QuizzesList } from './lessons/QuizzesList';
 export { default as SidebarCard } from './lessons/SidebarCard';
+export { default as LessonForm } from './lessons/LessonForm';
 
 export { default as QuizHeader } from './quizzes/QuizHeader';
 export { default as QuestionCard } from './quizzes/QuestionCard';

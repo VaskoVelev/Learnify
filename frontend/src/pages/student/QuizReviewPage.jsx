@@ -81,7 +81,7 @@ const QuizReviewPage = () => {
                 />
 
                 {isLoading ? (
-                    <LoadingState message="Loading review..." />
+                    <LoadingState message="Loading, wait a sec..." />
                 ) : submission ? (
                     <>
                         <ReviewResultCard submission={submission} />

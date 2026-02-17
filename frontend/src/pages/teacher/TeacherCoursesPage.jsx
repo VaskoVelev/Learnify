@@ -200,7 +200,7 @@ const TeacherCoursesPage = () => {
                     />
 
                     {isLoading ? (
-                        <LoadingState message="Loading courses..." />
+                        <LoadingState message="Loading, wait a sec..." />
                     ) : filteredCourses.length > 0 ? (
                         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3 items-start">
                             {filteredCourses.map((course) => (

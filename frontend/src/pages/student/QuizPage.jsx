@@ -146,7 +146,7 @@ const QuizPage = () => {
                 />
 
                 {isLoading ? (
-                    <LoadingState message="Loading quiz..." />
+                    <LoadingState message="Loading, wait a sec..." />
                 ) : (
                     <>
                         {isSubmitted && submission ? (

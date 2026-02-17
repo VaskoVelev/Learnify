@@ -1,6 +1,6 @@
-import { BookOpen, ChevronRight, Search } from "lucide-react";
+import { BookOpen, ChevronRight, Search, PlusCircle } from "lucide-react";
 
-const LessonsList = ({ lessons, onLessonClick }) => {
+const LessonsList = ({ lessons, onLessonClick, showCreateButton = false, onCreateClick }) => {
     return (
         <div
             className="rounded-2xl border border-white/10 backdrop-blur-xl p-6"
@@ -8,10 +8,21 @@ const LessonsList = ({ lessons, onLessonClick }) => {
                 background: "linear-gradient(145deg, hsla(0, 0%, 100%, 0.08) 0%, hsla(0, 0%, 100%, 0.02) 100%)",
             }}
         >
-            <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-teal-400" />
-                Course Lessons
-            </h3>
+            <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                    <BookOpen className="w-5 h-5 text-teal-400" />
+                    Course Lessons
+                </h3>
+                {showCreateButton && (
+                    <button
+                        onClick={onCreateClick}
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-teal-500/20 text-teal-400 hover:bg-teal-500/30 transition-all text-sm font-medium border border-teal-500/30"
+                    >
+                        <PlusCircle className="w-4 h-4" />
+                        New Lesson
+                    </button>
+                )}
+            </div>
 
             {lessons.length > 0 ? (
                 <div className="space-y-2">
@@ -51,7 +62,7 @@ const LessonsList = ({ lessons, onLessonClick }) => {
                             <Search className="w-10 h-10 text-white/30" />
                         </div>
                         <h3 className="text-2xl font-semibold text-white mb-3">No lessons available</h3>
-                        <p className="text-white/60 max-w-sm mx-auto">
+                        <p className="text-white/60 max-w-sm mx-auto mb-6">
                             There are no lessons available for this course yet.
                         </p>
                     </div>
