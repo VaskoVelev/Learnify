@@ -1,8 +1,6 @@
 import { FileText } from "lucide-react";
 
-const LessonContent = ({ content, className = "" }) => {
-    if (!content) return null;
-
+const LessonContent = ({ content }) => {
     return (
         <div
             className="rounded-2xl border border-white/10 backdrop-blur-xl p-6"
@@ -14,13 +12,21 @@ const LessonContent = ({ content, className = "" }) => {
                 <FileText className="w-5 h-5 text-teal-400" />
                 Lesson Content
             </h3>
-            <div className="prose prose-invert max-w-none">
-                {content.split("\n\n").map((paragraph, index) => (
-                    <p key={index} className="text-white/70 leading-relaxed mb-4 whitespace-pre-line">
-                        {paragraph}
-                    </p>
-                ))}
-            </div>
+
+            {content ? (
+                <div className="prose prose-invert max-w-none">
+                    {content.split("\n\n").map((paragraph, index) => (
+                        <p key={index} className="text-white/70 leading-relaxed mb-4 whitespace-pre-line">
+                            {paragraph}
+                        </p>
+                    ))}
+                </div>
+            ) : (
+                <div className="text-center py-8">
+                    <FileText className="w-12 h-12 text-white/20 mx-auto mb-3" />
+                    <p className="text-white/40">No content available for this lesson</p>
+                </div>
+            )}
         </div>
     );
 };
