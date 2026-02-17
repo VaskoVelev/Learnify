@@ -44,7 +44,7 @@ const ProfilePage = () => {
             <Navbar
                 onLogout={handleLogout}
                 showHome={true}
-                showCourses={true}
+                showCourses={false}
                 showProfile={false}
             />
 

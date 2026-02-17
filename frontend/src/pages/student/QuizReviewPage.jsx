@@ -64,7 +64,7 @@ const QuizReviewPage = () => {
             <Navbar
                 onLogout={handleLogout}
                 showHome={true}
-                showCourses={true}
+                showCourses={false}
                 showProfile={true}
             />
 

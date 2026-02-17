@@ -61,7 +61,7 @@ const TeacherHomePage = () => {
     };
 
     const handleCourseClick = (courseId) => {
-        navigate(`/courses-created/${courseId}`);
+        navigate(`/courses/${courseId}`);
     };
 
     const handleCreateCourse = () => {

@@ -21,20 +21,20 @@ const LessonsList = ({ lessons, onLessonClick }) => {
                             onClick={() => onLessonClick(lesson.id)}
                             className="w-full flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-teal-500/30 transition-all duration-200 group"
                         >
-                            <div className="flex items-center gap-4">
+                            <div className="flex items-center gap-4 min-w-0 flex-1">
                                 <span
-                                    className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-medium text-teal-400"
+                                    className="w-8 h-8 rounded-lg flex items-center justify-center text-sm font-medium text-teal-400 shrink-0"
                                     style={{
                                         background: "linear-gradient(145deg, hsla(174, 72%, 46%, 0.15) 0%, hsla(174, 72%, 46%, 0.05) 100%)",
                                     }}
                                 >
                                     {index + 1}
                                 </span>
-                                <span className="text-white/80 group-hover:text-white transition-colors text-left">
+                                <span className="text-white/80 group-hover:text-white transition-colors text-left break-words">
                                     {lesson.title}
                                 </span>
                             </div>
-                            <ChevronRight className="w-5 h-5 text-white/40 group-hover:text-teal-400 group-hover:translate-x-1 transition-all" />
+                            <ChevronRight className="w-5 h-5 text-white/40 group-hover:text-teal-400 group-hover:translate-x-1 transition-all shrink-0 ml-2" />
                         </button>
                     ))}
                 </div>
