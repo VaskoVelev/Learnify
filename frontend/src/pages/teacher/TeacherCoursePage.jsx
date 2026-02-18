@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { getCourse, deleteCourse } from "../../api/course.api";
+import { getCourse, deleteCourse, getCourseProgressions } from "../../api/course.api";
 import { getCourseLessons } from "../../api/lesson.api";
 import { getCourseEnrollments } from "../../api/enrollment.api";
 import {
@@ -28,6 +28,7 @@ const TeacherCoursePage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showDeleteCourseModal, setShowDeleteCourseModal] = useState(false);
+    const [studentProgress, setStudentProgress] = useState([]);
 
     const fetchCourseData = async () => {
         try {
@@ -43,11 +44,15 @@ const TeacherCoursePage = () => {
             const studentsData = await getCourseEnrollments(courseId);
             setEnrolledStudents(studentsData);
 
+            const progressData = await getCourseProgressions(courseId);
+            setStudentProgress(progressData);
+
             setIsLoading(false);
         } catch (err) {
             setError(err.message);
             setLessons([]);
             setEnrolledStudents([]);
+            setStudentProgress([]);
         } finally {
             setIsLoading(false);
         }
@@ -95,6 +100,19 @@ const TeacherCoursePage = () => {
         setShowDeleteCourseModal(false);
     };
 
+    const studentsWithProgress = enrolledStudents.map(student => {
+        const progress = studentProgress.find(p => p.studentId === student.id) || {
+            progressionPercent: 0,
+            averageScore: 0
+        };
+
+        return {
+            ...student,
+            progressionPercent: progress.progressionPercent,
+            averageScore: progress.averageScore
+        };
+    });
+
     return (
         <GradientBackground>
             <FloatingOrbs />
@@ -124,7 +142,7 @@ const TeacherCoursePage = () => {
                 />
 
                 {isLoading ? (
-                    <LoadingState message="Loading, wait a sec..." />
+                    <LoadingState message="Loading course details..." />
                 ) : (
                     <div className="flex gap-8">
                         {/* Left Side - Main Content */}
@@ -147,9 +165,9 @@ const TeacherCoursePage = () => {
                             </div>
                         </div>
 
-                        {/* Right Side - Enrolled Students List (fixed width) */}
-                        <div className="w-80 flex-shrink-0">
-                            <EnrolledStudentsList students={enrolledStudents} />
+                        {/* Right Side - Enrolled Students List with Progress */}
+                        <div className="w-96 flex-shrink-0">
+                            <EnrolledStudentsList students={studentsWithProgress} />
                         </div>
                     </div>
                 )}

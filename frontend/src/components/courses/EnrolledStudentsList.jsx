@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Users, Calendar, ChevronDown, ChevronUp, Search } from "lucide-react";
+import { Users, Calendar, ChevronDown, ChevronUp, Search, TrendingUp, Award } from "lucide-react";
 import { formatDate } from "../../utils";
 
 const EnrolledStudentsList = ({ students = [], className = "" }) => {
@@ -29,7 +29,7 @@ const EnrolledStudentsList = ({ students = [], className = "" }) => {
     }
 
     // Get the students to display based on expanded state
-    const displayedStudents = isExpanded ? students : students.slice(0, 5);
+    const displayedStudents = isExpanded ? students : students.slice(0, 3);
 
     // Filter based on search term (only applied when expanded)
     const filteredStudents = searchTerm && isExpanded
@@ -39,6 +39,20 @@ const EnrolledStudentsList = ({ students = [], className = "" }) => {
         : displayedStudents;
 
     const hasMoreThanFive = students.length > 5;
+
+    // Get badge color based on progress
+    const getProgressColor = (progress) => {
+        if (progress >= 80) return "bg-emerald-500";
+        if (progress >= 50) return "bg-amber-500";
+        return "bg-rose-500";
+    };
+
+    // Get score color based on value
+    const getScoreColor = (score) => {
+        if (score >= 80) return "text-emerald-400";
+        if (score >= 50) return "text-amber-400";
+        return "text-rose-400";
+    };
 
     return (
         <div
@@ -74,32 +88,72 @@ const EnrolledStudentsList = ({ students = [], className = "" }) => {
                 </div>
             )}
 
-            {/* Students List - no scrollbar when not expanded */}
-            <div className={`space-y-3 ${isExpanded ? 'max-h-[300px] overflow-y-auto custom-scrollbar pr-2' : ''}`}>
+            {/* Students List */}
+            <div className={`space-y-4 ${isExpanded ? 'max-h-[400px] overflow-y-auto custom-scrollbar pr-2' : ''}`}>
                 {filteredStudents.length > 0 ? (
                     filteredStudents.map((student) => (
                         <div
                             key={student.id}
-                            className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group"
+                            className="p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group"
                         >
-                            <div className="flex items-center gap-3">
-                                {/* Avatar with initials */}
-                                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center text-xs font-bold text-gray-900 shrink-0">
-                                    {`${student.firstName?.[0] || ''}${student.lastName?.[0] || ''}`.toUpperCase()}
-                                </div>
-                                <div>
-                                    <p className="text-white text-sm font-medium">
-                                        {student.firstName} {student.lastName}
-                                    </p>
-                                    <div className="flex items-center gap-1 text-xs text-white/30">
-                                        <Calendar className="w-3 h-3" />
-                                        <span>Enrolled {formatDate(student.enrolledAt)}</span>
+                            {/* Student header with name and avatar */}
+                            <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center text-xs font-bold text-gray-900 shrink-0">
+                                        {`${student.firstName?.[0] || ''}${student.lastName?.[0] || ''}`.toUpperCase()}
+                                    </div>
+                                    <div>
+                                        <p className="text-white text-sm font-medium">
+                                            {student.firstName} {student.lastName}
+                                        </p>
+                                        <div className="flex items-center gap-1 text-xs text-white/30">
+                                            <Calendar className="w-3 h-3" />
+                                            <span>Enrolled {formatDate(student.enrolledAt)}</span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Student indicator dot */}
-                            <div className="w-2 h-2 rounded-full bg-emerald-400/50 group-hover:bg-emerald-400 transition-colors" />
+                            {/* Progress and Score stats */}
+                            <div className="grid grid-cols-2 gap-2 mt-2">
+                                {/* Progress */}
+                                <div className="flex items-center gap-1.5">
+                                    <TrendingUp className="w-3.5 h-3.5 text-teal-400/70" />
+                                    <div className="flex-1">
+                                        <div className="flex justify-between text-xs mb-0.5">
+                                            <span className="text-white/40">Progress</span>
+                                            <span className={`text-xs font-medium ${getScoreColor(student.progressionPercent || 0)}`}>
+                                                {student.progressionPercent || 0}%
+                                            </span>
+                                        </div>
+                                        <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                            <div
+                                                className={`h-full rounded-full ${getProgressColor(student.progressionPercent || 0)}`}
+                                                style={{ width: `${student.progressionPercent || 0}%` }}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Average Score */}
+                                <div className="flex items-center gap-1.5">
+                                    <Award className="w-3.5 h-3.5 text-amber-400/70" />
+                                    <div className="flex-1">
+                                        <div className="flex justify-between text-xs mb-0.5">
+                                            <span className="text-white/40">Avg Score</span>
+                                            <span className={`text-xs font-medium ${getScoreColor(student.averageScore || 0)}`}>
+                                                {student.averageScore || 0}%
+                                            </span>
+                                        </div>
+                                        <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                                            <div
+                                                className={`h-full rounded-full ${getProgressColor(student.averageScore || 0)}`}
+                                                style={{ width: `${student.averageScore || 0}%` }}
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     ))
                 ) : (
@@ -109,12 +163,12 @@ const EnrolledStudentsList = ({ students = [], className = "" }) => {
                 )}
             </div>
 
-            {/* Show More/Less Button - only if more than 5 students */}
+            {/* Show More/Less Button */}
             {hasMoreThanFive && (
                 <button
                     onClick={() => {
                         setIsExpanded(!isExpanded);
-                        setSearchTerm(""); // Clear search when collapsing/expanding
+                        setSearchTerm("");
                     }}
                     className="w-full mt-4 flex items-center justify-center gap-2 py-2 rounded-lg bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 transition-all text-sm"
                 >
