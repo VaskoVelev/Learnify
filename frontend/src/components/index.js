@@ -47,6 +47,8 @@ export { default as ReturnToLessonButton } from './quizzes/ReturnToLessonButton'
 export { default as ReviewResultCard } from './quizzes/ReviewResultCard';
 export { default as ReviewQuestionCard } from './quizzes/ReviewQuestionCard';
 
+export { default as MaterialForm } from './materials/MaterialForm';
+
 export { default as AuthBrandPanel } from './auth/AuthBrandPanel';
 export { default as AuthButton } from './auth/AuthButton';
 export { default as AuthInput } from './auth/AuthInput';

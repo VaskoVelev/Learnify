@@ -198,7 +198,10 @@ const TeacherLessonPage = () => {
                     <LoadingState message="Loading, wait a sec..." />
                 ) : (
                     <>
-                        <BackButton onClick={() => navigate(`/courses/${courseId}`)} />
+                        <BackButton
+                            onClick={() => navigate(`/courses/${courseId}`)}
+                            text="Back to Course"
+                        />
 
                         <LessonHeader
                             title={lesson?.title}

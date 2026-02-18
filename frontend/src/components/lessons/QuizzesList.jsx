@@ -21,7 +21,7 @@ const QuizzesList = ({ quizzes, onQuizClick, quizSubmissions = {}, showAddButton
                             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 transition-all text-sm font-medium border border-amber-500/30"
                         >
                             <PlusCircle className="w-4 h-4" />
-                            Add Quiz
+                            New Quiz
                         </button>
                     )}
                 </div>
@@ -61,7 +61,7 @@ const QuizzesList = ({ quizzes, onQuizClick, quizSubmissions = {}, showAddButton
                         className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 transition-all text-sm font-medium border border-amber-500/30"
                     >
                         <PlusCircle className="w-4 h-4" />
-                        Add Quiz
+                        New Quiz
                     </button>
                 )}
             </div>

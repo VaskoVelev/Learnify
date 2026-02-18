@@ -34,7 +34,7 @@ const MaterialsList = ({ materials, onDownload, showAddButton = false, onAddClic
                             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-teal-500/20 text-teal-400 hover:bg-teal-500/30 transition-all text-sm font-medium border border-teal-500/30"
                         >
                             <PlusCircle className="w-4 h-4" />
-                            Add Material
+                            New Material
                         </button>
                     )}
                 </div>
@@ -74,7 +74,7 @@ const MaterialsList = ({ materials, onDownload, showAddButton = false, onAddClic
                         className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-teal-500/20 text-teal-400 hover:bg-teal-500/30 transition-all text-sm font-medium border border-teal-500/30"
                     >
                         <PlusCircle className="w-4 h-4" />
-                        Add Material
+                        New Material
                     </button>
                 )}
             </div>
