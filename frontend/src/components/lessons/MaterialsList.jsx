@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Download, AlertCircle, Search, ChevronDown, ChevronUp } from "lucide-react";
+import { Download, AlertCircle, Search, ChevronDown, ChevronUp, PlusCircle } from "lucide-react";
 import {
     getFileName,
     getFileIcon,
@@ -7,7 +7,7 @@ import {
     isValidFileUrl
 } from "../../utils";
 
-const MaterialsList = ({ materials, onDownload }) => {
+const MaterialsList = ({ materials, onDownload, showAddButton = false, onAddClick }) => {
     const [downloadingId, setDownloadingId] = useState(null);
     const [isExpanded, setIsExpanded] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -21,11 +21,22 @@ const MaterialsList = ({ materials, onDownload }) => {
     if (materials.length === 0) {
         return (
             <div className="rounded-2xl border border-white/10 backdrop-blur-xl p-6">
-                <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2 rounded-lg bg-teal-500/20">
-                        <Download className="w-5 h-5 text-teal-400" />
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-lg bg-teal-500/20">
+                            <Download className="w-5 h-5 text-teal-400" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-white">Materials</h3>
                     </div>
-                    <h3 className="text-lg font-semibold text-white">Materials</h3>
+                    {showAddButton && (
+                        <button
+                            onClick={onAddClick}
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-teal-500/20 text-teal-400 hover:bg-teal-500/30 transition-all text-sm font-medium border border-teal-500/30"
+                        >
+                            <PlusCircle className="w-4 h-4" />
+                            Add Material
+                        </button>
+                    )}
                 </div>
                 <div className="text-center py-8">
                     <Download className="w-12 h-12 text-white/20 mx-auto mb-3" />
@@ -49,12 +60,23 @@ const MaterialsList = ({ materials, onDownload }) => {
 
     return (
         <div className="rounded-2xl border border-white/10 backdrop-blur-xl p-6">
-            {/* Header with original icon */}
-            <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-lg bg-teal-500/20">
-                    <Download className="w-5 h-5 text-teal-400" />
+            {/* Header with add button */}
+            <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-teal-500/20">
+                        <Download className="w-5 h-5 text-teal-400" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-white">Materials</h3>
                 </div>
-                <h3 className="text-lg font-semibold text-white">Materials</h3>
+                {showAddButton && (
+                    <button
+                        onClick={onAddClick}
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-teal-500/20 text-teal-400 hover:bg-teal-500/30 transition-all text-sm font-medium border border-teal-500/30"
+                    >
+                        <PlusCircle className="w-4 h-4" />
+                        Add Material
+                    </button>
+                )}
             </div>
 
             {/* Search Bar - only show when expanded */}

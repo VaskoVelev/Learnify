@@ -17,13 +17,11 @@ import {
     VideoPlayer,
     LessonContent,
     MaterialsList,
-    QuizzesList,
-    SidebarCard
+    QuizzesList
 } from "../../components";
-import { Download, HelpCircle } from "lucide-react";
 import { getFileName, isValidFileUrl, getFileDownloadError, isVideoAvailable } from "../../utils";
 
-const LessonPage = () => {
+const TeacherLessonPage = () => {
     const { logout } = useAuth();
     const navigate = useNavigate();
     const { courseId, lessonId } = useParams();
@@ -152,11 +150,24 @@ const LessonPage = () => {
             setDownloadingMaterialId(null);
 
             if (err.name === 'TypeError' && err.message.includes('Failed to fetch')) {
-                setDownloadError(`Cannot connect to download server for "${getFileName(material.filePath)}".`);
+                setDownloadError(`Cannot connect to download server for "${fileName}".`);
             } else {
-                setDownloadError(`An unexpected error occurred while downloading "${getFileName(material.filePath)}".`);
+                setDownloadError(`An unexpected error occurred while downloading "${fileName}".`);
             }
         }
+    };
+
+    // Edit handlers
+    const handleEditLesson = () => {
+        navigate(`/courses/${courseId}/lessons/${lessonId}/edit`);
+    };
+
+    const handleAddMaterial = () => {
+        navigate(`/courses/${courseId}/lessons/${lessonId}/materials/create`);
+    };
+
+    const handleAddQuiz = () => {
+        navigate(`/courses/${courseId}/lessons/${lessonId}/quizzes/create`);
     };
 
     return (
@@ -170,7 +181,6 @@ const LessonPage = () => {
                 showProfile={true}
             />
 
-            {/* Main Content */}
             <main className="relative z-10 max-w-7xl mx-auto px-6 py-8 lg:py-12">
                 <GlobalError
                     error={error}
@@ -184,41 +194,48 @@ const LessonPage = () => {
                     type="error"
                 />
 
-                {/* Loading State */}
                 {isLoading ? (
                     <LoadingState message="Loading, wait a sec..." />
                 ) : (
                     <>
-                        <BackButton
-                            onClick={() => navigate(`/courses/${courseId}`)}
-                            text="Back to Course"
+                        <BackButton onClick={() => navigate(`/courses/${courseId}`)} />
+
+                        <LessonHeader
+                            title={lesson?.title}
+                            onEdit={handleEditLesson}
                         />
 
-                        <LessonHeader title={lesson?.title} />
-
                         <div className="grid lg:grid-cols-3 gap-8">
-                            {/* Main Content Column */}
+                            {/* Main Content Column - NO EDIT BUTTONS */}
                             <div className="lg:col-span-2 space-y-8">
                                 <VideoPlayer
                                     videoUrl={lesson?.videoUrl}
                                     title={lesson?.title}
                                     isAvailable={isVideoAvailable(lesson?.videoUrl)}
+                                    // NO onEdit prop
                                 />
 
-                                <LessonContent content={lesson?.content} />
+                                <LessonContent
+                                    content={lesson?.content}
+                                    // NO onEdit prop
+                                />
                             </div>
 
-                            {/* Sidebar */}
+                            {/* Sidebar - WITH EDIT/ADD BUTTONS */}
                             <div className="lg:col-span-1 space-y-6">
                                 <MaterialsList
                                     materials={materials}
                                     onDownload={handleMaterialDownload}
+                                    showAddButton={true}
+                                    onAddClick={handleAddMaterial}
                                 />
 
                                 <QuizzesList
                                     quizzes={quizzes}
                                     onQuizClick={handleQuizClick}
                                     quizSubmissions={quizSubmissions}
+                                    showAddButton={true}
+                                    onAddClick={handleAddQuiz}
                                 />
                             </div>
                         </div>
@@ -231,4 +248,4 @@ const LessonPage = () => {
     );
 };
 
-export default LessonPage;
+export default TeacherLessonPage;

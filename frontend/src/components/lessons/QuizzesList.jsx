@@ -1,18 +1,29 @@
 import { useState } from "react";
-import { HelpCircle, ChevronRight, CheckCircle, RotateCcw, Search, ChevronDown, ChevronUp } from "lucide-react";
+import { HelpCircle, ChevronRight, CheckCircle, RotateCcw, Search, ChevronDown, ChevronUp, PlusCircle } from "lucide-react";
 
-const QuizzesList = ({ quizzes, onQuizClick, quizSubmissions = {} }) => {
+const QuizzesList = ({ quizzes, onQuizClick, quizSubmissions = {}, showAddButton = false, onAddClick }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
 
     if (quizzes.length === 0) {
         return (
             <div className="rounded-2xl border border-white/10 backdrop-blur-xl p-6">
-                <div className="flex items-center gap-3 mb-4">
-                    <div className="p-2 rounded-lg bg-amber-500/20">
-                        <HelpCircle className="w-5 h-5 text-amber-400" />
+                <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 rounded-lg bg-amber-500/20">
+                            <HelpCircle className="w-5 h-5 text-amber-400" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-white">Quizzes</h3>
                     </div>
-                    <h3 className="text-lg font-semibold text-white">Quizzes</h3>
+                    {showAddButton && (
+                        <button
+                            onClick={onAddClick}
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 transition-all text-sm font-medium border border-amber-500/30"
+                        >
+                            <PlusCircle className="w-4 h-4" />
+                            Add Quiz
+                        </button>
+                    )}
                 </div>
                 <div className="text-center py-8">
                     <HelpCircle className="w-12 h-12 text-white/20 mx-auto mb-3" />
@@ -36,12 +47,23 @@ const QuizzesList = ({ quizzes, onQuizClick, quizSubmissions = {} }) => {
 
     return (
         <div className="rounded-2xl border border-white/10 backdrop-blur-xl p-6">
-            {/* Header with original icon */}
-            <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 rounded-lg bg-amber-500/20">
-                    <HelpCircle className="w-5 h-5 text-amber-400" />
+            {/* Header with add button */}
+            <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-amber-500/20">
+                        <HelpCircle className="w-5 h-5 text-amber-400" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-white">Quizzes</h3>
                 </div>
-                <h3 className="text-lg font-semibold text-white">Quizzes</h3>
+                {showAddButton && (
+                    <button
+                        onClick={onAddClick}
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 transition-all text-sm font-medium border border-amber-500/30"
+                    >
+                        <PlusCircle className="w-4 h-4" />
+                        Add Quiz
+                    </button>
+                )}
             </div>
 
             {/* Search Bar - only show when expanded */}
