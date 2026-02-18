@@ -13,7 +13,7 @@ import {
     LoadingState,
     CourseHeader,
     LessonsList,
-    EnrolledStudentsList,
+    TeacherEnrolledStudentsList,
     ConfirmationModal
 } from "../../components";
 
@@ -167,7 +167,7 @@ const TeacherCoursePage = () => {
 
                         {/* Right Side - Enrolled Students List with Progress */}
                         <div className="w-96 flex-shrink-0">
-                            <EnrolledStudentsList students={studentsWithProgress} />
+                            <TeacherEnrolledStudentsList students={studentsWithProgress} />
                         </div>
                     </div>
                 )}

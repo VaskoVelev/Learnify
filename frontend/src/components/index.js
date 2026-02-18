@@ -30,6 +30,7 @@ export { default as AverageScoreCard } from './courses/AverageScoreCard';
 export { default as LessonsList } from './courses/LessonsList';
 export { default as EnrolledStudentsList } from './courses/EnrolledStudentsList';
 export { default as CourseForm } from './courses/CourseForm';
+export { default as TeacherEnrolledStudentsList } from './courses/TeacherEnrolledStudentsList';
 
 export { default as LessonHeader } from './lessons/LessonHeader';
 export { default as VideoPlayer } from './lessons/VideoPlayer';
