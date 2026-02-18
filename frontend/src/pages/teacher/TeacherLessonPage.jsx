@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { getLesson } from "../../api/lesson.api";
-import { getLessonMaterials } from "../../api/material.api";
+import { getLesson, deleteLesson } from "../../api/lesson.api";
+import { getLessonMaterials, deleteMaterial } from "../../api/material.api";
 import { getLessonQuizzes } from "../../api/quiz.api";
 import { getMyQuizSubmissions } from "../../api/submission.api";
 import {
@@ -17,7 +17,8 @@ import {
     VideoPlayer,
     LessonContent,
     MaterialsList,
-    QuizzesList
+    QuizzesList,
+    ConfirmationModal
 } from "../../components";
 import { getFileName, isValidFileUrl, getFileDownloadError, isVideoAvailable } from "../../utils";
 
@@ -34,6 +35,8 @@ const TeacherLessonPage = () => {
     const [error, setError] = useState(null);
     const [downloadError, setDownloadError] = useState(null);
     const [downloadingMaterialId, setDownloadingMaterialId] = useState(null);
+    const [showDeleteLessonModal, setShowDeleteLessonModal] = useState(false);
+    const [materialToDelete, setMaterialToDelete] = useState(null);
 
     const fetchLessonData = async () => {
         try {
@@ -162,8 +165,32 @@ const TeacherLessonPage = () => {
         navigate(`/courses/${courseId}/lessons/${lessonId}/edit`);
     };
 
+    const handleDeleteLesson = async () => {
+        try {
+            setIsLoading(true);
+            await deleteLesson(lessonId);
+            navigate(`/courses/${courseId}`);
+        } catch (err) {
+            setError(err.message);
+            setIsLoading(false);
+        }
+        setShowDeleteLessonModal(false);
+    };
+
     const handleAddMaterial = () => {
         navigate(`/courses/${courseId}/lessons/${lessonId}/materials/create`);
+    };
+
+    const handleDeleteMaterial = async (materialId) => {
+        try {
+            await deleteMaterial(materialId);
+            // Refresh materials list
+            const updatedMaterials = materials.filter(m => m.id !== materialId);
+            setMaterials(updatedMaterials);
+            setMaterialToDelete(null);
+        } catch (err) {
+            setError(err.message);
+        }
     };
 
     const handleAddQuiz = () => {
@@ -194,6 +221,27 @@ const TeacherLessonPage = () => {
                     type="error"
                 />
 
+                <ConfirmationModal
+                    isOpen={showDeleteLessonModal}
+                    onClose={() => setShowDeleteLessonModal(false)}
+                    onConfirm={handleDeleteLesson}
+                    title="Delete Lesson"
+                    message="Are you sure you want to delete this lesson? This action cannot be undone and will also delete all materials and quizzes."
+                    confirmText="Delete Lesson"
+                    type="danger"
+                />
+
+                {/* Delete Material Modal */}
+                <ConfirmationModal
+                    isOpen={!!materialToDelete}
+                    onClose={() => setMaterialToDelete(null)}
+                    onConfirm={() => handleDeleteMaterial(materialToDelete)}
+                    title="Delete Material"
+                    message="Are you sure you want to delete this material? This action cannot be undone."
+                    confirmText="Delete Material"
+                    type="danger"
+                />
+
                 {isLoading ? (
                     <LoadingState message="Loading, wait a sec..." />
                 ) : (
@@ -206,6 +254,7 @@ const TeacherLessonPage = () => {
                         <LessonHeader
                             title={lesson?.title}
                             onEdit={handleEditLesson}
+                            onDelete={() => setShowDeleteLessonModal(true)}
                         />
 
                         <div className="grid lg:grid-cols-3 gap-8">
@@ -231,6 +280,7 @@ const TeacherLessonPage = () => {
                                     onDownload={handleMaterialDownload}
                                     showAddButton={true}
                                     onAddClick={handleAddMaterial}
+                                    onDelete={(id) => setMaterialToDelete(id)}
                                 />
 
                                 <QuizzesList

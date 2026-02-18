@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Download, AlertCircle, Search, ChevronDown, ChevronUp, PlusCircle } from "lucide-react";
+import { Download, AlertCircle, Search, ChevronDown, ChevronUp, PlusCircle, Trash2 } from "lucide-react";
 import {
     getFileName,
     getFileIcon,
@@ -7,7 +7,7 @@ import {
     isValidFileUrl
 } from "../../utils";
 
-const MaterialsList = ({ materials, onDownload, showAddButton = false, onAddClick }) => {
+const MaterialsList = ({ materials, onDownload, showAddButton = false, onAddClick, onDelete}) => {
     const [downloadingId, setDownloadingId] = useState(null);
     const [isExpanded, setIsExpanded] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -144,6 +144,19 @@ const MaterialsList = ({ materials, onDownload, showAddButton = false, onAddClic
                                     <Download className={`w-4 h-4 shrink-0 transition-all ${
                                         isValid ? 'text-white/40 group-hover:text-teal-400 group-hover:translate-y-0.5' : 'text-red-400/50'
                                     }`} />
+                                )}
+
+                                {onDelete && (
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onDelete(material.id);
+                                        }}
+                                        className="p-1.5 rounded-lg bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 transition-all border border-rose-500/30 ml-1"
+                                        title="Delete material"
+                                    >
+                                        <Trash2 className="w-3.5 h-3.5" />
+                                    </button>
                                 )}
                             </button>
                         );
