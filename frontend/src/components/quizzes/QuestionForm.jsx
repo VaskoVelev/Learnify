@@ -8,6 +8,7 @@ const QuestionForm = ({
     onSubmit,
     onCancel,
     isSubmitting = false,
+    onDeleteAnswer, // Add this prop for handling answer deletion
     submitButtonText = "Create Question",
     loadingText = "Creating Question..."
 }) => {
@@ -49,6 +50,7 @@ const QuestionForm = ({
             setAnswerError("Maximum 4 answers allowed");
             return;
         }
+        // New answers have no ID (they will be created in the database)
         const newAnswers = [...form.answers, { text: "", isCorrect: false }];
         onAnswersChange(newAnswers);
         setAnswerError("");
@@ -59,6 +61,15 @@ const QuestionForm = ({
             setAnswerError("Minimum 2 answers required");
             return;
         }
+
+        const answerToDelete = form.answers[index];
+
+        // If this answer has an ID (existing answer in edit mode), call the delete API
+        if (answerToDelete.id && onDeleteAnswer) {
+            onDeleteAnswer(answerToDelete.id);
+        }
+        // If it doesn't have an ID (new answer), just remove it from state
+
         const newAnswers = form.answers.filter((_, i) => i !== index);
         onAnswersChange(newAnswers);
         setAnswerError("");
@@ -111,7 +122,7 @@ const QuestionForm = ({
 
                 <div className="space-y-3">
                     {form.answers.map((answer, index) => (
-                        <div key={index} className="flex items-start gap-3">
+                        <div key={answer.id || `new-${index}`} className="flex items-start gap-3">
                             {/* Answer input */}
                             <div className="flex-1">
                                 <input
