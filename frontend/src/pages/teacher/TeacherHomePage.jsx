@@ -14,8 +14,7 @@ import {
     WelcomeSection,
     StatsCard,
     SectionHeader,
-    TeacherCourseCard,
-    CreateCourseButton
+    TeacherCourseCard
 } from "../../components";
 import { BookOpen, Sparkles, PlusCircle } from "lucide-react";
 
@@ -128,7 +127,14 @@ const TeacherHomePage = () => {
                         />
 
                         {/* Create Course Button - Next to the header */}
-                        <CreateCourseButton onClick={handleCreateCourse} />
+                        {/* New Course Button - styled like all other add buttons */}
+                        <button
+                            onClick={handleCreateCourse}
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-teal-500/20 text-teal-400 hover:bg-teal-500/30 transition-all text-sm font-medium border border-teal-500/30"
+                        >
+                            <PlusCircle className="w-4 h-4" />
+                            New Course
+                        </button>
                     </div>
 
                     {isLoading ? (
