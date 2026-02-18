@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { getCourse } from "../../api/course.api";
+import { getCourse, deleteCourse } from "../../api/course.api";
 import { getCourseLessons } from "../../api/lesson.api";
 import { getCourseEnrollments } from "../../api/enrollment.api";
 import {
@@ -13,7 +13,8 @@ import {
     LoadingState,
     CourseHeader,
     LessonsList,
-    EnrolledStudentsList
+    EnrolledStudentsList,
+    ConfirmationModal
 } from "../../components";
 
 const TeacherCoursePage = () => {
@@ -26,6 +27,7 @@ const TeacherCoursePage = () => {
     const [enrolledStudents, setEnrolledStudents] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showDeleteCourseModal, setShowDeleteCourseModal] = useState(false);
 
     const fetchCourseData = async () => {
         try {
@@ -81,6 +83,18 @@ const TeacherCoursePage = () => {
         navigate(`/courses/${courseId}/edit`);
     };
 
+    const handleDeleteCourse = async () => {
+        try {
+            setIsLoading(true);
+            await deleteCourse(courseId);
+            navigate("/home");
+        } catch (err) {
+            setError(err.message);
+            setIsLoading(false);
+        }
+        setShowDeleteCourseModal(false);
+    };
+
     return (
         <GradientBackground>
             <FloatingOrbs />
@@ -99,13 +113,28 @@ const TeacherCoursePage = () => {
                     type="error"
                 />
 
+                <ConfirmationModal
+                    isOpen={showDeleteCourseModal}
+                    onClose={() => setShowDeleteCourseModal(false)}
+                    onConfirm={handleDeleteCourse}
+                    title="Delete Course"
+                    message="Are you sure you want to delete this course? This action cannot be undone and will also delete all lessons, materials, and quizzes."
+                    confirmText="Delete Course"
+                    type="danger"
+                />
+
                 {isLoading ? (
                     <LoadingState message="Loading, wait a sec..." />
                 ) : (
                     <div className="flex gap-8">
                         {/* Left Side - Main Content */}
                         <div className="flex-1">
-                            <CourseHeader course={course} showCreator={false} onEdit={handleEditCourse}/>
+                            <CourseHeader
+                                course={course}
+                                showCreator={false}
+                                onEdit={handleEditCourse}
+                                onDelete={() => setShowDeleteCourseModal(true)}
+                            />
 
                             <div className="mt-8">
                                 {/* Lessons - Full width */}

@@ -1,8 +1,8 @@
-import { Calendar, Edit2 } from "lucide-react";
+import { Calendar, Edit2, Trash2 } from "lucide-react";
 import { formatDate, getInitials } from "../../utils";
 import { DIFFICULTY_COLORS } from "../../constants";
 
-const CourseHeader = ({ course, showCreator = true, onEdit }) => {
+const CourseHeader = ({ course, showCreator = true, onEdit, onDelete }) => {
     return (
         <div
             className="rounded-2xl border border-white/10 backdrop-blur-xl overflow-hidden mb-8"
@@ -23,16 +23,26 @@ const CourseHeader = ({ course, showCreator = true, onEdit }) => {
                         </span>
                     </div>
 
-                    {/* Edit button - only show if onEdit prop is provided */}
-                    {onEdit && (
-                        <button
-                            onClick={onEdit}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 transition-all text-sm font-medium border border-amber-500/30 shrink-0"
-                        >
-                            <Edit2 className="w-4 h-4" />
-                            Edit Course
-                        </button>
-                    )}
+                    <div className="flex gap-2">
+                        {onEdit && (
+                            <button
+                                onClick={onEdit}
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 transition-all text-sm font-medium border border-amber-500/30 shrink-0"
+                            >
+                                <Edit2 className="w-4 h-4" />
+                                Edit Course
+                            </button>
+                        )}
+                        {onDelete && (
+                            <button
+                                onClick={onDelete}
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 transition-all text-sm font-medium border border-rose-500/30 shrink-0"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                                Delete Course
+                            </button>
+                        )}
+                    </div>
                 </div>
 
                 {/* Course title - with word wrapping */}
