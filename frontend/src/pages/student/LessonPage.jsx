@@ -210,20 +210,16 @@ const LessonPage = () => {
 
                             {/* Sidebar */}
                             <div className="lg:col-span-1 space-y-6">
-                                <SidebarCard icon={Download} title="Materials">
-                                    <MaterialsList
-                                        materials={materials}
-                                        onDownload={handleMaterialDownload}
-                                    />
-                                </SidebarCard>
+                                <MaterialsList
+                                    materials={materials}
+                                    onDownload={handleMaterialDownload}
+                                />
 
-                                <SidebarCard icon={HelpCircle} title="Quizzes" iconColor="text-amber-400">
-                                    <QuizzesList
-                                        quizzes={quizzes}
-                                        onQuizClick={handleQuizClick}
-                                        quizSubmissions={quizSubmissions}
-                                    />
-                                </SidebarCard>
+                                <QuizzesList
+                                    quizzes={quizzes}
+                                    onQuizClick={handleQuizClick}
+                                    quizSubmissions={quizSubmissions}
+                                />
                             </div>
                         </div>
                     </>
