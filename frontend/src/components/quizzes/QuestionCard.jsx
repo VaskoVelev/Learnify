@@ -1,4 +1,4 @@
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, Edit2 } from "lucide-react";
 
 const QuestionCard = ({
     question,
@@ -6,6 +6,8 @@ const QuestionCard = ({
     selectedAnswer,
     onSelectAnswer,
     isSubmitted = false,
+    showEditButton = false,
+    onEditClick,
     letters = ["A", "B", "C", "D"]
 }) => {
     const isAnswered = !!selectedAnswer;
@@ -43,42 +45,40 @@ const QuestionCard = ({
                 <h3 className="text-white font-semibold text-base sm:text-lg leading-snug flex-1">
                     {question.text}
                 </h3>
-                {isAnswered && (
-                    <CheckCircle className="w-5 h-5 text-teal-400 shrink-0 animate-scale-in" />
-                )}
+                <div className="flex items-center gap-2">
+                    {isAnswered && (
+                        <CheckCircle className="w-5 h-5 text-teal-400 shrink-0 animate-scale-in" />
+                    )}
+                    {showEditButton && (
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onEditClick(question.id);
+                            }}
+                            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 transition-all text-sm font-medium border border-amber-500/30"
+                        >
+                            <Edit2 className="w-3.5 h-3.5" />
+                            Edit Question
+                        </button>
+                    )}
+                </div>
             </div>
 
-            {/* Answers in 2x2 grid */}
+            {/* Answers in 2x2 grid - disabled for teacher view */}
             <div className="p-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {question.answers.map((answer, aIndex) => {
                         const isSelected = selectedAnswer === answer.id;
                         return (
-                            <button
+                            <div
                                 key={answer.id}
-                                onClick={() => onSelectAnswer(question.id, answer.id)}
-                                disabled={isSubmitted}
-                                className={`relative text-left px-4 py-4 rounded-xl border-2 transition-all duration-200 flex items-center gap-3 group ${
-                                    isSubmitted ? "cursor-default" : "cursor-pointer"
-                                }`}
+                                className="relative text-left px-4 py-4 rounded-xl border-2 transition-all duration-200 flex items-center gap-3 group cursor-default"
                                 style={{
                                     borderColor: isSelected ? "hsla(174, 72%, 46%, 0.5)" : "hsla(0, 0%, 100%, 0.08)",
                                     background: isSelected
                                         ? "linear-gradient(135deg, hsla(174, 72%, 46%, 0.12) 0%, hsla(199, 89%, 48%, 0.06) 100%)"
                                         : "hsla(0, 0%, 100%, 0.03)",
                                     boxShadow: isSelected ? "0 0 25px hsla(174, 72%, 46%, 0.1), inset 0 1px 0 hsla(174, 72%, 46%, 0.1)" : "none",
-                                }}
-                                onMouseEnter={(e) => {
-                                    if (!isSelected && !isSubmitted) {
-                                        e.currentTarget.style.borderColor = "hsla(0, 0%, 100%, 0.2)";
-                                        e.currentTarget.style.background = "hsla(0, 0%, 100%, 0.06)";
-                                    }
-                                }}
-                                onMouseLeave={(e) => {
-                                    if (!isSelected) {
-                                        e.currentTarget.style.borderColor = "hsla(0, 0%, 100%, 0.08)";
-                                        e.currentTarget.style.background = "hsla(0, 0%, 100%, 0.03)";
-                                    }
                                 }}
                             >
                                 {/* Letter badge */}
@@ -94,10 +94,10 @@ const QuestionCard = ({
                                 >
                                     {letters[aIndex]}
                                 </span>
-                                <span className={`text-sm font-medium transition-colors duration-200 ${isSelected ? "text-white" : "text-white/60 group-hover:text-white/90"}`}>
+                                <span className={`text-sm font-medium transition-colors duration-200 ${isSelected ? "text-white" : "text-white/60"}`}>
                                     {answer.text}
                                 </span>
-                            </button>
+                            </div>
                         );
                     })}
                 </div>

@@ -1,6 +1,6 @@
-import { HelpCircle } from "lucide-react";
+import { Sparkles, Edit2 } from "lucide-react";
 
-const QuizHeader = ({ title, description, totalQuestions, answeredCount }) => {
+const QuizHeader = ({ title, description, totalQuestions, onEdit }) => {
     return (
         <div
             className="rounded-2xl border border-white/10 backdrop-blur-xl overflow-hidden mb-8"
@@ -9,25 +9,38 @@ const QuizHeader = ({ title, description, totalQuestions, answeredCount }) => {
             }}
         >
             <div className="p-6 sm:p-8">
-                <div className="flex items-center gap-3 mb-4">
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20">
-                        <HelpCircle className="w-3.5 h-3.5 text-teal-400" />
-                        <span className="text-xs font-medium text-teal-400">Quiz</span>
+                <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1">
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20">
+                                <Sparkles className="w-3.5 h-3.5 text-teal-400" />
+                                <span className="text-xs font-medium text-teal-400">Quiz</span>
+                            </div>
+                        </div>
+
+                        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-2">
+                            {title}
+                        </h1>
+
+                        <p className="text-white/60 text-base sm:text-lg max-w-3xl mb-4">
+                            {description}
+                        </p>
+
+                        <div className="flex items-center gap-4">
+                            <span className="text-white/40 text-sm">{totalQuestions} questions</span>
+                        </div>
                     </div>
-                </div>
 
-                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-2">
-                    {title}
-                </h1>
-
-                <p className="text-white/60 text-base sm:text-lg max-w-3xl mb-4">
-                    {description}
-                </p>
-
-                <div className="flex items-center gap-4">
-                    <span className="text-white/40 text-sm">{totalQuestions} questions</span>
-                    <span className="text-white/20">•</span>
-                    <span className="text-white/40 text-sm">{answeredCount}/{totalQuestions} answered</span>
+                    {/* Edit button integrated into header */}
+                    {onEdit && (
+                        <button
+                            onClick={onEdit}
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 transition-all text-sm font-medium border border-amber-500/30 shrink-0"
+                        >
+                            <Edit2 className="w-4 h-4" />
+                            Edit Quiz
+                        </button>
+                    )}
                 </div>
             </div>
         </div>

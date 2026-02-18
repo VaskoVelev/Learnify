@@ -10,15 +10,15 @@ const QuizzesList = ({ quizzes, onQuizClick, quizSubmissions = {}, showAddButton
             <div className="rounded-2xl border border-white/10 backdrop-blur-xl p-6">
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
-                        <div className="p-2 rounded-lg bg-amber-500/20">
-                            <HelpCircle className="w-5 h-5 text-amber-400" />
+                        <div className="p-2 rounded-lg bg-teal-500/20">
+                            <HelpCircle className="w-5 h-5 text-teal-400" />
                         </div>
                         <h3 className="text-lg font-semibold text-white">Quizzes</h3>
                     </div>
                     {showAddButton && (
                         <button
                             onClick={onAddClick}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 transition-all text-sm font-medium border border-amber-500/30"
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-teal-500/20 text-teal-400 hover:bg-teal-500/30 transition-all text-sm font-medium border border-teal-500/30"
                         >
                             <PlusCircle className="w-4 h-4" />
                             New Quiz
@@ -50,15 +50,15 @@ const QuizzesList = ({ quizzes, onQuizClick, quizSubmissions = {}, showAddButton
             {/* Header with add button */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-amber-500/20">
-                        <HelpCircle className="w-5 h-5 text-amber-400" />
+                    <div className="p-2 rounded-lg bg-teal-500/20">
+                        <HelpCircle className="w-5 h-5 text-teal-400" />
                     </div>
                     <h3 className="text-lg font-semibold text-white">Quizzes</h3>
                 </div>
                 {showAddButton && (
                     <button
                         onClick={onAddClick}
-                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 transition-all text-sm font-medium border border-amber-500/30"
+                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-teal-500/20 text-teal-400 hover:bg-teal-500/30 transition-all text-sm font-medium border border-teal-500/30"
                     >
                         <PlusCircle className="w-4 h-4" />
                         New Quiz
@@ -90,7 +90,7 @@ const QuizzesList = ({ quizzes, onQuizClick, quizSubmissions = {}, showAddButton
                             <button
                                 key={quiz?.id}
                                 onClick={() => onQuizClick(quiz?.id)}
-                                className="w-full text-left p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-amber-500/30 transition-all group relative overflow-hidden"
+                                className="w-full text-left p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-teal-500/30 transition-all group relative overflow-hidden"
                             >
                                 {/* Completed indicator background */}
                                 {isCompleted && (
@@ -105,7 +105,7 @@ const QuizzesList = ({ quizzes, onQuizClick, quizSubmissions = {}, showAddButton
                                 <div className="flex items-start justify-between gap-3 relative">
                                     <div className="flex-1">
                                         <div className="flex items-center gap-2 mb-1">
-                                            <h4 className="text-white font-medium group-hover:text-amber-400 transition-colors">
+                                            <h4 className="text-white font-medium group-hover:text-teal-400 transition-colors">
                                                 {quiz?.title}
                                             </h4>
                                             {isCompleted && (
@@ -125,7 +125,7 @@ const QuizzesList = ({ quizzes, onQuizClick, quizSubmissions = {}, showAddButton
                                             </p>
                                         )}
                                     </div>
-                                    <ChevronRight className="w-5 h-5 text-white/40 group-hover:text-amber-400 group-hover:translate-x-1 transition-all mt-1 shrink-0" />
+                                    <ChevronRight className="w-5 h-5 text-white/40 group-hover:text-teal-400 group-hover:translate-x-1 transition-all mt-1 shrink-0" />
                                 </div>
                             </button>
                         );

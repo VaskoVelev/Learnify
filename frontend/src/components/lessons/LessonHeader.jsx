@@ -19,7 +19,7 @@ const LessonHeader = ({ title, onEdit }) => {
                     {onEdit && (
                         <button
                             onClick={onEdit}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-teal-500/20 text-teal-400 hover:bg-teal-500/30 transition-all text-sm font-medium border border-teal-500/30"
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 transition-all text-sm font-medium border border-amber-500/30"
                         >
                             <Edit2 className="w-4 h-4" />
                             Edit Lesson

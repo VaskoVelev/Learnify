@@ -5,6 +5,7 @@ import HomePageWrapper from "./HomePageWrapper";
 import CoursesPageWrapper from "./CoursesPageWrapper";
 import CoursePageWrapper from "./CoursePageWrapper";
 import LessonPageWrapper from "./LessonPageWrapper";
+import QuizPageWrapper from "./QuizPageWrapper.jsx";
 
 import IndexPage from "../pages/IndexPage";
 import LoginPage from "../pages/LoginPage";
@@ -42,8 +43,8 @@ const AppRouter = () => {
                 <Route path="/courses/:courseId/lessons/:lessonId" element={<LessonPageWrapper />} />
                 <Route path="/courses/:courseId/lessons/:lessonId/edit" element={<EditLessonPage />} />
                 <Route path="/courses/:courseId/lessons/:lessonId/materials/create" element={<CreateMaterialPage />} />
-                <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId" element={<QuizPage />} />
                 <Route path="/courses/:courseId/lessons/:lessonId/quizzes/create" element={<CreateQuizPage />} />
+                <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId" element={<QuizPageWrapper />} />
                 <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId/submissions/:submissionId/review" element={<QuizReviewPage />} />
             </Route>
         </Routes>
