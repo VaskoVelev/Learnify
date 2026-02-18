@@ -1,4 +1,4 @@
-import { CheckCircle, Edit2 } from "lucide-react";
+import { CheckCircle, Edit2, Trash2 } from "lucide-react";
 
 const QuestionCard = ({
     question,
@@ -7,7 +7,9 @@ const QuestionCard = ({
     onSelectAnswer,
     isSubmitted = false,
     showEditButton = false,
+    showDeleteButton = false,
     onEditClick,
+    onDeleteClick,
     isTeacher = false,
     letters = ["A", "B", "C", "D"]
 }) => {
@@ -60,6 +62,19 @@ const QuestionCard = ({
                         >
                             <Edit2 className="w-3.5 h-3.5" />
                             Edit Question
+                        </button>
+                    )}
+
+                    {showDeleteButton && (
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                onDeleteClick(question.id);
+                            }}
+                            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 transition-all text-sm font-medium border border-rose-500/30"
+                        >
+                            <Trash2 className="w-3.5 h-3.5" />
+                            Delete Question
                         </button>
                     )}
                 </div>

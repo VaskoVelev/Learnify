@@ -1,6 +1,6 @@
-import { Sparkles, Edit2 } from "lucide-react";
+import { Sparkles, Edit2, Trash2 } from "lucide-react";
 
-const QuizHeader = ({ title, description, totalQuestions, onEdit }) => {
+const QuizHeader = ({ title, description, totalQuestions, onEdit, onDelete }) => {
     return (
         <div
             className="rounded-2xl border border-white/10 backdrop-blur-xl overflow-hidden mb-8"
@@ -39,6 +39,16 @@ const QuizHeader = ({ title, description, totalQuestions, onEdit }) => {
                         >
                             <Edit2 className="w-4 h-4" />
                             Edit Quiz
+                        </button>
+                    )}
+
+                    {onDelete && (
+                        <button
+                            onClick={onDelete}
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 transition-all text-sm font-medium border border-rose-500/30"
+                        >
+                            <Trash2 className="w-4 h-4" />
+                            Delete Quiz
                         </button>
                     )}
                 </div>

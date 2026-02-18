@@ -18,6 +18,7 @@ export { default as FilterDropdown } from './ui/FilterDropdown';
 export { default as ClearFiltersButton } from './ui/ClearFiltersButton';
 export { default as BackButton } from './ui/BackButton';
 export { default as CreateCourseButton } from './ui/CreateCourseButton';
+export { default as ConfirmationModal } from './ui/ConfirmationModal';
 
 export { default as CourseCard } from './courses/CourseCard';
 export { default as TeacherCourseCard } from './courses/TeacherCourseCard';

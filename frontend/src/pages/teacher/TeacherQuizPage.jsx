@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { getQuiz } from "../../api/quiz.api";
-import { getQuizQuestions } from "../../api/question.api";
+import { getQuiz, deleteQuiz } from "../../api/quiz.api";
+import { getQuizQuestions, deleteQuestion } from "../../api/question.api";
 import { getQuestionAnswers } from "../../api/answer.api";
 import {
     Navbar,
@@ -13,7 +13,8 @@ import {
     LoadingState,
     BackButton,
     QuizHeader,
-    QuestionCard
+    QuestionCard,
+    ConfirmationModal
 } from "../../components";
 import { PlusCircle } from "lucide-react";
 
@@ -26,6 +27,8 @@ const TeacherQuizPage = () => {
     const [questions, setQuestions] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showDeleteQuizModal, setShowDeleteQuizModal] = useState(false);
+    const [questionToDelete, setQuestionToDelete] = useState(null);
 
     const fetchQuizData = async () => {
         try {
@@ -81,8 +84,31 @@ const TeacherQuizPage = () => {
         navigate(`/courses/${courseId}/lessons/${lessonId}/quizzes/${quizId}/edit`);
     };
 
+    const handleDeleteQuiz = async () => {
+        try {
+            setIsLoading(true);
+            await deleteQuiz(quizId);
+            navigate(`/courses/${courseId}/lessons/${lessonId}`);
+        } catch (err) {
+            setError(err.message);
+            setIsLoading(false);
+        }
+        setShowDeleteQuizModal(false);
+    };
+
     const handleEditQuestion = (questionId) => {
         navigate(`/courses/${courseId}/lessons/${lessonId}/quizzes/${quizId}/questions/${questionId}/edit`);
+    };
+
+    const handleDeleteQuestion = async (questionId) => {
+        try {
+            await deleteQuestion(questionId);
+            const updatedQuestions = questions.filter(q => q.id !== questionId);
+            setQuestions(updatedQuestions);
+            setQuestionToDelete(null);
+        } catch (err) {
+            setError(err.message);
+        }
     };
 
     const handleAddQuestion = () => {
@@ -112,6 +138,26 @@ const TeacherQuizPage = () => {
                     type="error"
                 />
 
+                <ConfirmationModal
+                    isOpen={showDeleteQuizModal}
+                    onClose={() => setShowDeleteQuizModal(false)}
+                    onConfirm={handleDeleteQuiz}
+                    title="Delete Quiz"
+                    message="Are you sure you want to delete this quiz? This action cannot be undone and will also delete all questions and answers."
+                    confirmText="Delete Quiz"
+                    type="danger"
+                />
+
+                <ConfirmationModal
+                    isOpen={!!questionToDelete}
+                    onClose={() => setQuestionToDelete(null)}
+                    onConfirm={() => handleDeleteQuestion(questionToDelete)}
+                    title="Delete Question"
+                    message="Are you sure you want to delete this question? This action cannot be undone."
+                    confirmText="Delete Question"
+                    type="danger"
+                />
+
                 {isLoading ? (
                     <LoadingState message="Loading, wait a sec..." />
                 ) : (
@@ -122,6 +168,7 @@ const TeacherQuizPage = () => {
                             description={quiz?.description}
                             totalQuestions={questions.length}
                             onEdit={handleEditQuiz}
+                            onDelete={() => setShowDeleteQuizModal(true)}
                         />
 
                         {/* Add Question Button - same style as other teacher pages */}
@@ -143,8 +190,10 @@ const TeacherQuizPage = () => {
                                     question={question}
                                     index={index}
                                     showEditButton={true}
+                                    showDeleteButton={true}
                                     onEditClick={handleEditQuestion}
                                     isTeacher={true}
+                                    onDeleteClick={() => setQuestionToDelete(question.id)}
                                 />
                             ))}
                         </div>
