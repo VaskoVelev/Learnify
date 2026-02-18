@@ -8,6 +8,7 @@ const QuestionCard = ({
     isSubmitted = false,
     showEditButton = false,
     onEditClick,
+    isTeacher = false,
     letters = ["A", "B", "C", "D"]
 }) => {
     const isAnswered = !!selectedAnswer;
@@ -46,10 +47,10 @@ const QuestionCard = ({
                     {question.text}
                 </h3>
                 <div className="flex items-center gap-2">
-                    {isAnswered && (
+                    {isAnswered && !isTeacher && (
                         <CheckCircle className="w-5 h-5 text-teal-400 shrink-0 animate-scale-in" />
                     )}
-                    {showEditButton && (
+                    {showEditButton && isTeacher && (
                         <button
                             onClick={(e) => {
                                 e.stopPropagation();
@@ -64,7 +65,7 @@ const QuestionCard = ({
                 </div>
             </div>
 
-            {/* Answers in 2x2 grid - disabled for teacher view */}
+            {/* Answers in 2x2 grid */}
             <div className="p-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {question.answers.map((answer, aIndex) => {
@@ -72,13 +73,28 @@ const QuestionCard = ({
                         return (
                             <div
                                 key={answer.id}
-                                className="relative text-left px-4 py-4 rounded-xl border-2 transition-all duration-200 flex items-center gap-3 group cursor-default"
+                                onClick={() => !isTeacher && !isSubmitted && onSelectAnswer?.(question.id, answer.id)}
+                                className={`relative text-left px-4 py-4 rounded-xl border-2 transition-all duration-200 flex items-center gap-3 group ${
+                                    isTeacher ? 'cursor-default' : 'cursor-pointer hover:bg-white/10'
+                                }`}
                                 style={{
                                     borderColor: isSelected ? "hsla(174, 72%, 46%, 0.5)" : "hsla(0, 0%, 100%, 0.08)",
                                     background: isSelected
                                         ? "linear-gradient(135deg, hsla(174, 72%, 46%, 0.12) 0%, hsla(199, 89%, 48%, 0.06) 100%)"
                                         : "hsla(0, 0%, 100%, 0.03)",
                                     boxShadow: isSelected ? "0 0 25px hsla(174, 72%, 46%, 0.1), inset 0 1px 0 hsla(174, 72%, 46%, 0.1)" : "none",
+                                }}
+                                onMouseEnter={(e) => {
+                                    if (!isSelected && !isTeacher && !isSubmitted) {
+                                        e.currentTarget.style.borderColor = "hsla(0, 0%, 100%, 0.2)";
+                                        e.currentTarget.style.background = "hsla(0, 0%, 100%, 0.06)";
+                                    }
+                                }}
+                                onMouseLeave={(e) => {
+                                    if (!isSelected && !isTeacher) {
+                                        e.currentTarget.style.borderColor = "hsla(0, 0%, 100%, 0.08)";
+                                        e.currentTarget.style.background = "hsla(0, 0%, 100%, 0.03)";
+                                    }
                                 }}
                             >
                                 {/* Letter badge */}
@@ -94,7 +110,7 @@ const QuestionCard = ({
                                 >
                                     {letters[aIndex]}
                                 </span>
-                                <span className={`text-sm font-medium transition-colors duration-200 ${isSelected ? "text-white" : "text-white/60"}`}>
+                                <span className={`text-sm font-medium transition-colors duration-200 ${isSelected ? "text-white" : "text-white/60 group-hover:text-white/90"}`}>
                                     {answer.text}
                                 </span>
                             </div>

@@ -144,6 +144,7 @@ const TeacherQuizPage = () => {
                                     index={index}
                                     showEditButton={true}
                                     onEditClick={handleEditQuestion}
+                                    isTeacher={true}
                                 />
                             ))}
                         </div>
