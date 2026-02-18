@@ -1,6 +1,6 @@
-import { Sparkles, Edit2 } from "lucide-react";
+import { Sparkles, Edit2, Trash2 } from "lucide-react";
 
-const LessonHeader = ({ title, onEdit }) => {
+const LessonHeader = ({ title, onEdit, onDelete }) => {
     return (
         <div
             className="rounded-2xl border border-white/10 backdrop-blur-xl overflow-hidden mb-8"
@@ -9,24 +9,40 @@ const LessonHeader = ({ title, onEdit }) => {
             }}
         >
             <div className="p-6 sm:p-8">
-                <div className="flex items-center justify-between mb-4">
+                {/* Top row with badge and buttons */}
+                <div className="flex items-start justify-between gap-4 mb-4">
                     <div className="flex items-center gap-3">
                         <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20">
                             <Sparkles className="w-3.5 h-3.5 text-teal-400" />
                             <span className="text-xs font-medium text-teal-400">Lesson Details</span>
                         </div>
                     </div>
-                    {onEdit && (
-                        <button
-                            onClick={onEdit}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 transition-all text-sm font-medium border border-amber-500/30"
-                        >
-                            <Edit2 className="w-4 h-4" />
-                            Edit Lesson
-                        </button>
-                    )}
+
+                    {/* Buttons in top right */}
+                    <div className="flex gap-2">
+                        {onEdit && (
+                            <button
+                                onClick={onEdit}
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 transition-all text-sm font-medium border border-amber-500/30"
+                            >
+                                <Edit2 className="w-4 h-4" />
+                                Edit Lesson
+                            </button>
+                        )}
+
+                        {onDelete && (
+                            <button
+                                onClick={onDelete}
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 transition-all text-sm font-medium border border-rose-500/30"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                                Delete Lesson
+                            </button>
+                        )}
+                    </div>
                 </div>
 
+                {/* Title */}
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-2 break-words">
                     {title}
                 </h1>
