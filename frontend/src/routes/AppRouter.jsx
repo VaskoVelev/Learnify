@@ -21,6 +21,7 @@ import CreateLessonPage from "../pages/teacher/CreateLessonPage";
 import EditLessonPage from "../pages/teacher/EditLessonPage";
 import CreateMaterialPage from "../pages/teacher/CreateMaterialPage";
 import CreateQuizPage from "../pages/teacher/CreateQuizPage";
+import EditQuizPage from "../pages/teacher/EditQuizPage";
 
 const AppRouter = () => {
     return (
@@ -45,6 +46,7 @@ const AppRouter = () => {
                 <Route path="/courses/:courseId/lessons/:lessonId/materials/create" element={<CreateMaterialPage />} />
                 <Route path="/courses/:courseId/lessons/:lessonId/quizzes/create" element={<CreateQuizPage />} />
                 <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId" element={<QuizPageWrapper />} />
+                <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId/edit" element={<EditQuizPage />} />
                 <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId/submissions/:submissionId/review" element={<QuizReviewPage />} />
             </Route>
         </Routes>
