@@ -21,7 +21,7 @@ const ReviewResultCard = ({ submission }) => {
                     <div>
                         <h3 className="text-white font-semibold text-lg">Quiz Results</h3>
                         <p className="text-white/60 text-sm">
-                            You scored {submission.score}% ({correctCount}/{totalQuestions} correct)
+                            Scored {submission.score}% ({correctCount}/{totalQuestions} correct)
                         </p>
                     </div>
                 </div>

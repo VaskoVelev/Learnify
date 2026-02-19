@@ -4,6 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import { getQuiz, deleteQuiz } from "../../api/quiz.api";
 import { getQuizQuestions, deleteQuestion } from "../../api/question.api";
 import { getQuestionAnswers } from "../../api/answer.api";
+import { getQuizSubmissions } from "../../api/submission.api";
 import {
     Navbar,
     Footer,
@@ -25,6 +26,7 @@ const TeacherQuizPage = () => {
 
     const [quiz, setQuiz] = useState(null);
     const [questions, setQuestions] = useState([]);
+    const [hasSubmissions, setHasSubmissions] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showDeleteQuizModal, setShowDeleteQuizModal] = useState(false);
@@ -55,6 +57,16 @@ const TeacherQuizPage = () => {
             );
 
             setQuestions(questionsWithAnswers);
+
+            // Check if quiz has any submissions
+            try {
+                const submissions = await getQuizSubmissions(quizId);
+                setHasSubmissions(submissions.length > 0);
+            } catch (err) {
+                console.error("Error fetching submissions:", err);
+                setHasSubmissions(false);
+            }
+
         } catch (err) {
             setError(err.message);
         } finally {
@@ -115,6 +127,10 @@ const TeacherQuizPage = () => {
         navigate(`/courses/${courseId}/lessons/${lessonId}/quizzes/${quizId}/questions/create`);
     };
 
+    const handleViewSubmissions = () => {
+        navigate(`/courses/${courseId}/lessons/${lessonId}/quizzes/${quizId}/submissions`);
+    };
+
     return (
         <GradientBackground>
             <FloatingOrbs />
@@ -129,7 +145,6 @@ const TeacherQuizPage = () => {
             <main className="relative z-10 max-w-7xl mx-auto px-6 py-8 lg:py-12">
                 <BackButton
                     onClick={() => navigate(`/courses/${courseId}/lessons/${lessonId}`)}
-                    text="Back to Lesson"
                 />
 
                 <GlobalError
@@ -162,16 +177,18 @@ const TeacherQuizPage = () => {
                     <LoadingState message="Loading, wait a sec..." />
                 ) : (
                     <>
-                        {/* Quiz Header with integrated Edit button */}
+                        {/* Quiz Header with integrated buttons */}
                         <QuizHeader
                             title={quiz?.title}
                             description={quiz?.description}
                             totalQuestions={questions.length}
                             onEdit={handleEditQuiz}
                             onDelete={() => setShowDeleteQuizModal(true)}
+                            onViewSubmissions={hasSubmissions ? handleViewSubmissions : undefined}
+                            hasSubmissions={hasSubmissions}
                         />
 
-                        {/* Add Question Button - same style as other teacher pages */}
+                        {/* Add Question Button */}
                         <div className="flex justify-end mb-6">
                             <button
                                 onClick={handleAddQuestion}
@@ -182,7 +199,7 @@ const TeacherQuizPage = () => {
                             </button>
                         </div>
 
-                        {/* Questions - Not selectable, with edit buttons */}
+                        {/* Questions */}
                         <div className="space-y-8">
                             {questions.map((question, index) => (
                                 <QuestionCard
@@ -192,8 +209,8 @@ const TeacherQuizPage = () => {
                                     showEditButton={true}
                                     showDeleteButton={true}
                                     onEditClick={handleEditQuestion}
-                                    isTeacher={true}
                                     onDeleteClick={() => setQuestionToDelete(question.id)}
+                                    isTeacher={true}
                                 />
                             ))}
                         </div>

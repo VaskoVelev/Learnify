@@ -5,14 +5,15 @@ import HomePageWrapper from "./HomePageWrapper";
 import CoursesPageWrapper from "./CoursesPageWrapper";
 import CoursePageWrapper from "./CoursePageWrapper";
 import LessonPageWrapper from "./LessonPageWrapper";
-import QuizPageWrapper from "./QuizPageWrapper.jsx";
+import QuizPageWrapper from "./QuizPageWrapper";
+import QuizSubmissionsPageWrapper from "./QuizSubmissionsPageWrapper";
 
 import IndexPage from "../pages/IndexPage";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import ProfilePage from "../pages/ProfilePage";
-import UpdateProfilePage from "../pages/UpdateProfilePage";
 
+import UpdateProfilePage from "../pages/UpdateProfilePage";
 import QuizPage from "../pages/student/QuizPage";
 import QuizReviewPage from "../pages/student/QuizReviewPage";
 import CreateCoursePage from "../pages/teacher/CreateCoursePage";
@@ -24,7 +25,6 @@ import CreateQuizPage from "../pages/teacher/CreateQuizPage";
 import EditQuizPage from "../pages/teacher/EditQuizPage";
 import CreateQuestionPage from "../pages/teacher/CreateQuestionPage";
 import EditQuestionPage from "../pages/teacher/EditQuestionPage";
-import QuizSubmissionsPage from "../pages/student/QuizSubmissionsPage";
 
 const AppRouter = () => {
     return (
@@ -53,7 +53,7 @@ const AppRouter = () => {
                 <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId/questions/create" element={<CreateQuestionPage />} />
                 <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId/questions/:questionId/edit" element={<EditQuestionPage />} />
                 <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId/submissions/:submissionId/review" element={<QuizReviewPage />} />
-                <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId/submissions" element={<QuizSubmissionsPage />} />
+                <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId/submissions" element={<QuizSubmissionsPageWrapper />} />
             </Route>
         </Routes>
     );

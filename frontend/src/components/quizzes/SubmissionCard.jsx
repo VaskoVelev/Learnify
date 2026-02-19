@@ -1,7 +1,12 @@
-import { History, Calendar, ChevronRight } from "lucide-react";
+import { History, Calendar, ChevronRight, User } from "lucide-react";
 import { formatDateTime, getScoreColor, getScoreBgColor } from "../../utils";
 
-const SubmissionCard = ({ submission, onClick }) => {
+const SubmissionCard = ({ submission, onClick, showStudentName = false }) => {
+    // Construct full name if first and last name are available
+    const studentName = submission.studentFirstName && submission.studentLastName
+        ? `${submission.studentFirstName} ${submission.studentLastName}`
+        : null;
+
     return (
         <button
             onClick={onClick}
@@ -17,6 +22,12 @@ const SubmissionCard = ({ submission, onClick }) => {
                     </div>
                     <div>
                         <div className="flex items-center gap-3 mb-1">
+                            {showStudentName && studentName && (
+                                <span className="text-white text-sm font-medium flex items-center gap-1 mr-2 bg-white/5 px-2 py-0.5 rounded-lg">
+                                    <User className="w-3.5 h-3.5 text-white/40" />
+                                    {studentName}
+                                </span>
+                            )}
                             <span className={`text-sm font-medium px-2 py-0.5 rounded-full ${getScoreBgColor(submission.score)} ${getScoreColor(submission.score)}`}>
                                 Score: {submission.score}%
                             </span>

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { getMyQuizSubmissions } from "../../api/submission.api";
+import { getQuizSubmissions } from "../../api/submission.api";
 import { getQuiz } from "../../api/quiz.api";
 import {
     Navbar,
@@ -14,9 +14,9 @@ import {
     PageHeader,
     SubmissionCard
 } from "../../components";
-import { History } from "lucide-react";
+import { History, User } from "lucide-react";
 
-const QuizSubmissionsPage = () => {
+const TeacherQuizSubmissionsPage = () => {
     const { logout } = useAuth();
     const navigate = useNavigate();
     const { courseId, lessonId, quizId } = useParams();
@@ -27,7 +27,7 @@ const QuizSubmissionsPage = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const fetchData = async () => {
+        const fetchSubmissions = async () => {
             try {
                 setIsLoading(true);
                 setError(null);
@@ -35,7 +35,7 @@ const QuizSubmissionsPage = () => {
                 const quizData = await getQuiz(quizId);
                 setQuiz(quizData);
 
-                const submissionsData = await getMyQuizSubmissions(quizId);
+                const submissionsData = await getQuizSubmissions(quizId);
                 setSubmissions(submissionsData);
             } catch (err) {
                 setError(err.message);
@@ -44,7 +44,7 @@ const QuizSubmissionsPage = () => {
             }
         };
 
-        fetchData();
+        fetchSubmissions();
     }, [quizId]);
 
     const handleLogout = async () => {
@@ -78,13 +78,13 @@ const QuizSubmissionsPage = () => {
 
             <main className="relative z-10 max-w-4xl mx-auto px-6 py-12">
                 <BackButton
-                    onClick={() => navigate(`/courses/${courseId}/lessons/${lessonId}/quizzes/${quizId}`)}
+                    onClick={() => navigate(`/courses/${courseId}/lessons/${lessonId}/quizzes/${quizId}/teacher`)}
                     text="Back to Quiz"
                 />
 
                 <PageHeader
                     title="Quiz Submissions"
-                    subtitle={`Your previous attempts for "${quiz?.title}"`}
+                    subtitle={`All student submissions for "${quiz?.title}"`}
                 />
 
                 <GlobalError
@@ -102,6 +102,7 @@ const QuizSubmissionsPage = () => {
                                 key={submission.id}
                                 submission={submission}
                                 onClick={() => handleSubmissionClick(submission.id)}
+                                showStudentName={true}
                             />
                         ))}
                     </div>
@@ -109,7 +110,7 @@ const QuizSubmissionsPage = () => {
                     <div className="text-center py-16">
                         <History className="w-16 h-16 text-white/20 mx-auto mb-4" />
                         <h3 className="text-xl font-semibold text-white mb-2">No submissions yet</h3>
-                        <p className="text-white/40">You haven't taken this quiz yet.</p>
+                        <p className="text-white/40">No students have taken this quiz yet.</p>
                     </div>
                 )}
 
@@ -119,4 +120,4 @@ const QuizSubmissionsPage = () => {
     );
 };
 
-export default QuizSubmissionsPage;
+export default TeacherQuizSubmissionsPage;
