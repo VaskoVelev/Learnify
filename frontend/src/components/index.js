@@ -50,6 +50,7 @@ export { default as ReviewResultCard } from './quizzes/ReviewResultCard';
 export { default as ReviewQuestionCard } from './quizzes/ReviewQuestionCard';
 export { default as QuizForm } from './quizzes/QuizForm';
 export { default as QuestionForm } from './quizzes/QuestionForm';
+export { default as SubmissionCard } from './quizzes/SubmissionCard';
 
 export { default as MaterialForm } from './materials/MaterialForm';
 

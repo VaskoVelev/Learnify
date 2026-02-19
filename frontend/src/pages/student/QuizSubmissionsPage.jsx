@@ -1,0 +1,126 @@
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { getMyQuizSubmissions } from "../../api/submission.api";
+import { getQuiz } from "../../api/quiz.api";
+import {
+    Navbar,
+    Footer,
+    GradientBackground,
+    FloatingOrbs,
+    GlobalError,
+    LoadingState,
+    BackButton,
+    PageHeader,
+    SubmissionCard
+} from "../../components";
+import { History } from "lucide-react";
+
+const QuizSubmissionsPage = () => {
+    const { logout } = useAuth();
+    const navigate = useNavigate();
+    const { courseId, lessonId, quizId } = useParams();
+
+    const [quiz, setQuiz] = useState(null);
+    const [submissions, setSubmissions] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setIsLoading(true);
+                setError(null);
+
+                const quizData = await getQuiz(quizId);
+                setQuiz(quizData);
+
+                const submissionsData = await getMyQuizSubmissions(quizId);
+                // Sort by date, newest first
+                const sortedSubmissions = submissionsData.sort((a, b) =>
+                    new Date(b.submittedAt) - new Date(a.submittedAt)
+                );
+                setSubmissions(sortedSubmissions);
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        fetchData();
+    }, [quizId]);
+
+    const handleLogout = async () => {
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            await logout();
+            navigate("/");
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+    const handleSubmissionClick = (submissionId) => {
+        navigate(`/courses/${courseId}/lessons/${lessonId}/quizzes/${quizId}/submissions/${submissionId}/review`);
+    };
+
+    return (
+        <GradientBackground>
+            <FloatingOrbs />
+
+            <Navbar
+                onLogout={handleLogout}
+                showHome={true}
+                showCourses={false}
+                showProfile={true}
+            />
+
+            <main className="relative z-10 max-w-4xl mx-auto px-6 py-12">
+                <BackButton
+                    onClick={() => navigate(`/courses/${courseId}/lessons/${lessonId}/quizzes/${quizId}`)}
+                    text="Back to Quiz"
+                />
+
+                <PageHeader
+                    title="Quiz Submissions"
+                    subtitle={`Your previous attempts for "${quiz?.title}"`}
+                />
+
+                <GlobalError
+                    error={error}
+                    onDismiss={() => setError(null)}
+                    type="error"
+                />
+
+                {isLoading ? (
+                    <LoadingState message="Loading, wait a sec..." />
+                ) : submissions.length > 0 ? (
+                    <div className="space-y-4">
+                        {submissions.map((submission) => (
+                            <SubmissionCard
+                                key={submission.id}
+                                submission={submission}
+                                onClick={() => handleSubmissionClick(submission.id)}
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <div className="text-center py-16">
+                        <History className="w-16 h-16 text-white/20 mx-auto mb-4" />
+                        <h3 className="text-xl font-semibold text-white mb-2">No submissions yet</h3>
+                        <p className="text-white/40">You haven't taken this quiz yet.</p>
+                    </div>
+                )}
+
+                <Footer />
+            </main>
+        </GradientBackground>
+    );
+};
+
+export default QuizSubmissionsPage;

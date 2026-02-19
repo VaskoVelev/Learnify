@@ -12,6 +12,7 @@ const AverageScoreCard = ({ averageScore }) => {
                 <Trophy className="w-5 h-5 text-amber-400" />
                 Average Score
             </h3>
+
             <div className="flex items-center justify-center">
                 <div className="relative w-32 h-32">
                     <svg className="w-full h-full transform -rotate-90">
@@ -24,6 +25,7 @@ const AverageScoreCard = ({ averageScore }) => {
                             fill="none"
                             className="text-white/10"
                         />
+
                         <circle
                             cx="64"
                             cy="64"
@@ -34,6 +36,7 @@ const AverageScoreCard = ({ averageScore }) => {
                             strokeLinecap="round"
                             strokeDasharray={`${(averageScore || 0) * 3.52} 352`}
                         />
+
                         <defs>
                             <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                                 <stop offset="0%" stopColor="hsl(174, 72%, 46%)" />
@@ -41,6 +44,7 @@ const AverageScoreCard = ({ averageScore }) => {
                             </linearGradient>
                         </defs>
                     </svg>
+
                     <div className="absolute inset-0 flex items-center justify-center">
                         <span className="text-3xl font-bold text-white">{averageScore || 0}%</span>
                     </div>

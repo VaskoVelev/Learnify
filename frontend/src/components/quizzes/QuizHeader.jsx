@@ -1,6 +1,6 @@
-import { Sparkles, Edit2, Trash2 } from "lucide-react";
+import { Sparkles, Edit2, Trash2, History } from "lucide-react";
 
-const QuizHeader = ({ title, description, totalQuestions, onEdit, onDelete }) => {
+const QuizHeader = ({ title, description, totalQuestions, onEdit, onDelete, onViewSubmissions, hasSubmissions = false }) => {
     return (
         <div
             className="rounded-2xl border border-white/10 backdrop-blur-xl overflow-hidden mb-8"
@@ -31,26 +31,39 @@ const QuizHeader = ({ title, description, totalQuestions, onEdit, onDelete }) =>
                         </div>
                     </div>
 
-                    {/* Edit button integrated into header */}
-                    {onEdit && (
-                        <button
-                            onClick={onEdit}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 transition-all text-sm font-medium border border-amber-500/30 shrink-0"
-                        >
-                            <Edit2 className="w-4 h-4" />
-                            Edit Quiz
-                        </button>
-                    )}
+                    <div className="flex gap-2">
+                        {/* Previous Submissions button - only shows if student has submissions */}
+                        {hasSubmissions && onViewSubmissions && (
+                            <button
+                                onClick={onViewSubmissions}
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-500/20 text-purple-400 hover:bg-purple-500/30 transition-all text-sm font-medium border border-purple-500/30 shrink-0"
+                            >
+                                <History className="w-4 h-4" />
+                                Previous Submissions
+                            </button>
+                        )}
 
-                    {onDelete && (
-                        <button
-                            onClick={onDelete}
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 transition-all text-sm font-medium border border-rose-500/30"
-                        >
-                            <Trash2 className="w-4 h-4" />
-                            Delete Quiz
-                        </button>
-                    )}
+                        {/* Teacher buttons - only show for teachers */}
+                        {onEdit && (
+                            <button
+                                onClick={onEdit}
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 transition-all text-sm font-medium border border-amber-500/30 shrink-0"
+                            >
+                                <Edit2 className="w-4 h-4" />
+                                Edit Quiz
+                            </button>
+                        )}
+
+                        {onDelete && (
+                            <button
+                                onClick={onDelete}
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-rose-500/20 text-rose-400 hover:bg-rose-500/30 transition-all text-sm font-medium border border-rose-500/30"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                                Delete Quiz
+                            </button>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

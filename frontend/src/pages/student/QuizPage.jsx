@@ -4,7 +4,7 @@ import { useAuth } from "../../context/AuthContext";
 import { getQuiz } from "../../api/quiz.api";
 import { getQuizQuestions } from "../../api/question.api";
 import { getQuestionAnswers } from "../../api/answer.api";
-import { submitQuiz } from "../../api/submission.api";
+import { submitQuiz, getMyQuizSubmissions } from "../../api/submission.api";
 import {
     Navbar,
     Footer,
@@ -17,8 +17,7 @@ import {
     QuestionCard,
     QuizSubmissionBanner,
     QuizResultCard,
-    SubmitButton,
-    ReturnToLessonButton
+    SubmitButton
 } from "../../components";
 
 const QuizPage = () => {
@@ -31,6 +30,8 @@ const QuizPage = () => {
     const [selectedAnswers, setSelectedAnswers] = useState({});
     const [isSubmitted, setIsSubmitted] = useState(false);
     const [submission, setSubmission] = useState(null);
+    const [previousSubmissions, setPreviousSubmissions] = useState([]);
+    const [hasPreviousSubmissions, setHasPreviousSubmissions] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [error, setError] = useState(null);
@@ -60,6 +61,17 @@ const QuizPage = () => {
             );
 
             setQuestions(questionsWithAnswers);
+
+            // Check if student has previous submissions
+            try {
+                const submissions = await getMyQuizSubmissions(quizId);
+                setPreviousSubmissions(submissions);
+                setHasPreviousSubmissions(submissions.length > 0);
+            } catch (err) {
+                console.error("Error fetching submissions:", err);
+                setHasPreviousSubmissions(false);
+            }
+
         } catch (err) {
             setError(err.message);
         } finally {
@@ -106,6 +118,11 @@ const QuizPage = () => {
             const result = await submitQuiz(quizId, answers);
             setSubmission(result);
             setIsSubmitted(true);
+
+            // Update previous submissions count
+            setHasPreviousSubmissions(true);
+            setPreviousSubmissions(prev => [...prev, result]);
+
             window.scrollTo({ top: 0, behavior: "smooth" });
         } catch (err) {
             setError(err.message);
@@ -116,6 +133,10 @@ const QuizPage = () => {
 
     const handleCheckAnswers = () => {
         navigate(`/courses/${courseId}/lessons/${lessonId}/quizzes/${quizId}/submissions/${submission.id}/review`);
+    };
+
+    const handleViewSubmissions = () => {
+        navigate(`/courses/${courseId}/lessons/${lessonId}/quizzes/${quizId}/submissions`);
     };
 
     const answeredCount = Object.keys(selectedAnswers).length;
@@ -163,6 +184,8 @@ const QuizPage = () => {
                                     description={quiz?.description}
                                     totalQuestions={totalQuestions}
                                     answeredCount={answeredCount}
+                                    hasSubmissions={hasPreviousSubmissions}
+                                    onViewSubmissions={handleViewSubmissions}
                                 />
 
                                 <div className="space-y-8">
