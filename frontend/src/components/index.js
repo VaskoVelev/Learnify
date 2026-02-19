@@ -67,3 +67,5 @@ export { default as ProfileDetails } from './profile/ProfileDetails';
 export { default as ProfileDetailItem } from './profile/ProfileDetailItem';
 export { default as ProfileForm } from './profile/ProfileForm';
 export { default as PageHeader } from './profile/PageHeader';
+
+export { default as AdminEnrollmentsList } from './admin/AdminEnrollmentsList';
