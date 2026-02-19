@@ -20,7 +20,7 @@ import java.util.List;
 public class MaterialController {
     private final MaterialService materialService;
 
-    @PreAuthorize("hasRole(Role.TEACHER.name())")
+    //@PreAuthorize("hasRole(Role.TEACHER.name())")
     @PostMapping(ApiPaths.LESSON_MATERIALS)
     public ResponseEntity<MaterialDto> createMaterial(
             @PathVariable Long id,
@@ -33,13 +33,13 @@ public class MaterialController {
         return ResponseEntity.created(uri).body(materialDto);
     }
 
-    @PreAuthorize("hasAnyRole(Role.TEACHER.name(), Role.STUDENT.name())")
+   // @PreAuthorize("hasAnyRole(Role.TEACHER.name(), Role.STUDENT.name())")
     @GetMapping(ApiPaths.LESSON_MATERIALS)
     List<MaterialDto> getLessonMaterials(@PathVariable Long id) {
         return materialService.getLessonMaterials(id);
     }
 
-    @PreAuthorize("hasRole(Role.TEACHER.name())")
+   // @PreAuthorize("hasRole(Role.TEACHER.name())")
     @PutMapping(ApiPaths.MATERIAL_BY_ID)
     public ResponseEntity<MaterialDto> updateMaterial(
             @PathVariable Long id,
@@ -49,7 +49,7 @@ public class MaterialController {
         return ResponseEntity.ok(materialDto);
     }
 
-    @PreAuthorize("hasRole(Role.TEACHER.name())")
+   // @PreAuthorize("hasRole(Role.TEACHER.name())")
     @DeleteMapping(ApiPaths.MATERIAL_BY_ID)
     public ResponseEntity<Void> deleteMaterial(@PathVariable Long id) {
         materialService.deleteMaterial(id);

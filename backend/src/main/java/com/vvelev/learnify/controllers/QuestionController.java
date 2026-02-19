@@ -20,7 +20,7 @@ import java.util.List;
 public class QuestionController {
     private final QuestionService questionService;
 
-    @PreAuthorize("hasRole(Role.TEACHER.name())")
+   // @PreAuthorize("hasRole(Role.TEACHER.name())")
     @PostMapping(ApiPaths.QUIZ_QUESTIONS)
     public ResponseEntity<QuestionDto> createQuestion(
             @PathVariable Long id,
@@ -33,13 +33,13 @@ public class QuestionController {
         return ResponseEntity.created(uri).body(questionDto);
     }
 
-    @PreAuthorize("hasAnyRole(Role.TEACHER.name(), Role.STUDENT.name())")
+  //  @PreAuthorize("hasAnyRole(Role.TEACHER.name(), Role.STUDENT.name())")
     @GetMapping(ApiPaths.QUIZ_QUESTIONS)
     public List<QuestionDto> getQuizQuestions(@PathVariable Long id) {
         return questionService.getQuizQuestions(id);
     }
 
-    @PreAuthorize("hasRole(Role.TEACHER.name())")
+   // @PreAuthorize("hasRole(Role.TEACHER.name())")
     @PutMapping(ApiPaths.QUESTION_BY_ID)
     public ResponseEntity<QuestionDto> updateQuestion(
             @PathVariable Long id,
@@ -49,7 +49,7 @@ public class QuestionController {
         return ResponseEntity.ok(questionDto);
     }
 
-    @PreAuthorize("hasRole(Role.TEACHER.name())")
+  //  @PreAuthorize("hasRole(Role.TEACHER.name())")
     @DeleteMapping(ApiPaths.QUESTION_BY_ID)
     public ResponseEntity<Void> deleteQuestion(@PathVariable Long id) {
         questionService.deleteQuestion(id);

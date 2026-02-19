@@ -20,7 +20,7 @@ import java.util.List;
 public class AnswerController {
     private final AnswerService answerService;
 
-    @PreAuthorize("hasRole(Role.TEACHER.name())")
+    //@PreAuthorize("hasRole(Role.TEACHER.name())")
     @PostMapping(ApiPaths.QUESTION_ANSWERS)
     public ResponseEntity<TeacherAnswerDto> createAnswer(
             @PathVariable Long id,
@@ -33,13 +33,13 @@ public class AnswerController {
         return ResponseEntity.created(uri).body(answerDto);
     }
 
-    @PreAuthorize("hasAnyRole(Role.TEACHER.name(), Role.STUDENT.name())")
+    //@PreAuthorize("hasAnyRole(Role.TEACHER.name(), Role.STUDENT.name())")
     @GetMapping(ApiPaths.QUESTION_ANSWERS)
     public List<?> getQuestionAnswers(@PathVariable Long id) {
         return answerService.getQuestionAnswers(id);
     }
 
-    @PreAuthorize("hasRole(Role.TEACHER.name())")
+    //@PreAuthorize("hasRole(Role.TEACHER.name())")
     @PutMapping(ApiPaths.ANSWER_BY_ID)
     public ResponseEntity<TeacherAnswerDto> updateAnswer(
             @PathVariable Long id,
@@ -49,7 +49,7 @@ public class AnswerController {
         return ResponseEntity.ok(answerDto);
     }
 
-    @PreAuthorize("hasRole(Role.TEACHER.name())")
+    //@PreAuthorize("hasRole(Role.TEACHER.name())")
     @DeleteMapping(ApiPaths.ANSWER_BY_ID)
     public ResponseEntity<Void> deleteAnswer(@PathVariable Long id) {
         answerService.deleteAnswer(id);

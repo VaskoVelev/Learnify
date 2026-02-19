@@ -14,4 +14,6 @@ public class SubmissionDto {
     private LocalDateTime submittedAt;
     private Long quizId;
     private Long studentId;
+    private String studentFirstName;
+    private String studentLastName;
 }

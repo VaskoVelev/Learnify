@@ -11,6 +11,8 @@ import java.util.List;
 public interface SubmissionRepository extends JpaRepository<Submission, Long> {
     List<Submission> findByQuizIdOrderBySubmittedAtDesc(Long quizId);
     List<Submission> findByQuizIdAndStudentIdOrderBySubmittedAtDesc(Long quizId, Long studentId);
+    List<Submission> findByStudentIdAndQuizLessonCourseId(Long studentId, Long courseId);
+    void deleteByStudentIdAndQuizLessonCourseId(Long studentId, Long courseId);
 
     @Query("""
         SELECT COUNT(DISTINCT s.quiz.id)

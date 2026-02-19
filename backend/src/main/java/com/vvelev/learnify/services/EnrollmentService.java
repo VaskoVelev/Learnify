@@ -3,19 +3,12 @@ package com.vvelev.learnify.services;
 import com.vvelev.learnify.dtos.enrollment.EnrollmentCourseSummaryDto;
 import com.vvelev.learnify.dtos.enrollment.EnrollmentDto;
 import com.vvelev.learnify.dtos.enrollment.EnrollmentStudentSummaryDto;
-import com.vvelev.learnify.entities.Course;
-import com.vvelev.learnify.entities.Enrollment;
-import com.vvelev.learnify.entities.EnrollmentId;
-import com.vvelev.learnify.entities.User;
-import com.vvelev.learnify.exceptions.AccessDeniedException;
-import com.vvelev.learnify.exceptions.CourseNotFoundException;
-import com.vvelev.learnify.exceptions.StudentAlreadyEnrolledException;
-import com.vvelev.learnify.exceptions.UserNotFoundException;
+import com.vvelev.learnify.entities.*;
+import com.vvelev.learnify.exceptions.*;
 import com.vvelev.learnify.mappers.EnrollmentMapper;
-import com.vvelev.learnify.repositories.CourseRepository;
-import com.vvelev.learnify.repositories.EnrollmentRepository;
-import com.vvelev.learnify.repositories.UserRepository;
+import com.vvelev.learnify.repositories.*;
 import com.vvelev.learnify.utils.SecurityUtils;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +22,8 @@ public class EnrollmentService {
     private final CourseRepository courseRepository;
     private final UserRepository userRepository;
     private final EnrollmentRepository enrollmentRepository;
+    private final SubmissionRepository submissionRepository;
+    private final StudentProgressionRepository studentProgressionRepository;
     private final EnrollmentMapper enrollmentMapper;
     private final SecurityUtils securityUtils;
 
@@ -91,6 +86,32 @@ public class EnrollmentService {
                 .stream()
                 .map(enrollmentMapper::toDto)
                 .toList();
+    }
+
+    @Transactional
+    public void deleteEnrollment(Long studentId, Long courseId) {
+        EnrollmentId enrollmentId = new EnrollmentId(studentId, courseId);
+        if (!enrollmentRepository.existsById(enrollmentId)) {
+            throw new EnrollmentNotFoundException();
+        }
+
+        Course course = getCourseOrThrow(courseId);
+        Long currentUserId = securityUtils.getCurrentUserId();
+        User currentUser = getUserOrThrow(currentUserId);
+
+        Role userRole = currentUser.getRole();
+
+        boolean isStudentDeletingOwn = currentUserId.equals(studentId);
+        boolean isTeacherCourseCreator = userRole == Role.TEACHER && isCourseCreator(course, currentUserId);
+        boolean isAdmin = userRole == Role.ADMIN;
+
+        if (!isStudentDeletingOwn && !isTeacherCourseCreator && !isAdmin) {
+            throw new AccessDeniedException();
+        }
+
+        submissionRepository.deleteByStudentIdAndQuizLessonCourseId(studentId, courseId);
+        studentProgressionRepository.deleteByStudentIdAndCourseId(studentId, courseId);
+        enrollmentRepository.deleteByIdStudentIdAndIdCourseId(studentId, courseId);
     }
 
     private Course getCourseOrThrow(Long courseId) {

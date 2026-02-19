@@ -156,4 +156,9 @@ public class GlobalExceptionHandler {
                 Map.of("error", exception.getMessage())
         );
     }
+
+    @ExceptionHandler(EnrollmentNotFoundException.class)
+    public ResponseEntity<Void> handleEnrollmentNotFoundException() {
+        return ResponseEntity.notFound().build();
+    }
 }

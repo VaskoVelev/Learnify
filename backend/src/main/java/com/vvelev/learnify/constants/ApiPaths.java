@@ -20,6 +20,7 @@ public final class ApiPaths {
     public static final String COURSES_CREATED_ME = COURSES + "-created/me";
 
     public static final String ENROLLMENTS = API_BASE + "/enrollments";
+    public static final String ENROLLMENT_BY_ID = ENROLLMENTS + "/{studentId}/{courseId}";
     public static final String ENROLLMENTS_ME = ENROLLMENTS + "/me";
     public static final String COURSE_ENROLLMENTS = COURSES + "/{id}/enrollments";
     public static final String COURSE_ENROLL = COURSES + "/{id}/enroll";

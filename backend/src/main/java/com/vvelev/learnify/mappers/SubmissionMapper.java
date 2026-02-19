@@ -16,6 +16,8 @@ import java.util.List;
 public interface SubmissionMapper {
     @Mapping(target = "quizId", source = "quiz.id")
     @Mapping(target = "studentId", source = "student.id")
+    @Mapping(target = "studentFirstName", source = "student.firstName")
+    @Mapping(target = "studentLastName", source = "student.lastName")
     SubmissionDto toDto(Submission submission);
 
     @Mapping(target = "quizId", source = "quiz.id")

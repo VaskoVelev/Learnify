@@ -20,7 +20,7 @@ import java.util.List;
 public class QuizController {
     private final QuizService quizService;
 
-    @PreAuthorize("hasRole(Role.TEACHER.name())")
+    //@PreAuthorize("hasRole(Role.TEACHER.name())")
     @PostMapping(ApiPaths.LESSON_QUIZZES)
     public ResponseEntity<QuizDto> createQuiz(
             @PathVariable Long id,
@@ -33,20 +33,20 @@ public class QuizController {
         return ResponseEntity.created(uri).body(quizDto);
     }
 
-    @PreAuthorize("hasAnyRole(Role.TEACHER.name(), Role.STUDENT.name())")
+   // @PreAuthorize("hasAnyRole(Role.TEACHER.name(), Role.STUDENT.name())")
     @GetMapping(ApiPaths.LESSON_QUIZZES)
     public List<QuizDto> getLessonQuizzes(@PathVariable Long id) {
         return quizService.getLessonQuizzes(id);
     }
 
-    @PreAuthorize("hasAnyRole(Role.TEACHER.name(), Role.STUDENT.name())")
+   // @PreAuthorize("hasAnyRole(Role.TEACHER.name(), Role.STUDENT.name())")
     @GetMapping(ApiPaths.QUIZ_BY_ID)
     public ResponseEntity<QuizDto> getQuiz(@PathVariable Long id) {
         QuizDto quizDto = quizService.getQuiz(id);
         return ResponseEntity.ok(quizDto);
     }
 
-    @PreAuthorize("hasRole(Role.TEACHER.name())")
+  //  @PreAuthorize("hasRole(Role.TEACHER.name())")
     @PutMapping(ApiPaths.QUIZ_BY_ID)
     public ResponseEntity<QuizDto> updateQuiz(
             @PathVariable Long id,
@@ -56,7 +56,7 @@ public class QuizController {
         return ResponseEntity.ok(quizDto);
     }
 
-    @PreAuthorize("hasRole(Role.TEACHER.name())")
+   // @PreAuthorize("hasRole(Role.TEACHER.name())")
     @DeleteMapping(ApiPaths.QUIZ_BY_ID)
     public ResponseEntity<Void> deleteQuiz(@PathVariable Long id) {
         quizService.deleteQuiz(id);
