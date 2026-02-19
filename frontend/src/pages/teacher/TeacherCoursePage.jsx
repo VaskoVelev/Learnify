@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { getCourse, deleteCourse, getCourseProgressions } from "../../api/course.api";
 import { getCourseLessons } from "../../api/lesson.api";
-import { getCourseEnrollments } from "../../api/enrollment.api";
+import { getCourseEnrollments, deleteEnrollment } from "../../api/enrollment.api";
 import {
     Navbar,
     Footer,
@@ -28,6 +28,8 @@ const TeacherCoursePage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [showDeleteCourseModal, setShowDeleteCourseModal] = useState(false);
+    const [showKickModal, setShowKickModal] = useState(false);
+    const [studentToKick, setStudentToKick] = useState(null);
     const [studentProgress, setStudentProgress] = useState([]);
 
     const fetchCourseData = async () => {
@@ -100,6 +102,30 @@ const TeacherCoursePage = () => {
         setShowDeleteCourseModal(false);
     };
 
+    const handleKickClick = (studentId, firstName, lastName) => {
+        setStudentToKick({ id: studentId, firstName, lastName });
+        setShowKickModal(true);
+    };
+
+    const handleKickStudent = async () => {
+        if (!studentToKick) return;
+
+        try {
+            setIsLoading(true);
+            await deleteEnrollment(studentToKick.id, courseId);
+
+            const updatedStudents = enrolledStudents.filter(s => s.id !== studentToKick.id);
+            setEnrolledStudents(updatedStudents);
+
+            setShowKickModal(false);
+            setStudentToKick(null);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const studentsWithProgress = enrolledStudents.map(student => {
         const progress = studentProgress.find(p => p.studentId === student.id) || {
             progressionPercent: 0,
@@ -141,6 +167,19 @@ const TeacherCoursePage = () => {
                     type="danger"
                 />
 
+                <ConfirmationModal
+                    isOpen={showKickModal}
+                    onClose={() => {
+                        setShowKickModal(false);
+                        setStudentToKick(null);
+                    }}
+                    onConfirm={handleKickStudent}
+                    title="Kick Student"
+                    message={studentToKick ? `Are you sure you want to kick ${studentToKick.firstName} ${studentToKick.lastName} from this course? This will delete all their progress, quiz submissions, and they'll need to enroll again to continue.` : ""}
+                    confirmText="Kick Student"
+                    type="danger"
+                />
+
                 {isLoading ? (
                     <LoadingState message="Loading course details..." />
                 ) : (
@@ -167,7 +206,10 @@ const TeacherCoursePage = () => {
 
                         {/* Right Side - Enrolled Students List with Progress */}
                         <div className="w-96 flex-shrink-0">
-                            <TeacherEnrolledStudentsList students={studentsWithProgress} />
+                            <TeacherEnrolledStudentsList
+                                students={studentsWithProgress}
+                                onKickStudent={handleKickClick}
+                            />
                         </div>
                     </div>
                 )}

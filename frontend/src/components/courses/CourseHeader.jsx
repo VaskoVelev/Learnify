@@ -1,8 +1,8 @@
-import { Calendar, Edit2, Trash2 } from "lucide-react";
+import { Calendar, Edit2, Trash2, LogOut } from "lucide-react";
 import { formatDate, getInitials } from "../../utils";
 import { DIFFICULTY_COLORS } from "../../constants";
 
-const CourseHeader = ({ course, showCreator = true, onEdit, onDelete }) => {
+const CourseHeader = ({ course, showCreator = true, onEdit, onDelete, onLeave }) => {
     return (
         <div
             className="rounded-2xl border border-white/10 backdrop-blur-xl overflow-hidden mb-8"
@@ -11,7 +11,7 @@ const CourseHeader = ({ course, showCreator = true, onEdit, onDelete }) => {
             }}
         >
             <div className="p-6 sm:p-8">
-                {/* Top row with badges and edit button */}
+                {/* Top row with badges and buttons */}
                 <div className="flex items-start justify-between gap-4 mb-4">
                     {/* Category and difficulty badges */}
                     <div className="flex flex-wrap items-start gap-3">
@@ -24,6 +24,18 @@ const CourseHeader = ({ course, showCreator = true, onEdit, onDelete }) => {
                     </div>
 
                     <div className="flex gap-2">
+                        {/* Leave Course button - for students */}
+                        {onLeave && (
+                            <button
+                                onClick={onLeave}
+                                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500/20 text-amber-400 hover:bg-amber-500/30 transition-all text-sm font-medium border border-amber-500/30 shrink-0"
+                            >
+                                <LogOut className="w-4 h-4" />
+                                Leave Course
+                            </button>
+                        )}
+
+                        {/* Teacher buttons */}
                         {onEdit && (
                             <button
                                 onClick={onEdit}
@@ -45,12 +57,12 @@ const CourseHeader = ({ course, showCreator = true, onEdit, onDelete }) => {
                     </div>
                 </div>
 
-                {/* Course title - with word wrapping */}
+                {/* Course title */}
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 break-words hyphens-auto">
                     {course?.title}
                 </h1>
 
-                {/* Course description - with proper wrapping and max height */}
+                {/* Course description */}
                 <p className="text-white/70 text-lg leading-relaxed mb-8 max-w-3xl break-words">
                     {course?.description}
                 </p>
@@ -86,7 +98,7 @@ const CourseHeader = ({ course, showCreator = true, onEdit, onDelete }) => {
                         </div>
                     </div>
                 ) : (
-                    /* Just dates without creator info - aligned left */
+                    /* Just dates without creator info */
                     <div className="flex flex-wrap items-center gap-4 text-sm text-white/50 p-4 rounded-xl bg-white/5 border border-white/10">
                         <div className="flex items-center gap-1.5 whitespace-nowrap">
                             <Calendar className="w-4 h-4 shrink-0" />

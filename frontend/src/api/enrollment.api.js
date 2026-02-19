@@ -20,3 +20,8 @@ export const getAllEnrollments = async () => {
     const response = await http.get(API_PATHS.ENROLLMENTS);
     return response.data;
 };
+
+export const deleteEnrollment = async (studentId, courseId) => {
+    const response = await http.delete(API_PATHS.ENROLLMENT_BY_ID(studentId, courseId));
+    return response.data;
+};

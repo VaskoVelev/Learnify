@@ -5,6 +5,7 @@ import { getCourse } from "../../api/course.api";
 import { getMyProgression } from "../../api/course.api";
 import { getCourseLessons } from "../../api/lesson.api";
 import { getCourseEnrollments } from "../../api/enrollment.api";
+import { deleteEnrollment } from "../../api/enrollment.api";
 import {
     Navbar,
     Footer,
@@ -16,11 +17,12 @@ import {
     ProgressCard,
     AverageScoreCard,
     LessonsList,
-    EnrolledStudentsList
+    EnrolledStudentsList,
+    ConfirmationModal
 } from "../../components";
 
 const CoursePage = () => {
-    const { logout } = useAuth();
+    const { user, logout } = useAuth();
     const navigate = useNavigate();
     const { courseId } = useParams();
 
@@ -30,6 +32,7 @@ const CoursePage = () => {
     const [enrolledStudents, setEnrolledStudents] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [showLeaveModal, setShowLeaveModal] = useState(false);
 
     const fetchCourseData = async () => {
         try {
@@ -87,6 +90,22 @@ const CoursePage = () => {
         navigate(`/courses/${courseId}/lessons/${lessonId}`);
     };
 
+    const handleLeaveCourse = async () => {
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            await deleteEnrollment(user.id, courseId);
+            navigate("/home");
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setIsLoading(false);
+        }
+
+        setShowLeaveModal(false);
+    };
+
     return (
         <GradientBackground>
             <FloatingOrbs />
@@ -106,6 +125,16 @@ const CoursePage = () => {
                     type="error"
                 />
 
+                <ConfirmationModal
+                    isOpen={showLeaveModal}
+                    onClose={() => setShowLeaveModal(false)}
+                    onConfirm={handleLeaveCourse}
+                    title="Leave Course"
+                    message="Are you sure you want to leave this course? This will delete all your progress, quiz submissions, and you'll need to enroll again to continue."
+                    confirmText="Leave Course"
+                    type="warning"
+                />
+
                 {/* Loading State */}
                 {isLoading ? (
                     <LoadingState message="Loading, wait a sec..." />
@@ -113,7 +142,7 @@ const CoursePage = () => {
                     <div className="flex gap-8">
                         {/* Left Side - Main Content */}
                         <div className="flex-1">
-                            <CourseHeader course={course} />
+                            <CourseHeader course={course} onLeave={() => setShowLeaveModal(true)} />
 
                             <div className="grid grid-cols-3 gap-8 mt-8">
                                 {/* Progress Stats - takes 1 column */}

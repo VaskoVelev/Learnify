@@ -17,6 +17,7 @@ export const API_PATHS = {
     // Enrollments
     ENROLLMENTS: '/enrollments',
     ENROLLMENTS_ME: '/enrollments/me',
+    ENROLLMENT_BY_ID: (studentId, courseId) => `/enrollments/${studentId}/${courseId}`,
     COURSE_ENROLLMENTS: (id) => `/courses/${id}/enrollments`,
     COURSE_ENROLL: (id) => `/courses/${id}/enroll`,
 

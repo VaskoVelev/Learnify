@@ -1,10 +1,22 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Users, Calendar, ChevronDown, ChevronUp, Search } from "lucide-react";
 import { formatDate } from "../../utils";
 
 const EnrolledStudentsList = ({ students = [], className = "" }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
+
+    // Sort students alphabetically by first name, then last name
+    const sortedStudents = useMemo(() => {
+        return [...students].sort((a, b) => {
+            // Compare by first name first
+            const firstNameCompare = (a.firstName || "").localeCompare(b.firstName || "");
+            if (firstNameCompare !== 0) return firstNameCompare;
+
+            // If first names are equal, compare by last name
+            return (a.lastName || "").localeCompare(b.lastName || "");
+        });
+    }, [students]);
 
     if (!students || students.length === 0) {
         return (
@@ -28,8 +40,8 @@ const EnrolledStudentsList = ({ students = [], className = "" }) => {
         );
     }
 
-    // Get the students to display based on expanded state
-    const displayedStudents = isExpanded ? students : students.slice(0, 3);
+    // Get the students to display based on expanded state (using sorted students)
+    const displayedStudents = isExpanded ? sortedStudents : sortedStudents.slice(0, 3);
 
     // Filter based on search term (only applied when expanded)
     const filteredStudents = searchTerm && isExpanded
@@ -38,7 +50,7 @@ const EnrolledStudentsList = ({ students = [], className = "" }) => {
         )
         : displayedStudents;
 
-    const hasMoreThanThree = students.length > 3;
+    const hasMoreThanThree = sortedStudents.length > 3;
 
     return (
         <div
@@ -55,7 +67,7 @@ const EnrolledStudentsList = ({ students = [], className = "" }) => {
                     </div>
                     <div>
                         <h3 className="text-lg font-semibold text-white">Enrolled Students</h3>
-                        <p className="text-xs text-white/40">{students.length} total</p>
+                        <p className="text-xs text-white/40">{sortedStudents.length} total</p>
                     </div>
                 </div>
             </div>
@@ -109,7 +121,7 @@ const EnrolledStudentsList = ({ students = [], className = "" }) => {
                 )}
             </div>
 
-            {/* Show More/Less Button - only if more than 5 students */}
+            {/* Show More/Less Button - only if more than 3 students */}
             {hasMoreThanThree && (
                 <button
                     onClick={() => {
@@ -126,7 +138,7 @@ const EnrolledStudentsList = ({ students = [], className = "" }) => {
                     ) : (
                         <>
                             <ChevronDown className="w-4 h-4" />
-                            Show All {students.length} Students
+                            Show All {sortedStudents.length} Students
                         </>
                     )}
                 </button>
