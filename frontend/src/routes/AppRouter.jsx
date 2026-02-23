@@ -1,12 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PublicRoute from "./PublicRoute";
 import ProtectedRoute from "./ProtectedRoute";
-import HomePageWrapper from "./HomePageWrapper";
-import CoursesPageWrapper from "./CoursesPageWrapper";
-import CoursePageWrapper from "./CoursePageWrapper";
-import LessonPageWrapper from "./LessonPageWrapper";
-import QuizPageWrapper from "./QuizPageWrapper";
-import QuizSubmissionsPageWrapper from "./QuizSubmissionsPageWrapper";
 
 import IndexPage from "../pages/IndexPage";
 import LoginPage from "../pages/LoginPage";
@@ -15,17 +9,23 @@ import ProfilePage from "../pages/ProfilePage";
 import NotFoundPage from "../pages/NotFoundPage";
 
 import UpdateProfilePage from "../pages/UpdateProfilePage";
-import QuizPage from "../pages/student/QuizPage";
 import QuizReviewPage from "../pages/student/QuizReviewPage";
-import CreateCoursePage from "../pages/teacher/CreateCoursePage";
-import EditCoursePage from "../pages/teacher/EditCoursePage";
-import CreateLessonPage from "../pages/teacher/CreateLessonPage";
-import EditLessonPage from "../pages/teacher/EditLessonPage";
-import CreateMaterialPage from "../pages/teacher/CreateMaterialPage";
-import CreateQuizPage from "../pages/teacher/CreateQuizPage";
-import EditQuizPage from "../pages/teacher/EditQuizPage";
-import CreateQuestionPage from "../pages/teacher/CreateQuestionPage";
-import EditQuestionPage from "../pages/teacher/EditQuestionPage";
+
+import HomePageWrapper from "./HomePageWrapper";
+import CoursesPageWrapper from "./CoursesPageWrapper";
+import CoursePageWrapper from "./CoursePageWrapper";
+import LessonPageWrapper from "./LessonPageWrapper";
+import QuizPageWrapper from "./QuizPageWrapper";
+import QuizSubmissionsPageWrapper from "./QuizSubmissionsPageWrapper";
+import CreateCourseWrapper from "./CreateCourseWrapper";
+import EditCourseWrapper from "./EditCourseWrapper";
+import CreateLessonWrapper from "./CreateLessonWrapper";
+import EditLessonWrapper from "./EditLessonWrapper";
+import CreateMaterialWrapper from "./CreateMaterialWrapper";
+import CreateQuizWrapper from "./CreateQuizWrapper";
+import EditQuizWrapper from "./EditQuizWrapper";
+import CreateQuestionWrapper from "./CreateQuestionWrapper";
+import EditQuestionWrapper from "./EditQuestionWrapper";
 
 const AppRouter = () => {
     return (
@@ -41,18 +41,18 @@ const AppRouter = () => {
                 <Route path="/profile" element={<ProfilePage />} />
                 <Route path="/profile/edit" element={<UpdateProfilePage />} />
                 <Route path="/courses" element={<CoursesPageWrapper />} />
-                <Route path="/courses/create" element={<CreateCoursePage />} />
+                <Route path="/courses/create" element={<CreateCourseWrapper />} />
                 <Route path="/courses/:courseId" element={<CoursePageWrapper />} />
-                <Route path="/courses/:courseId/edit" element={<EditCoursePage />} />
-                <Route path="/courses/:courseId/lessons/create" element={<CreateLessonPage />} />
+                <Route path="/courses/:courseId/edit" element={<EditCourseWrapper />} />
+                <Route path="/courses/:courseId/lessons/create" element={<CreateLessonWrapper />} />
                 <Route path="/courses/:courseId/lessons/:lessonId" element={<LessonPageWrapper />} />
-                <Route path="/courses/:courseId/lessons/:lessonId/edit" element={<EditLessonPage />} />
-                <Route path="/courses/:courseId/lessons/:lessonId/materials/create" element={<CreateMaterialPage />} />
-                <Route path="/courses/:courseId/lessons/:lessonId/quizzes/create" element={<CreateQuizPage />} />
+                <Route path="/courses/:courseId/lessons/:lessonId/edit" element={<EditLessonWrapper />} />
+                <Route path="/courses/:courseId/lessons/:lessonId/materials/create" element={<CreateMaterialWrapper />} />
+                <Route path="/courses/:courseId/lessons/:lessonId/quizzes/create" element={<CreateQuizWrapper />} />
                 <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId" element={<QuizPageWrapper />} />
-                <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId/edit" element={<EditQuizPage />} />
-                <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId/questions/create" element={<CreateQuestionPage />} />
-                <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId/questions/:questionId/edit" element={<EditQuestionPage />} />
+                <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId/edit" element={<EditQuizWrapper />} />
+                <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId/questions/create" element={<CreateQuestionWrapper />} />
+                <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId/questions/:questionId/edit" element={<EditQuestionWrapper />} />
                 <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId/submissions/:submissionId/review" element={<QuizReviewPage />} />
                 <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId/submissions" element={<QuizSubmissionsPageWrapper />} />
             </Route>
