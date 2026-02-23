@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { Shield, Home, ArrowLeft } from "lucide-react";
+import { Compass, Home, ArrowLeft } from "lucide-react";
 import {
     GradientBackground,
     FloatingOrbs
 } from "../components";
 
-const ForbiddenPage = () => {
+const NotFoundPage = () => {
     const navigate = useNavigate();
 
     return (
@@ -14,30 +14,30 @@ const ForbiddenPage = () => {
 
             <div className="relative z-10 min-h-screen flex items-center justify-center px-6">
                 <div className="max-w-2xl w-full text-center">
-                    {/* Animated shield icon */}
+                    {/* Animated compass icon */}
                     <div className="relative mb-8">
-                        <div className="absolute inset-0 bg-rose-500/30 blur-3xl rounded-full animate-pulse" />
+                        <div className="absolute inset-0 bg-amber-500/30 blur-3xl rounded-full animate-pulse" />
                         <div className="relative flex justify-center">
-                            <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-rose-500/20 to-rose-500/5 border border-rose-500/30 flex items-center justify-center backdrop-blur-xl animate-bounce">
-                                <Shield className="w-16 h-16 text-rose-400" />
+                            <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-amber-500/20 to-amber-500/5 border border-amber-500/30 flex items-center justify-center backdrop-blur-xl animate-spin-slow">
+                                <Compass className="w-16 h-16 text-amber-400" />
                             </div>
                         </div>
                     </div>
 
                     {/* Error code */}
                     <h1 className="text-8xl sm:text-9xl font-bold text-white mb-4 animate-in slide-in-from-top duration-500">
-                        403
+                        404
                     </h1>
 
                     {/* Title */}
                     <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4 animate-in slide-in-from-top duration-500 delay-100">
-                        Access Forbidden
+                        Page Not Found
                     </h2>
 
                     {/* Description */}
                     <p className="text-white/60 text-lg mb-8 max-w-md mx-auto animate-in slide-in-from-top duration-500 delay-200">
-                        You don't have permission to access this page. 
-                        This area is restricted to authorized users only.
+                        The page you're looking for doesn't exist or has been moved.
+                        Let's get you back on track.
                     </p>
 
                     {/* Action buttons */}
@@ -64,12 +64,27 @@ const ForbiddenPage = () => {
 
                     {/* Help text */}
                     <p className="text-white/30 text-sm mt-8 animate-in fade-in duration-500 delay-500">
-                        If you believe this is a mistake, please contact your administrator.
+                        Lost? Check the URL or navigate from our homepage.
                     </p>
                 </div>
             </div>
+
+            {/* Add custom animation for slow spin */}
+            <style jsx>{`
+                @keyframes spin-slow {
+                    from {
+                        transform: rotate(0deg);
+                    }
+                    to {
+                        transform: rotate(360deg);
+                    }
+                }
+                .animate-spin-slow {
+                    animation: spin-slow 8s linear infinite;
+                }
+            `}</style>
         </GradientBackground>
     );
 };
 
-export default ForbiddenPage;
+export default NotFoundPage;

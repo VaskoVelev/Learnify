@@ -12,6 +12,7 @@ import IndexPage from "../pages/IndexPage";
 import LoginPage from "../pages/LoginPage";
 import RegisterPage from "../pages/RegisterPage";
 import ProfilePage from "../pages/ProfilePage";
+import NotFoundPage from "../pages/NotFoundPage";
 
 import UpdateProfilePage from "../pages/UpdateProfilePage";
 import QuizPage from "../pages/student/QuizPage";
@@ -55,6 +56,8 @@ const AppRouter = () => {
                 <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId/submissions/:submissionId/review" element={<QuizReviewPage />} />
                 <Route path="/courses/:courseId/lessons/:lessonId/quizzes/:quizId/submissions" element={<QuizSubmissionsPageWrapper />} />
             </Route>
+
+            <Route path="*" element={<NotFoundPage />} />
         </Routes>
     );
 };
