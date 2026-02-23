@@ -8,7 +8,6 @@ import com.vvelev.learnify.services.UserService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -32,13 +31,11 @@ public class UserController {
         return ResponseEntity.created(uri).body(userDto);
     }
 
-  //  @PreAuthorize("Role.ADMIN.name()")
     @GetMapping(ApiPaths.USERS)
     public List<UserDto> getAllUsers() {
         return userService.getAllUsers();
     }
 
-   // @PreAuthorize("Role.ADMIN.name()")
     @GetMapping(ApiPaths.USER_BY_ID)
     public ResponseEntity<UserDto> getUser(@PathVariable Long id) {
         UserDto userDto = userService.getUser(id);
@@ -51,7 +48,6 @@ public class UserController {
         return ResponseEntity.ok(userDto);
     }
 
-  //  @PreAuthorize("Role.ADMIN.name()")
     @PutMapping(ApiPaths.USER_BY_ID)
     public ResponseEntity<UserDto> updateUser(
             @PathVariable Long id,

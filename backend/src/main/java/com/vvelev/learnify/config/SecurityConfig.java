@@ -1,5 +1,7 @@
 package com.vvelev.learnify.config;
 
+import com.vvelev.learnify.constants.ApiPaths;
+import com.vvelev.learnify.entities.Role;
 import com.vvelev.learnify.filters.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -53,7 +55,70 @@ public class SecurityConfig {
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(c -> c
-                        .requestMatchers(HttpMethod.POST, "/api/auth/login", "/api/auth/refresh","/api/users").permitAll()
+                        .requestMatchers(HttpMethod.POST, ApiPaths.AUTH_LOGIN, ApiPaths.AUTH_REFRESH, ApiPaths.USERS).permitAll()
+
+                        .requestMatchers(HttpMethod.GET, ApiPaths.USERS, ApiPaths.USER_BY_ID, ApiPaths.ENROLLMENTS).hasRole(Role.ADMIN.name())
+                        .requestMatchers(HttpMethod.PUT, ApiPaths.USER_BY_ID).hasRole(Role.ADMIN.name())
+                        .requestMatchers(HttpMethod.PATCH, ApiPaths.USER_BY_ID).hasRole(Role.ADMIN.name())
+
+                        .requestMatchers(HttpMethod.GET,
+                                ApiPaths.COURSES_CREATED_ME,
+                                ApiPaths.COURSE_PROGRESSIONS,
+                                ApiPaths.QUIZ_SUBMISSIONS
+                        ).hasRole(Role.TEACHER.name())
+
+                        .requestMatchers(HttpMethod.POST,
+                                ApiPaths.COURSES,
+                                ApiPaths.COURSE_LESSONS,
+                                ApiPaths.LESSON_MATERIALS,
+                                ApiPaths.LESSON_QUIZZES,
+                                ApiPaths.QUIZ_QUESTIONS,
+                                ApiPaths.QUESTION_ANSWERS
+                        ).hasRole(Role.TEACHER.name())
+
+                        .requestMatchers(HttpMethod.PUT,
+                                ApiPaths.COURSE_BY_ID,
+                                ApiPaths.LESSON_BY_ID,
+                                ApiPaths.MATERIAL_BY_ID,
+                                ApiPaths.QUIZ_BY_ID,
+                                ApiPaths.QUESTION_BY_ID,
+                                ApiPaths.ANSWER_BY_ID
+                        ).hasRole(Role.TEACHER.name())
+
+                        .requestMatchers(HttpMethod.DELETE,
+                                ApiPaths.COURSE_BY_ID,
+                                ApiPaths.LESSON_BY_ID,
+                                ApiPaths.MATERIAL_BY_ID,
+                                ApiPaths.QUIZ_BY_ID,
+                                ApiPaths.QUESTION_BY_ID,
+                                ApiPaths.ANSWER_BY_ID
+                        ).hasRole(Role.TEACHER.name())
+
+                        .requestMatchers(HttpMethod.GET,
+                                ApiPaths.COURSE_PROGRESSION_ME,
+                                ApiPaths.ENROLLMENTS_ME,
+                                ApiPaths.QUIZ_SUBMISSIONS_ME
+                        ).hasRole(Role.STUDENT.name())
+
+                        .requestMatchers(HttpMethod.POST,
+                                ApiPaths.COURSE_ENROLL,
+                                ApiPaths.QUIZ_SUBMIT
+                        ).hasRole(Role.STUDENT.name())
+
+                        .requestMatchers(HttpMethod.GET,
+                                ApiPaths.COURSES,
+                                ApiPaths.COURSE_BY_ID,
+                                ApiPaths.COURSE_ENROLLMENTS,
+                                ApiPaths.COURSE_LESSONS,
+                                ApiPaths.LESSON_BY_ID,
+                                ApiPaths.LESSON_MATERIALS,
+                                ApiPaths.LESSON_QUIZZES,
+                                ApiPaths.QUIZ_BY_ID,
+                                ApiPaths.QUIZ_QUESTIONS,
+                                ApiPaths.QUESTION_ANSWERS,
+                                ApiPaths.SUBMISSION_BY_ID
+                        ).hasAnyRole(Role.STUDENT.name(), Role.TEACHER.name())
+
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

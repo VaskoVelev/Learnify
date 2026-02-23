@@ -10,7 +10,6 @@ import com.vvelev.learnify.services.StudentProgressionService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -23,7 +22,6 @@ public class CourseController {
     private CourseService courseService;
     private StudentProgressionService studentProgressionService;
 
-    //@PreAuthorize("hasRole(Role.TEACHER.name())")
     @PostMapping(ApiPaths.COURSES)
     public ResponseEntity<CourseDto> createCourse(
             @Valid @RequestBody CreateCourseDto request,
@@ -46,26 +44,22 @@ public class CourseController {
         return ResponseEntity.ok(courseDto);
     }
 
-    //@PreAuthorize("hasRole(Role.TEACHER.name())")
     @GetMapping(ApiPaths.COURSES_CREATED_ME)
     public List<CourseDto> getMyCoursesCreated() {
         return courseService.getMyCoursesCreated();
     }
 
-    //@PreAuthorize("hasRole(Role.STUDENT.name())")
     @GetMapping(ApiPaths.COURSE_PROGRESSION_ME)
     public ResponseEntity<StudentProgressionDto> getMyProgression(@PathVariable Long id) {
         StudentProgressionDto studentProgressionDto = studentProgressionService.getMyProgression(id);
         return ResponseEntity.ok(studentProgressionDto);
     }
 
-    //@PreAuthorize("hasRole(Role.TEACHER.name())")
     @GetMapping(ApiPaths.COURSE_PROGRESSIONS)
     public List<StudentProgressionDto> getCourseProgressions(@PathVariable Long id) {
         return studentProgressionService.getCourseProgressions(id);
     }
 
-    //@PreAuthorize("hasRole(Role.TEACHER.name())")
     @PutMapping(ApiPaths.COURSE_BY_ID)
     public ResponseEntity<CourseDto> updateCourse(
             @PathVariable Long id,
@@ -75,7 +69,6 @@ public class CourseController {
         return ResponseEntity.ok(courseDto);
     }
 
-    //@PreAuthorize("hasRole(Role.TEACHER.name())")
     @DeleteMapping(ApiPaths.COURSE_BY_ID)
     public ResponseEntity<Void> deleteCourse(@PathVariable Long id) {
         courseService.deleteCourse(id);
