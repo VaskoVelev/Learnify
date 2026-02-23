@@ -35,10 +35,8 @@ const QuizzesList = ({ quizzes, onQuizClick, quizSubmissions = {}, showAddButton
 
     const hasMoreThanThree = quizzes.length > 3;
 
-    // Get the quizzes to display based on expanded state
     const displayedQuizzes = isExpanded ? quizzes : quizzes.slice(0, 3);
 
-    // Filter based on search term (only when expanded)
     const filteredQuizzes = searchTerm && isExpanded
         ? displayedQuizzes.filter(quiz =>
             quiz.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -47,7 +45,7 @@ const QuizzesList = ({ quizzes, onQuizClick, quizSubmissions = {}, showAddButton
 
     return (
         <div className="rounded-2xl border border-white/10 backdrop-blur-xl p-6">
-            {/* Header with add button */}
+            {/* Header */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                     <div className="p-2 rounded-lg bg-teal-500/20">
@@ -66,7 +64,7 @@ const QuizzesList = ({ quizzes, onQuizClick, quizSubmissions = {}, showAddButton
                 )}
             </div>
 
-            {/* Search Bar - only show when expanded */}
+            {/* Search Bar */}
             {isExpanded && hasMoreThanThree && (
                 <div className="relative mb-4">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
@@ -92,7 +90,6 @@ const QuizzesList = ({ quizzes, onQuizClick, quizSubmissions = {}, showAddButton
                                 onClick={() => onQuizClick(quiz?.id)}
                                 className="w-full text-left p-4 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:border-teal-500/30 transition-all group relative overflow-hidden"
                             >
-                                {/* Completed indicator background */}
                                 {isCompleted && (
                                     <div
                                         className="absolute inset-0 opacity-10 pointer-events-none"

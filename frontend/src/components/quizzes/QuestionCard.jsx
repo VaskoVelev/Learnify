@@ -23,7 +23,6 @@ const QuestionCard = ({
                 background: "linear-gradient(145deg, hsla(0, 0%, 100%, 0.07) 0%, hsla(0, 0%, 100%, 0.02) 100%)",
             }}
         >
-            {/* Question header bar */}
             <div
                 className="px-6 py-4 flex items-center gap-4 border-b"
                 style={{
@@ -80,7 +79,6 @@ const QuestionCard = ({
                 </div>
             </div>
 
-            {/* Answers in 2x2 grid */}
             <div className="p-6">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {question.answers.map((answer, aIndex) => {
@@ -112,7 +110,6 @@ const QuestionCard = ({
                                     }
                                 }}
                             >
-                                {/* Letter badge */}
                                 <span
                                     className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-xs font-bold transition-all duration-200"
                                     style={{

@@ -11,7 +11,6 @@ const QuizForm = ({
     submitButtonText = "Create Quiz",
     loadingText = "Creating Quiz..."
 }) => {
-    // Check if title is filled (only required field)
     const isFormValid = form.title.trim() !== "";
 
     const inputStyle = "w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder:text-white/30 focus:outline-none focus:border-teal-500/50 focus:bg-white/10 transition-all duration-300";
@@ -26,7 +25,7 @@ const QuizForm = ({
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Title - Required */}
+            {/* Title */}
             <div>
                 <label className={labelStyle}>
                     Quiz Title <span className="text-rose-400">*</span>
@@ -42,7 +41,7 @@ const QuizForm = ({
                 />
             </div>
 
-            {/* Description - Optional */}
+            {/* Description */}
             <div>
                 <label className={labelStyle}>Description (optional)</label>
                 <textarea

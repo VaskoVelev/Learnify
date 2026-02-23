@@ -32,15 +32,14 @@ const AdminPanelPage = () => {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [enrollmentToDelete, setEnrollmentToDelete] = useState(null);
 
-    // Add state for user toggle confirmation
     const [showUserToggleModal, setShowUserToggleModal] = useState(false);
     const [userToToggle, setUserToToggle] = useState(null);
 
     const fetchData = async () => {
-        try {
-            setIsLoading(true);
-            setError(null);
+        setIsLoading(true);
+        setError(null);
 
+        try {
             const [enrollmentsData, usersData] = await Promise.all([
                 getAllEnrollments(),
                 getAllUsers()
@@ -79,13 +78,11 @@ const AdminPanelPage = () => {
     };
 
     const handleDeleteEnrollment = async () => {
-        if (!enrollmentToDelete) return;
+        setIsLoading(true);
+        setError(null);
 
         try {
-            setIsLoading(true);
             await deleteEnrollment(enrollmentToDelete.studentId, enrollmentToDelete.courseId);
-
-            // Refresh the data
             await fetchData();
 
             setShowDeleteModal(false);
@@ -97,41 +94,33 @@ const AdminPanelPage = () => {
         }
     };
 
-    // Handle user toggle click - shows confirmation modal
     const handleToggleClick = (userId, firstName, lastName, newStatus) => {
         setUserToToggle({ userId, firstName, lastName, newStatus });
         setShowUserToggleModal(true);
     };
 
     const handleToggleUser = async () => {
-        if (!userToToggle) return;
+        setIsLoading(true);
+        setError(null);
 
         try {
-            setIsLoading(true);
-
-            // Call the API to toggle user active status
             await toggleUserActive(userToToggle.userId, userToToggle.newStatus);
-
-            // Refresh the users list
             await fetchData();
 
-            // Close modal
             setShowUserToggleModal(false);
             setUserToToggle(null);
         } catch (err) {
-            setError(`Failed to ${userToToggle.newStatus ? 'activate' : 'deactivate'} user: ${err.message}`);
+            setError(err.message);
         } finally {
             setIsLoading(false);
         }
     };
 
-    // Calculate stats
     const totalEnrollments = enrollments.length;
     const uniqueStudents = new Set(enrollments.map(e => e.studentId)).size;
     const uniqueCourses = new Set(enrollments.map(e => e.courseId)).size;
     const uniqueTeachers = new Set(enrollments.map(e => e.teacherId)).size;
 
-    // User stats
     const totalUsers = users.length;
     const activeUsers = users.filter(u => u.active).length;
     const adminCount = users.filter(u => u.role === 'ADMIN').length;
@@ -142,6 +131,7 @@ const AdminPanelPage = () => {
         <GradientBackground>
             <FloatingOrbs />
 
+            {/* Navigation bar */}
             <Navbar
                 onLogout={handleLogout}
                 showHome={false}
@@ -149,21 +139,23 @@ const AdminPanelPage = () => {
                 showProfile={true}
             />
 
+            {/* Main content area */}
             <main className="relative z-10 max-w-7xl mx-auto px-6 py-8 lg:py-12">
+
                 {isLoading ? (
                     <LoadingState message="Loading, wait a sec..." />
                 ) : (
                     <>
-                        {/* Welcome Section */}
                         <div className="mb-8 lg:mb-12">
                             <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+
+                                {/* Welcome text */}
                                 <div>
                                     <WelcomeBadge
                                         text="Admin Panel"
                                         icon={Sparkles}
                                         className="mb-3"
                                     />
-
                                     <WelcomeSection
                                         coloredText={user?.firstName}
                                         title="Hello,"
@@ -171,7 +163,7 @@ const AdminPanelPage = () => {
                                     />
                                 </div>
 
-                                {/* Quick Stats Cards */}
+                                {/* Stats cards */}
                                 <div className="flex gap-3 sm:gap-4">
                                     <StatsCard
                                         icon={Users}
@@ -199,13 +191,14 @@ const AdminPanelPage = () => {
                             </div>
                         </div>
 
+                        {/* Error display */}
                         <GlobalError
                             error={error}
                             onDismiss={() => setError(null)}
                             type="error"
                         />
 
-                        {/* Delete Enrollment Modal */}
+                        {/* Delete enrollment modal */}
                         <ConfirmationModal
                             isOpen={showDeleteModal}
                             onClose={() => {
@@ -221,7 +214,7 @@ const AdminPanelPage = () => {
                             type="danger"
                         />
 
-                        {/* User Toggle Confirmation Modal */}
+                        {/* User toggle modal */}
                         <ConfirmationModal
                             isOpen={showUserToggleModal}
                             onClose={() => {
@@ -241,9 +234,9 @@ const AdminPanelPage = () => {
                             type={userToToggle?.newStatus ? "warning" : "danger"}
                         />
 
-                        {/* Two-column layout for lists */}
                         <div className="grid lg:grid-cols-2 gap-8">
-                            {/* Users List */}
+
+                            {/* Users column */}
                             <section>
                                 <SectionHeader
                                     icon={Shield}
@@ -257,7 +250,7 @@ const AdminPanelPage = () => {
                                 />
                             </section>
 
-                            {/* Enrollments List */}
+                            {/* Enrollments column */}
                             <section>
                                 <SectionHeader
                                     icon={Shield}
@@ -270,7 +263,7 @@ const AdminPanelPage = () => {
                             </section>
                         </div>
 
-                        {/* Stats breakdown */}
+                        {/* Stats */}
                         <div className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4">
                             <div className="p-4 rounded-xl bg-white/5 border border-white/10 text-center">
                                 <p className="text-white/40 text-xs mb-1">Admins</p>
@@ -292,6 +285,7 @@ const AdminPanelPage = () => {
                     </>
                 )}
 
+                {/* Page footer */}
                 <Footer />
             </main>
         </GradientBackground>

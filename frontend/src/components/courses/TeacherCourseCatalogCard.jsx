@@ -43,7 +43,7 @@ const TeacherCourseCatalogCard = ({
                 background: "linear-gradient(145deg, hsla(0, 0%, 100%, 0.08) 0%, hsla(0, 0%, 100%, 0.02) 100%)",
             }}
         >
-            {/* Card glow effect on hover */}
+            {/* Card glow effect */}
             <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                 style={{ background: "radial-gradient(circle at 50% 0%, hsla(174, 72%, 46%, 0.1) 0%, transparent 70%)" }}
@@ -92,7 +92,7 @@ const TeacherCourseCatalogCard = ({
                         <ChevronDown className={`w-4 h-4 text-teal-400 transition-transform duration-300 ${expanded ? 'rotate-180' : ''}`} />
                     </div>
 
-                    {/* Expandable content - NO ENROLL BUTTON */}
+                    {/* Expandable content */}
                     <div className={`overflow-hidden transition-all duration-300 ${expanded ? 'max-h-96 opacity-100 mt-4' : 'max-h-0 opacity-0'}`}>
                         <p className="text-white/60 text-sm mb-4 leading-relaxed">
                             {course.description}

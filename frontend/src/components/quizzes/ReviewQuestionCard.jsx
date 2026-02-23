@@ -13,7 +13,7 @@ const ReviewQuestionCard = ({ answer, index }) => {
                 background: "linear-gradient(145deg, hsla(0, 0%, 100%, 0.07) 0%, hsla(0, 0%, 100%, 0.02) 100%)",
             }}
         >
-            {/* Question header bar */}
+            {/* Question header */}
             <div
                 className="px-6 py-4 flex items-center gap-4 border-b"
                 style={{
@@ -76,7 +76,7 @@ const ReviewQuestionCard = ({ answer, index }) => {
                     </div>
                 </div>
 
-                {/* Correct Answer - Always shown */}
+                {/* Correct Answer */}
                 <div>
                     <div className="text-sm text-white/40 mb-2">Correct answer:</div>
                     <div

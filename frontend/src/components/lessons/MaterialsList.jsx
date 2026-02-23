@@ -48,10 +48,8 @@ const MaterialsList = ({ materials, onDownload, showAddButton = false, onAddClic
 
     const hasMoreThanThree = materials.length > 3;
 
-    // Get the materials to display based on expanded state
     const displayedMaterials = isExpanded ? materials : materials.slice(0, 3);
 
-    // Filter based on search term (only when expanded)
     const filteredMaterials = searchTerm && isExpanded
         ? displayedMaterials.filter(material =>
             getFileName(material?.filePath).toLowerCase().includes(searchTerm.toLowerCase())
@@ -60,7 +58,7 @@ const MaterialsList = ({ materials, onDownload, showAddButton = false, onAddClic
 
     return (
         <div className="rounded-2xl border border-white/10 backdrop-blur-xl p-6">
-            {/* Header with add button */}
+            {/* Header */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                     <div className="p-2 rounded-lg bg-teal-500/20">
@@ -79,7 +77,7 @@ const MaterialsList = ({ materials, onDownload, showAddButton = false, onAddClic
                 )}
             </div>
 
-            {/* Search Bar - only show when expanded */}
+            {/* Search Bar */}
             {isExpanded && hasMoreThanThree && (
                 <div className="relative mb-4">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />

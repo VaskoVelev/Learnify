@@ -20,7 +20,7 @@ const QuizResultCard = ({ submission, onCheckAnswers }) => {
                 </div>
 
                 <div className="flex flex-col lg:flex-row items-center gap-8">
-                    {/* Score Circle - Using the same design as AverageScoreCard */}
+                    {/* Score Circle */}
                     <div className="relative w-32 h-32">
                         <svg className="w-full h-full transform -rotate-90">
                             <circle

@@ -6,14 +6,11 @@ const EnrolledStudentsList = ({ students = [], className = "" }) => {
     const [isExpanded, setIsExpanded] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
 
-    // Sort students alphabetically by first name, then last name
     const sortedStudents = useMemo(() => {
         return [...students].sort((a, b) => {
-            // Compare by first name first
             const firstNameCompare = (a.firstName || "").localeCompare(b.firstName || "");
             if (firstNameCompare !== 0) return firstNameCompare;
 
-            // If first names are equal, compare by last name
             return (a.lastName || "").localeCompare(b.lastName || "");
         });
     }, [students]);
@@ -40,10 +37,8 @@ const EnrolledStudentsList = ({ students = [], className = "" }) => {
         );
     }
 
-    // Get the students to display based on expanded state (using sorted students)
     const displayedStudents = isExpanded ? sortedStudents : sortedStudents.slice(0, 3);
 
-    // Filter based on search term (only applied when expanded)
     const filteredStudents = searchTerm && isExpanded
         ? displayedStudents.filter(s =>
             `${s.firstName} ${s.lastName}`.toLowerCase().includes(searchTerm.toLowerCase())
@@ -72,7 +67,7 @@ const EnrolledStudentsList = ({ students = [], className = "" }) => {
                 </div>
             </div>
 
-            {/* Search Bar - only show when expanded */}
+            {/* Search Bar */}
             {isExpanded && hasMoreThanThree && (
                 <div className="relative mb-4">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
@@ -86,7 +81,7 @@ const EnrolledStudentsList = ({ students = [], className = "" }) => {
                 </div>
             )}
 
-            {/* Students List - no scrollbar when not expanded */}
+            {/* Students List */}
             <div className={`space-y-3 ${isExpanded ? 'max-h-[300px] overflow-y-auto custom-scrollbar pr-2' : ''}`}>
                 {filteredStudents.length > 0 ? (
                     filteredStudents.map((student) => (
@@ -121,12 +116,12 @@ const EnrolledStudentsList = ({ students = [], className = "" }) => {
                 )}
             </div>
 
-            {/* Show More/Less Button - only if more than 3 students */}
+            {/* Show More/Less Button */}
             {hasMoreThanThree && (
                 <button
                     onClick={() => {
                         setIsExpanded(!isExpanded);
-                        setSearchTerm(""); // Clear search when collapsing/expanding
+                        setSearchTerm("");
                     }}
                     className="w-full mt-4 flex items-center justify-center gap-2 py-2 rounded-lg bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 transition-all text-sm"
                 >

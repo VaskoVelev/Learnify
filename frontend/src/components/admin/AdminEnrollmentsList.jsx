@@ -6,7 +6,6 @@ const AdminEnrollmentsList = ({ enrollments = [], onDeleteEnrollment, className 
     const [isExpanded, setIsExpanded] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
 
-    // Sort enrollments by enrolledAt date (newest first)
     const sortedEnrollments = useMemo(() => {
         return [...enrollments].sort((a, b) =>
             new Date(b.enrolledAt) - new Date(a.enrolledAt)
@@ -35,10 +34,8 @@ const AdminEnrollmentsList = ({ enrollments = [], onDeleteEnrollment, className 
         );
     }
 
-    // Get enrollments to display based on expanded state
     const displayedEnrollments = isExpanded ? sortedEnrollments : sortedEnrollments.slice(0, 5);
 
-    // Filter based on search term (only when expanded)
     const filteredEnrollments = searchTerm && isExpanded
         ? displayedEnrollments.filter(e =>
             `${e.studentFirstName} ${e.studentLastName} ${e.title} ${e.teacherFirstName} ${e.teacherLastName}`
@@ -69,7 +66,7 @@ const AdminEnrollmentsList = ({ enrollments = [], onDeleteEnrollment, className 
                 </div>
             </div>
 
-            {/* Search Bar - only show when expanded */}
+            {/* Search Bar */}
             {isExpanded && hasMoreThanFive && (
                 <div className="relative mb-4">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
@@ -158,7 +155,7 @@ const AdminEnrollmentsList = ({ enrollments = [], onDeleteEnrollment, className 
                 <button
                     onClick={() => {
                         setIsExpanded(!isExpanded);
-                        setSearchTerm(""); // Clear search when collapsing/expanding
+                        setSearchTerm("");
                     }}
                     className="w-full mt-4 flex items-center justify-center gap-2 py-2 rounded-lg bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 transition-all text-sm"
                 >

@@ -31,7 +31,7 @@ const CourseForm = ({
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Title - Required */}
+            {/* Title */}
             <div>
                 <label className={labelStyle}>
                     Course Title <span className="text-rose-400">*</span>
@@ -47,7 +47,7 @@ const CourseForm = ({
                 />
             </div>
 
-            {/* Description - Optional */}
+            {/* Description */}
             <div>
                 <label className={labelStyle}>Description (optional)</label>
                 <textarea
@@ -61,9 +61,9 @@ const CourseForm = ({
                 />
             </div>
 
-            {/* Category and Difficulty - Side by side */}
+            {/* Category and Difficulty */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {/* Category - Required */}
+                {/* Category */}
                 <div>
                     <label className={labelStyle}>
                         Category <span className="text-rose-400">*</span>
@@ -78,7 +78,7 @@ const CourseForm = ({
                     />
                 </div>
 
-                {/* Difficulty - Required */}
+                {/* Difficulty */}
                 <div>
                     <label className={labelStyle}>
                         Difficulty <span className="text-rose-400">*</span>

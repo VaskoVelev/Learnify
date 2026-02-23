@@ -32,7 +32,7 @@ const QuizHeader = ({ title, description, totalQuestions, onEdit, onDelete, onVi
                     </div>
 
                     <div className="flex gap-2">
-                        {/* Previous Submissions button - only shows if student has submissions */}
+                        {/* Previous Submissions button */}
                         {hasSubmissions && onViewSubmissions && (
                             <button
                                 onClick={onViewSubmissions}
@@ -43,7 +43,7 @@ const QuizHeader = ({ title, description, totalQuestions, onEdit, onDelete, onVi
                             </button>
                         )}
 
-                        {/* Teacher buttons - only show for teachers */}
+                        {/* Teacher buttons */}
                         {onEdit && (
                             <button
                                 onClick={onEdit}

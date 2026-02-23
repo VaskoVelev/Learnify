@@ -8,25 +8,20 @@ const QuestionForm = ({
     onSubmit,
     onCancel,
     isSubmitting = false,
-    onDeleteAnswer, // Add this prop for handling answer deletion
+    onDeleteAnswer,
     submitButtonText = "Create Question",
     loadingText = "Creating Question..."
 }) => {
     const [answerError, setAnswerError] = useState("");
 
-    // Check if form is valid
     const isFormValid = () => {
-        // Question text must be filled
         if (!form.text.trim()) return false;
 
-        // Must have at least 2 answers
         if (form.answers.length < 2) return false;
 
-        // All answers must have text
         const allAnswersHaveText = form.answers.every(a => a.text.trim() !== "");
         if (!allAnswersHaveText) return false;
 
-        // Exactly one answer must be correct
         const correctCount = form.answers.filter(a => a.isCorrect).length;
         if (correctCount !== 1) return false;
 
@@ -50,7 +45,7 @@ const QuestionForm = ({
             setAnswerError("Maximum 4 answers allowed");
             return;
         }
-        // New answers have no ID (they will be created in the database)
+
         const newAnswers = [...form.answers, { text: "", isCorrect: false }];
         onAnswersChange(newAnswers);
         setAnswerError("");
@@ -64,11 +59,9 @@ const QuestionForm = ({
 
         const answerToDelete = form.answers[index];
 
-        // If this answer has an ID (existing answer in edit mode), call the delete API
         if (answerToDelete.id && onDeleteAnswer) {
             onDeleteAnswer(answerToDelete.id);
         }
-        // If it doesn't have an ID (new answer), just remove it from state
 
         const newAnswers = form.answers.filter((_, i) => i !== index);
         onAnswersChange(newAnswers);
@@ -93,7 +86,7 @@ const QuestionForm = ({
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Question Text - Required */}
+            {/* Question Text */}
             <div>
                 <label className={labelStyle}>
                     Question Text <span className="text-rose-400">*</span>
@@ -135,7 +128,7 @@ const QuestionForm = ({
                                 />
                             </div>
 
-                            {/* Correct answer radio */}
+                            {/* Correct answer */}
                             <button
                                 type="button"
                                 onClick={() => setCorrectAnswer(index)}

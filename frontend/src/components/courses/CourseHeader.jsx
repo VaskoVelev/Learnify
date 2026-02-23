@@ -24,7 +24,7 @@ const CourseHeader = ({ course, showCreator = true, onEdit, onDelete, onLeave })
                     </div>
 
                     <div className="flex gap-2">
-                        {/* Leave Course button - for students */}
+                        {/* Leave Course button */}
                         {onLeave && (
                             <button
                                 onClick={onLeave}
@@ -67,7 +67,7 @@ const CourseHeader = ({ course, showCreator = true, onEdit, onDelete, onLeave })
                     {course?.description}
                 </p>
 
-                {/* Creator Info - Conditional */}
+                {/* Creator Info */}
                 {showCreator ? (
                     <div className="flex flex-col sm:flex-row items-center gap-6 p-4 rounded-xl bg-white/5 border border-white/10">
                         <div className="flex items-center gap-3 min-w-0 flex-1">
@@ -98,7 +98,6 @@ const CourseHeader = ({ course, showCreator = true, onEdit, onDelete, onLeave })
                         </div>
                     </div>
                 ) : (
-                    /* Just dates without creator info */
                     <div className="flex flex-wrap items-center gap-4 text-sm text-white/50 p-4 rounded-xl bg-white/5 border border-white/10">
                         <div className="flex items-center gap-1.5 whitespace-nowrap">
                             <Calendar className="w-4 h-4 shrink-0" />

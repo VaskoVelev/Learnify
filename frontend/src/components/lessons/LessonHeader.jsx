@@ -9,7 +9,6 @@ const LessonHeader = ({ title, onEdit, onDelete }) => {
             }}
         >
             <div className="p-6 sm:p-8">
-                {/* Top row with badge and buttons */}
                 <div className="flex items-start justify-between gap-4 mb-4">
                     <div className="flex items-center gap-3">
                         <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20">
@@ -18,7 +17,6 @@ const LessonHeader = ({ title, onEdit, onDelete }) => {
                         </div>
                     </div>
 
-                    {/* Buttons in top right */}
                     <div className="flex gap-2">
                         {onEdit && (
                             <button
@@ -42,7 +40,6 @@ const LessonHeader = ({ title, onEdit, onDelete }) => {
                     </div>
                 </div>
 
-                {/* Title */}
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-2 break-words">
                     {title}
                 </h1>

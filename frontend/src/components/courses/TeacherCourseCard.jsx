@@ -18,13 +18,13 @@ const TeacherCourseCard = ({ course, onClick, index = 0 }) => {
                 animationDelay: `${index * 100}ms`
             }}
         >
-            {/* Card glow effect on hover */}
+            {/* Card glow effect */}
             <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                 style={{ background: "radial-gradient(circle at 50% 0%, hsla(174, 72%, 46%, 0.1) 0%, transparent 70%)" }}
             />
 
-            {/* Course icon with animated background */}
+            {/* Course icon */}
             <div className="relative flex items-start justify-between mb-5">
                 <div className="relative">
                     <div className="absolute inset-0 bg-teal-500/30 blur-xl rounded-full group-hover:bg-teal-500/40 transition-colors" />

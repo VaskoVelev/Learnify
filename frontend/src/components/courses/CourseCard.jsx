@@ -21,7 +21,7 @@ const CourseCard = ({ course, onClick, className = "", index = 0 }) => {
                 animationDelay: `${index * 100}ms`
             }}
         >
-            {/* Card glow effect on hover */}
+            {/* Card glow effect */}
             <div
                 className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
                 style={{ background: "radial-gradient(circle at 50% 0%, hsla(174, 72%, 46%, 0.1) 0%, transparent 70%)" }}
@@ -82,7 +82,6 @@ const CourseCard = ({ course, onClick, className = "", index = 0 }) => {
                             background: "linear-gradient(135deg, hsl(174, 72%, 46%) 0%, hsl(199, 89%, 48%) 100%)"
                         }}
                     >
-                        {/* Shimmer effect */}
                         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                     </div>
                 </div>

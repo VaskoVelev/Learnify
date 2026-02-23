@@ -6,7 +6,6 @@ const AdminUsersList = ({ users = [], onToggleActive, currentUserId, currentUser
     const [isExpanded, setIsExpanded] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
 
-    // Sort users by creation date (newest first)
     const sortedUsers = useMemo(() => {
         return [...users].sort((a, b) =>
             new Date(b.createdAt) - new Date(a.createdAt)
@@ -35,10 +34,8 @@ const AdminUsersList = ({ users = [], onToggleActive, currentUserId, currentUser
         );
     }
 
-    // Get users to display based on expanded state
     const displayedUsers = isExpanded ? sortedUsers : sortedUsers.slice(0, 5);
 
-    // Filter based on search term (only when expanded)
     const filteredUsers = searchTerm && isExpanded
         ? displayedUsers.filter(u =>
             `${u.firstName} ${u.lastName} ${u.email} ${u.role}`
@@ -49,7 +46,6 @@ const AdminUsersList = ({ users = [], onToggleActive, currentUserId, currentUser
 
     const hasMoreThanFive = sortedUsers.length > 5;
 
-    // Get role badge color
     const getRoleColor = (role) => {
         switch(role) {
             case 'ADMIN': return 'bg-purple-500/20 text-purple-400 border-purple-500/30';
@@ -59,18 +55,12 @@ const AdminUsersList = ({ users = [], onToggleActive, currentUserId, currentUser
         }
     };
 
-    // Check if toggle should be disabled
     const isToggleDisabled = (user) => {
-        // Cannot toggle yourself
         if (user.id === currentUserId) return true;
-
-        // Cannot toggle another admin
         if (user.role === 'ADMIN') return true;
-
         return false;
     };
 
-    // Get tooltip message for disabled toggle
     const getDisabledTooltip = (user) => {
         if (user.id === currentUserId) return "You cannot modify your own account";
         if (user.role === 'ADMIN') return "Admins cannot modify other admin accounts";
@@ -97,7 +87,7 @@ const AdminUsersList = ({ users = [], onToggleActive, currentUserId, currentUser
                 </div>
             </div>
 
-            {/* Search Bar - only show when expanded */}
+            {/* Search Bar */}
             {isExpanded && hasMoreThanFive && (
                 <div className="relative mb-4">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
@@ -153,7 +143,7 @@ const AdminUsersList = ({ users = [], onToggleActive, currentUserId, currentUser
                                         </div>
                                     </div>
 
-                                    {/* Active toggle button - disabled for self and other admins */}
+                                    {/* Active toggle button */}
                                     <button
                                         onClick={() => !disabled && onToggleActive(user.id, user.firstName, user.lastName, !user.active)}
                                         disabled={disabled}
@@ -194,7 +184,7 @@ const AdminUsersList = ({ users = [], onToggleActive, currentUserId, currentUser
                 <button
                     onClick={() => {
                         setIsExpanded(!isExpanded);
-                        setSearchTerm(""); // Clear search when collapsing/expanding
+                        setSearchTerm("");
                     }}
                     className="w-full mt-4 flex items-center justify-center gap-2 py-2 rounded-lg bg-white/5 border border-white/10 text-white/60 hover:text-white hover:bg-white/10 transition-all text-sm"
                 >

@@ -14,7 +14,6 @@ const MaterialForm = ({
 }) => {
     const [urlError, setUrlError] = useState("");
 
-    // Check if all required fields are filled
     const isFormValid = form.filePath.trim() !== "" && form.fileType !== "";
 
     const inputStyle = "w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder:text-white/30 focus:outline-none focus:border-teal-500/50 focus:bg-white/10 transition-all duration-300";
@@ -31,7 +30,6 @@ const MaterialForm = ({
         }
     };
 
-    // Validate URL on blur
     const validateUrl = (url) => {
         if (url && !url.match(/^(http|https):\/\/[^ "]+$/)) {
             setUrlError("Please enter a valid URL (including http:// or https://)");
@@ -40,7 +38,6 @@ const MaterialForm = ({
         }
     };
 
-    // Get icon component based on selected file type (convert to lowercase for comparison)
     const getFileTypeIcon = () => {
         const type = form.fileType?.toLowerCase();
         if (!type) return FileText;
@@ -57,7 +54,7 @@ const MaterialForm = ({
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
-            {/* File Path - Required */}
+            {/* File Path */}
             <div>
                 <label className={labelStyle}>
                     File URL <span className="text-rose-400">*</span>
@@ -86,7 +83,7 @@ const MaterialForm = ({
                 </p>
             </div>
 
-            {/* File Type - Required using FilterDropdown */}
+            {/* File Type */}
             <div>
                 <label className={labelStyle}>
                     File Type <span className="text-rose-400">*</span>

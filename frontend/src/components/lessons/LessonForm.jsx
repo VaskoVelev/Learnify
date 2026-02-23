@@ -12,10 +12,8 @@ const LessonForm = ({
     submitButtonText = "Create Lesson",
     loadingText = "Creating Lesson..."
 }) => {
-    // Local state for URL validation warning
     const [urlError, setUrlError] = useState("");
 
-    // Check if title is filled (only required field)
     const isFormValid = form.title.trim() !== "";
 
     const inputStyle = "w-full px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-white placeholder:text-white/30 focus:outline-none focus:border-teal-500/50 focus:bg-white/10 transition-all duration-300";
@@ -28,7 +26,6 @@ const LessonForm = ({
         }
     };
 
-    // Validate URL on blur (optional, just shows warning)
     const validateUrl = (url) => {
         if (url && !url.match(/^(http|https):\/\/[^ "]+$/)) {
             setUrlError("Please enter a valid URL (including http:// or https://)");
@@ -39,7 +36,7 @@ const LessonForm = ({
 
     return (
         <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Title - Required */}
+            {/* Title */}
             <div>
                 <label className={labelStyle}>
                     Lesson Title <span className="text-rose-400">*</span>
@@ -55,7 +52,7 @@ const LessonForm = ({
                 />
             </div>
 
-            {/* Content - Optional */}
+            {/* Content */}
             <div>
                 <label className={labelStyle}>
                     <div className="flex items-center gap-2">
@@ -74,7 +71,7 @@ const LessonForm = ({
                 />
             </div>
 
-            {/* Video URL - Optional */}
+            {/* Video URL */}
             <div>
                 <label className={labelStyle}>
                     <div className="flex items-center gap-2">

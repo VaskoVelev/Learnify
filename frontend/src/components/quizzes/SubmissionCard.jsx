@@ -2,7 +2,6 @@ import { History, Calendar, ChevronRight, User } from "lucide-react";
 import { formatDateTime, getScoreColor, getScoreBgColor } from "../../utils";
 
 const SubmissionCard = ({ submission, onClick, showStudentName = false }) => {
-    // Construct full name if first and last name are available
     const studentName = submission.studentFirstName && submission.studentLastName
         ? `${submission.studentFirstName} ${submission.studentLastName}`
         : null;

@@ -13,7 +13,7 @@ const LessonsList = ({ lessons, onLessonClick, showCreateButton = false, onCreat
                     background: "linear-gradient(145deg, hsla(0, 0%, 100%, 0.08) 0%, hsla(0, 0%, 100%, 0.02) 100%)",
                 }}
             >
-                {/* Header with create button - always visible */}
+                {/* Header */}
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                         <div className="p-2 rounded-lg bg-teal-500/20">
@@ -43,10 +43,8 @@ const LessonsList = ({ lessons, onLessonClick, showCreateButton = false, onCreat
 
     const hasMoreThanThree = lessons.length > 3;
 
-    // Get the lessons to display based on expanded state
     const displayedLessons = isExpanded ? lessons : lessons.slice(0, 3);
 
-    // Filter based on search term (only when expanded)
     const filteredLessons = searchTerm && isExpanded
         ? displayedLessons.filter(lesson =>
             lesson.title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -60,7 +58,7 @@ const LessonsList = ({ lessons, onLessonClick, showCreateButton = false, onCreat
                 background: "linear-gradient(145deg, hsla(0, 0%, 100%, 0.08) 0%, hsla(0, 0%, 100%, 0.02) 100%)",
             }}
         >
-            {/* Header with create button - always visible */}
+            {/* Header */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                     <div className="p-2 rounded-lg bg-teal-500/20">
@@ -79,7 +77,7 @@ const LessonsList = ({ lessons, onLessonClick, showCreateButton = false, onCreat
                 )}
             </div>
 
-            {/* Search Bar - only show when expanded */}
+            {/* Search Bar */}
             {isExpanded && hasMoreThanThree && (
                 <div className="relative mb-4">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
@@ -93,7 +91,7 @@ const LessonsList = ({ lessons, onLessonClick, showCreateButton = false, onCreat
                 </div>
             )}
 
-            {/* Lessons List - no scrollbar when not expanded */}
+            {/* Lessons List */}
             <div className={`space-y-2 ${isExpanded ? 'max-h-[300px] overflow-y-auto custom-scrollbar pr-2' : ''}`}>
                 {filteredLessons.length > 0 ? (
                     filteredLessons.map((lesson, index) => (
@@ -125,7 +123,7 @@ const LessonsList = ({ lessons, onLessonClick, showCreateButton = false, onCreat
                 )}
             </div>
 
-            {/* Show More/Less Button - only if more than 3 lessons */}
+            {/* Show More/Less Button */}
             {hasMoreThanThree && (
                 <button
                     onClick={() => {

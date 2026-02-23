@@ -6,14 +6,11 @@ const TeacherEnrolledStudentsList = ({ students = [], onKickStudent, className =
     const [isExpanded, setIsExpanded] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
 
-    // Sort students alphabetically by first name, then last name
     const sortedStudents = useMemo(() => {
         return [...students].sort((a, b) => {
-            // Compare by first name first
             const firstNameCompare = (a.firstName || "").localeCompare(b.firstName || "");
             if (firstNameCompare !== 0) return firstNameCompare;
 
-            // If first names are equal, compare by last name
             return (a.lastName || "").localeCompare(b.lastName || "");
         });
     }, [students]);
@@ -40,10 +37,8 @@ const TeacherEnrolledStudentsList = ({ students = [], onKickStudent, className =
         );
     }
 
-    // Get the students to display based on expanded state (using sorted students)
     const displayedStudents = isExpanded ? sortedStudents : sortedStudents.slice(0, 3);
 
-    // Filter based on search term (only applied when expanded)
     const filteredStudents = searchTerm && isExpanded
         ? displayedStudents.filter(s =>
             `${s.firstName} ${s.lastName}`.toLowerCase().includes(searchTerm.toLowerCase())
@@ -52,14 +47,12 @@ const TeacherEnrolledStudentsList = ({ students = [], onKickStudent, className =
 
     const hasMoreThanThree = sortedStudents.length > 3;
 
-    // Get badge color based on progress
     const getProgressColor = (progress) => {
         if (progress >= 80) return "bg-emerald-500";
         if (progress >= 50) return "bg-amber-500";
         return "bg-rose-500";
     };
 
-    // Get score color based on value
     const getScoreColor = (score) => {
         if (score >= 80) return "text-emerald-400";
         if (score >= 50) return "text-amber-400";
@@ -86,7 +79,7 @@ const TeacherEnrolledStudentsList = ({ students = [], onKickStudent, className =
                 </div>
             </div>
 
-            {/* Search Bar - only show when expanded */}
+            {/* Search Bar */}
             {isExpanded && hasMoreThanThree && (
                 <div className="relative mb-4">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30" />
@@ -108,7 +101,7 @@ const TeacherEnrolledStudentsList = ({ students = [], onKickStudent, className =
                             key={student.id}
                             className="p-3 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group"
                         >
-                            {/* Student header with name and avatar */}
+                            {/* Student header */}
                             <div className="flex items-center justify-between mb-2">
                                 <div className="flex items-center gap-3">
                                     <div className="w-8 h-8 rounded-full bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center text-xs font-bold text-gray-900 shrink-0">
@@ -125,7 +118,7 @@ const TeacherEnrolledStudentsList = ({ students = [], onKickStudent, className =
                                     </div>
                                 </div>
 
-                                {/* Kick button - just call the parent handler directly */}
+                                {/* Kick button */}
                                 <button
                                     onClick={(e) => {
                                         e.stopPropagation();
