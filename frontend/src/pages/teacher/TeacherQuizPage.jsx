@@ -33,10 +33,10 @@ const TeacherQuizPage = () => {
     const [questionToDelete, setQuestionToDelete] = useState(null);
 
     const fetchQuizData = async () => {
-        try {
-            setIsLoading(true);
-            setError(null);
+        setIsLoading(true);
+        setError(null);
 
+        try {
             const quizData = await getQuiz(quizId);
             setQuiz(quizData);
 
@@ -58,12 +58,11 @@ const TeacherQuizPage = () => {
 
             setQuestions(questionsWithAnswers);
 
-            // Check if quiz has any submissions
             try {
                 const submissions = await getQuizSubmissions(quizId);
                 setHasSubmissions(submissions.length > 0);
             } catch (err) {
-                console.error("Error fetching submissions:", err);
+                setError(err.message);
                 setHasSubmissions(false);
             }
 
@@ -97,14 +96,18 @@ const TeacherQuizPage = () => {
     };
 
     const handleDeleteQuiz = async () => {
+        setIsLoading(true);
+        setError(null);
+
         try {
-            setIsLoading(true);
             await deleteQuiz(quizId);
             navigate(`/courses/${courseId}/lessons/${lessonId}`);
         } catch (err) {
             setError(err.message);
+        } finally {
             setIsLoading(false);
         }
+
         setShowDeleteQuizModal(false);
     };
 
@@ -113,6 +116,9 @@ const TeacherQuizPage = () => {
     };
 
     const handleDeleteQuestion = async (questionId) => {
+        setIsLoading(true);
+        setError(null);
+
         try {
             await deleteQuestion(questionId);
             const updatedQuestions = questions.filter(q => q.id !== questionId);
@@ -120,6 +126,8 @@ const TeacherQuizPage = () => {
             setQuestionToDelete(null);
         } catch (err) {
             setError(err.message);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -135,6 +143,7 @@ const TeacherQuizPage = () => {
         <GradientBackground>
             <FloatingOrbs />
 
+            {/* Navigation bar */}
             <Navbar
                 onLogout={handleLogout}
                 showHome={true}
@@ -142,17 +151,23 @@ const TeacherQuizPage = () => {
                 showProfile={true}
             />
 
+            {/* Main content area */}
             <main className="relative z-10 max-w-7xl mx-auto px-6 py-8 lg:py-12">
+
+                {/* Back navigation */}
                 <BackButton
                     onClick={() => navigate(`/courses/${courseId}/lessons/${lessonId}`)}
+                    text="Back to Lesson"
                 />
 
+                {/* Error display */}
                 <GlobalError
                     error={error}
                     onDismiss={() => setError(null)}
                     type="error"
                 />
 
+                {/* Delete quiz confirmation modal */}
                 <ConfirmationModal
                     isOpen={showDeleteQuizModal}
                     onClose={() => setShowDeleteQuizModal(false)}
@@ -163,6 +178,7 @@ const TeacherQuizPage = () => {
                     type="danger"
                 />
 
+                {/* Delete question confirmation modal */}
                 <ConfirmationModal
                     isOpen={!!questionToDelete}
                     onClose={() => setQuestionToDelete(null)}
@@ -177,7 +193,6 @@ const TeacherQuizPage = () => {
                     <LoadingState message="Loading, wait a sec..." />
                 ) : (
                     <>
-                        {/* Quiz Header with integrated buttons */}
                         <QuizHeader
                             title={quiz?.title}
                             description={quiz?.description}
@@ -188,7 +203,7 @@ const TeacherQuizPage = () => {
                             hasSubmissions={hasSubmissions}
                         />
 
-                        {/* Add Question Button */}
+                        {/* Add question button */}
                         <div className="flex justify-end mb-6">
                             <button
                                 onClick={handleAddQuestion}
@@ -199,7 +214,7 @@ const TeacherQuizPage = () => {
                             </button>
                         </div>
 
-                        {/* Questions */}
+                        {/* Questions list */}
                         <div className="space-y-8">
                             {questions.map((question, index) => (
                                 <QuestionCard
@@ -217,6 +232,7 @@ const TeacherQuizPage = () => {
                     </>
                 )}
 
+                {/* Page footer */}
                 <Footer />
             </main>
         </GradientBackground>

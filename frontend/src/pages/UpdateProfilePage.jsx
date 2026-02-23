@@ -82,6 +82,7 @@ const UpdateProfilePage = () => {
         <GradientBackground>
             <FloatingOrbs />
 
+            {/* Navigation bar */}
             <Navbar
                 onLogout={handleLogout}
                 showHome={true}
@@ -89,12 +90,16 @@ const UpdateProfilePage = () => {
                 showProfile={false}
             />
 
+            {/* Main content area */}
             <main className="relative z-10 max-w-2xl mx-auto px-6 py-12">
+
+                {/* Page title */}
                 <PageHeader
                     title="Update Profile"
                     subtitle="Edit your account information"
                 />
 
+                {/* Error display */}
                 <GlobalError
                     error={globalError}
                     onDismiss={() => {
@@ -104,14 +109,17 @@ const UpdateProfilePage = () => {
                     type="error"
                 />
 
+                {/* Profile edit card */}
                 <div
                     className="rounded-2xl border border-white/10 backdrop-blur-xl overflow-hidden"
                     style={{
                         background: "linear-gradient(145deg, hsla(0, 0%, 100%, 0.08) 0%, hsla(0, 0%, 100%, 0.02) 100%)",
                     }}
                 >
+                    {/* Profile header with live preview of name changes */}
                     <ProfileHeader user={{ ...user, firstName: form.firstName, lastName: form.lastName }} />
 
+                    {/* Edit form */}
                     <ProfileForm
                         form={form}
                         fieldErrors={fieldErrors}
@@ -122,6 +130,7 @@ const UpdateProfilePage = () => {
                     />
                 </div>
 
+                {/* Page footer */}
                 <Footer />
             </main>
         </GradientBackground>

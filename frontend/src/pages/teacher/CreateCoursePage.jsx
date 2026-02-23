@@ -78,6 +78,7 @@ const CreateCoursePage = () => {
         <GradientBackground>
             <FloatingOrbs />
 
+            {/* Navigation bar */}
             <Navbar
                 onLogout={handleLogout}
                 showHome={true}
@@ -85,12 +86,16 @@ const CreateCoursePage = () => {
                 showProfile={true}
             />
 
+            {/* Main content area */}
             <main className="relative z-10 max-w-3xl mx-auto px-6 py-12">
+
+                {/* Page header */}
                 <PageHeader
                     title="Create New Course"
                     subtitle="Share your knowledge by creating a new course"
                 />
 
+                {/* Error display */}
                 <GlobalError
                     error={globalError}
                     onDismiss={() => setGlobalError(null)}
@@ -106,7 +111,7 @@ const CreateCoursePage = () => {
                             background: "linear-gradient(145deg, hsla(0, 0%, 100%, 0.08) 0%, hsla(0, 0%, 100%, 0.02) 100%)",
                         }}
                     >
-                        {/* Form */}
+                        {/* Form container */}
                         <div className="p-8">
                             <CourseForm
                                 form={form}
@@ -124,6 +129,7 @@ const CreateCoursePage = () => {
                     </div>
                 )}
 
+                {/* Page footer */}
                 <Footer />
             </main>
         </GradientBackground>

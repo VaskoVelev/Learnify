@@ -24,10 +24,10 @@ const QuizReviewPage = () => {
     const [error, setError] = useState(null);
 
     const fetchSubmission = async () => {
-        try {
-            setIsLoading(true);
-            setError(null);
+        setIsLoading(true);
+        setError(null);
 
+        try {
             const submissionData = await getSubmission(submissionId);
             submissionData.answers.sort((a, b) => a.questionId - b.questionId);
             setSubmission(submissionData);
@@ -55,12 +55,14 @@ const QuizReviewPage = () => {
             setIsLoading(false);
         }
     };
+
     const answers = submission?.answers;
 
     return (
         <GradientBackground>
             <FloatingOrbs />
 
+            {/* Navigation bar */}
             <Navbar
                 onLogout={handleLogout}
                 showHome={true}
@@ -68,12 +70,16 @@ const QuizReviewPage = () => {
                 showProfile={true}
             />
 
+            {/* Main content area */}
             <main className="relative z-10 max-w-7xl mx-auto px-6 py-8 lg:py-12">
+
+                {/* Back navigation */}
                 <BackButton
                     onClick={() => navigate(`/courses/${courseId}/lessons/${lessonId}`)}
                     text="Back to Lesson"
                 />
 
+                {/* Error display */}
                 <GlobalError
                     error={error}
                     onDismiss={() => setError(null)}
@@ -84,8 +90,10 @@ const QuizReviewPage = () => {
                     <LoadingState message="Loading, wait a sec..." />
                 ) : submission ? (
                     <>
+                        {/* Submission summary card */}
                         <ReviewResultCard submission={submission} />
 
+                        {/* Question review list */}
                         <div className="space-y-8">
                             {answers.map((answer, index) => (
                                 <ReviewQuestionCard
@@ -102,6 +110,7 @@ const QuizReviewPage = () => {
                     </div>
                 )}
 
+                {/* Page footer */}
                 <Footer />
             </main>
         </GradientBackground>

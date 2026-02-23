@@ -27,15 +27,14 @@ const TeacherHomePage = () => {
     const [error, setError] = useState(null);
 
     const fetchCreatedCourses = async () => {
-        try {
-            setIsLoading(true);
-            setError(null);
+        setIsLoading(true);
+        setError(null);
 
+        try {
             const courses = await getMyCoursesCreated();
             setCreatedCourses(courses);
         } catch (err) {
             setError(err.message);
-            setCreatedCourses([]);
         } finally {
             setIsLoading(false);
         }
@@ -73,6 +72,7 @@ const TeacherHomePage = () => {
         <GradientBackground>
             <FloatingOrbs />
 
+            {/* Navigation bar */}
             <Navbar
                 onLogout={handleLogout}
                 showHome={false}
@@ -80,17 +80,20 @@ const TeacherHomePage = () => {
                 showProfile={true}
             />
 
+            {/* Main content area */}
             <main className="relative z-10 max-w-7xl mx-auto px-6 py-8 lg:py-12">
-                {/* Welcome Section */}
+
+                {/* Welcome header */}
                 <div className="mb-8 lg:mb-12">
                     <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+
+                        {/* Welcome text */}
                         <div>
                             <WelcomeBadge
                                 text="Welcome back"
                                 icon={Sparkles}
                                 className="mb-3"
                             />
-
                             <WelcomeSection
                                 coloredText={user?.firstName}
                                 title="Hello,"
@@ -98,7 +101,7 @@ const TeacherHomePage = () => {
                             />
                         </div>
 
-                        {/* Quick Stats Cards - Only courses count */}
+                        {/* Course count stat */}
                         <div className="flex gap-3 sm:gap-4">
                             <StatsCard
                                 icon={BookOpen}
@@ -111,23 +114,23 @@ const TeacherHomePage = () => {
                     </div>
                 </div>
 
-                {/* Error Display */}
+                {/* Error display */}
                 <GlobalError
                     error={error}
                     onDismiss={() => setError(null)}
                     type="error"
                 />
 
-                {/* Created Courses Section */}
+                {/* Created courses section */}
                 <section>
+
                     <div className="flex items-center justify-between mb-6">
                         <SectionHeader
                             icon={BookOpen}
                             title="My Created Courses"
                         />
 
-                        {/* Create Course Button - Next to the header */}
-                        {/* New Course Button - styled like all other add buttons */}
+                        {/* New Course button */}
                         <button
                             onClick={handleCreateCourse}
                             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-teal-500/20 text-teal-400 hover:bg-teal-500/30 transition-all text-sm font-medium border border-teal-500/30"
@@ -161,6 +164,7 @@ const TeacherHomePage = () => {
                     )}
                 </section>
 
+                {/* Page footer */}
                 <Footer />
             </main>
         </GradientBackground>

@@ -26,24 +26,24 @@ const TeacherQuizSubmissionsPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const fetchSubmissions = async () => {
+        try {
+            setIsLoading(true);
+            setError(null);
+
+            const quizData = await getQuiz(quizId);
+            setQuiz(quizData);
+
+            const submissionsData = await getQuizSubmissions(quizId);
+            setSubmissions(submissionsData);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     useEffect(() => {
-        const fetchSubmissions = async () => {
-            try {
-                setIsLoading(true);
-                setError(null);
-
-                const quizData = await getQuiz(quizId);
-                setQuiz(quizData);
-
-                const submissionsData = await getQuizSubmissions(quizId);
-                setSubmissions(submissionsData);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
         fetchSubmissions();
     }, [quizId]);
 
@@ -69,6 +69,7 @@ const TeacherQuizSubmissionsPage = () => {
         <GradientBackground>
             <FloatingOrbs />
 
+            {/* Navigation bar */}
             <Navbar
                 onLogout={handleLogout}
                 showHome={true}
@@ -76,17 +77,22 @@ const TeacherQuizSubmissionsPage = () => {
                 showProfile={true}
             />
 
+            {/* Main content area */}
             <main className="relative z-10 max-w-4xl mx-auto px-6 py-12">
+
+                {/* Back navigation */}
                 <BackButton
-                    onClick={() => navigate(`/courses/${courseId}/lessons/${lessonId}/quizzes/${quizId}/teacher`)}
+                    onClick={() => navigate(`/courses/${courseId}/lessons/${lessonId}/quizzes/${quizId}`)}
                     text="Back to Quiz"
                 />
 
+                {/* Page header */}
                 <PageHeader
                     title="Quiz Submissions"
                     subtitle={`All student submissions for "${quiz?.title}"`}
                 />
 
+                {/* Error display */}
                 <GlobalError
                     error={error}
                     onDismiss={() => setError(null)}
@@ -114,6 +120,7 @@ const TeacherQuizSubmissionsPage = () => {
                     </div>
                 )}
 
+                {/* Page footer */}
                 <Footer />
             </main>
         </GradientBackground>

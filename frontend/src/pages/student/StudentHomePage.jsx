@@ -26,32 +26,33 @@ const StudentHomePage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    const fetchEnrollments = async () => {
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            const enrollments = await getMyEnrollments();
+
+            const transformedCourses = enrollments.map(enrollment => ({
+                id: enrollment.id,
+                title: enrollment.title,
+                teacherFirstName: enrollment.firstName,
+                teacherLastName: enrollment.lastName,
+                teacherId: enrollment.teacherId,
+                enrolledAt: enrollment.enrolledAt,
+                progress: enrollment.progressionPercent,
+            }));
+
+            setEnrolledCourses(transformedCourses);
+        } catch (err) {
+            setError(err.message);
+            setEnrolledCourses([]);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     useEffect(() => {
-        const fetchEnrollments = async () => {
-            try {
-                setIsLoading(true);
-                setError(null);
-                const enrollments = await getMyEnrollments();
-
-                const transformedCourses = enrollments.map(enrollment => ({
-                    id: enrollment.id,
-                    title: enrollment.title,
-                    teacherFirstName: enrollment.firstName,
-                    teacherLastName: enrollment.lastName,
-                    teacherId: enrollment.teacherId,
-                    enrolledAt: enrollment.enrolledAt,
-                    progress: enrollment.progressionPercent,
-                }));
-
-                setEnrolledCourses(transformedCourses);
-            } catch (err) {
-                setError(err.message);
-                setEnrolledCourses([]);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
         fetchEnrollments();
     }, []);
 
@@ -83,6 +84,7 @@ const StudentHomePage = () => {
         <GradientBackground>
             <FloatingOrbs />
 
+            {/* Navigation bar */}
             <Navbar
                 onLogout={handleLogout}
                 showHome={false}
@@ -90,18 +92,20 @@ const StudentHomePage = () => {
                 showProfile={true}
             />
 
-            {/* Main Content */}
+            {/* Main content area */}
             <main className="relative z-10 max-w-7xl mx-auto px-6 py-8 lg:py-12">
-                {/* Welcome Section */}
+
+                {/* Welcome header */}
                 <div className="mb-8 lg:mb-12">
                     <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+
+                        {/* Welcome text */}
                         <div>
                             <WelcomeBadge
                                 text="Welcome back"
                                 icon={Sparkles}
                                 className="mb-3"
                             />
-
                             <WelcomeSection
                                 coloredText={user?.firstName}
                                 title="Hello,"
@@ -109,7 +113,7 @@ const StudentHomePage = () => {
                             />
                         </div>
 
-                        {/* Quick Stats Cards */}
+                        {/* Statistics cards */}
                         <div className="flex gap-3 sm:gap-4">
                             <StatsCard
                                 icon={BookOpen}
@@ -118,7 +122,6 @@ const StudentHomePage = () => {
                                 color="teal"
                                 gradient="linear-gradient(145deg, hsla(174, 70%, 40%, 0.15) 0%, hsla(174, 70%, 40%, 0.05) 100%)"
                             />
-
                             <StatsCard
                                 icon={TrendingUp}
                                 label="Progress"
@@ -126,7 +129,6 @@ const StudentHomePage = () => {
                                 color="cyan"
                                 gradient="linear-gradient(145deg, hsla(199, 85%, 45%, 0.15) 0%, hsla(199, 85%, 45%, 0.05) 100%)"
                             />
-
                             <StatsCard
                                 icon={Award}
                                 label="Completed"
@@ -139,14 +141,14 @@ const StudentHomePage = () => {
                     </div>
                 </div>
 
-                {/* Error Display */}
+                {/* Error display */}
                 <GlobalError
                     error={error}
                     onDismiss={() => setError(null)}
                     type="error"
                 />
 
-                {/* Enrolled Courses Section */}
+                {/* Enrolled courses section */}
                 <section>
                     <SectionHeader
                         icon={BookOpen}
@@ -177,6 +179,7 @@ const StudentHomePage = () => {
                     )}
                 </section>
 
+                {/* Page footer */}
                 <Footer />
             </main>
         </GradientBackground>

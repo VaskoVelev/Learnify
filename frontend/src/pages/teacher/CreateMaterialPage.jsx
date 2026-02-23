@@ -73,6 +73,7 @@ const CreateMaterialPage = () => {
         <GradientBackground>
             <FloatingOrbs />
 
+            {/* Navigation bar */}
             <Navbar
                 onLogout={handleLogout}
                 showHome={true}
@@ -80,12 +81,16 @@ const CreateMaterialPage = () => {
                 showProfile={true}
             />
 
+            {/* Main content area */}
             <main className="relative z-10 max-w-3xl mx-auto px-6 py-12">
+
+                {/* Page header */}
                 <PageHeader
                     title="Add New Material"
                     subtitle="Share additional learning resources with your students"
                 />
 
+                {/* Error display */}
                 <GlobalError
                     error={globalError}
                     onDismiss={() => setGlobalError(null)}
@@ -101,7 +106,7 @@ const CreateMaterialPage = () => {
                             background: "linear-gradient(145deg, hsla(0, 0%, 100%, 0.08) 0%, hsla(0, 0%, 100%, 0.02) 100%)",
                         }}
                     >
-                        {/* Form */}
+                        {/* Form container */}
                         <div className="p-8">
                             <MaterialForm
                                 form={form}
@@ -117,6 +122,7 @@ const CreateMaterialPage = () => {
                     </div>
                 )}
 
+                {/* Page footer */}
                 <Footer />
             </main>
         </GradientBackground>

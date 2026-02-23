@@ -30,10 +30,10 @@ const EditLessonPage = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const fetchLesson = async () => {
-        try {
-            setIsLoading(true);
-            setGlobalError(null);
+        setIsLoading(true);
+        setGlobalError(null);
 
+        try {
             const lessonData = await getLesson(lessonId);
             setForm({
                 title: lessonData.title,
@@ -92,6 +92,7 @@ const EditLessonPage = () => {
         <GradientBackground>
             <FloatingOrbs />
 
+            {/* Navigation bar */}
             <Navbar
                 onLogout={handleLogout}
                 showHome={true}
@@ -99,12 +100,16 @@ const EditLessonPage = () => {
                 showProfile={true}
             />
 
+            {/* Main content area */}
             <main className="relative z-10 max-w-3xl mx-auto px-6 py-12">
+
+                {/* Page header */}
                 <PageHeader
                     title="Edit Lesson"
                     subtitle="Update your lesson information"
                 />
 
+                {/* Error display */}
                 <GlobalError
                     error={globalError}
                     onDismiss={() => setGlobalError(null)}
@@ -120,7 +125,7 @@ const EditLessonPage = () => {
                             background: "linear-gradient(145deg, hsla(0, 0%, 100%, 0.08) 0%, hsla(0, 0%, 100%, 0.02) 100%)",
                         }}
                     >
-                        {/* Form */}
+                        {/* Form container */}
                         <div className="p-8">
                             <LessonForm
                                 form={form}
@@ -137,6 +142,7 @@ const EditLessonPage = () => {
                     </div>
                 )}
 
+                {/* Page footer */}
                 <Footer />
             </main>
         </GradientBackground>

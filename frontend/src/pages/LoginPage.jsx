@@ -58,22 +58,31 @@ const LoginPage = () => {
 
     return (
         <div className="min-h-screen flex" style={{ background: "linear-gradient(135deg, hsl(220, 30%, 8%) 0%, hsl(220, 25%, 15%) 50%, hsl(200, 30%, 12%) 100%)" }}>
+
+            {/* Left side brand panel */}
             <AuthBrandPanel />
 
+            {/* Right side form section */}
             <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
                 <AuthFormContainer>
+
+                    {/* Header with title and subtitle */}
                     <AuthFormHeader
                         title="Welcome Back"
                         subtitle="Sign in to continue your learning journey"
                     />
 
+                    {/* Error message display */}
                     <GlobalError
                         error={globalError}
                         onDismiss={handleDismissError}
                         type="error"
                     />
 
+                    {/* Login form */}
                     <form onSubmit={handleSubmit} className="space-y-5">
+
+                        {/* Email field */}
                         <div>
                             <label className="block text-sm font-medium text-gray-400 mb-2">Email</label>
                             <AuthInput
@@ -89,6 +98,7 @@ const LoginPage = () => {
                             <FieldError error={fieldErrors.email} />
                         </div>
 
+                        {/* Password field */}
                         <div>
                             <label className="block text-sm font-medium text-gray-400 mb-2">Password</label>
                             <AuthInput
@@ -104,6 +114,7 @@ const LoginPage = () => {
                             <FieldError error={fieldErrors.password} />
                         </div>
 
+                        {/* Submit button */}
                         <AuthButton
                             isLoading={isLoading}
                             className="mt-8"
@@ -112,6 +123,7 @@ const LoginPage = () => {
                         </AuthButton>
                     </form>
 
+                    {/* Link to register page */}
                     <AuthLink
                         text="Don't have an account?"
                         linkText="Create one"

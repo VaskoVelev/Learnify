@@ -35,9 +35,10 @@ const CoursePage = () => {
     const [showLeaveModal, setShowLeaveModal] = useState(false);
 
     const fetchCourseData = async () => {
+        setIsLoading(true);
+        setError(null);
+
         try {
-            setIsLoading(true);
-            setError(null);
 
             const courseData = await getCourse(courseId);
             setCourse(courseData);
@@ -58,11 +59,8 @@ const CoursePage = () => {
             const studentsData = await getCourseEnrollments(courseId);
             setEnrolledStudents(studentsData);
 
-            setIsLoading(false);
         } catch (err) {
             setError(err.message);
-            setLessons([]);
-            setEnrolledStudents([]);
         } finally {
             setIsLoading(false);
         }
@@ -110,6 +108,7 @@ const CoursePage = () => {
         <GradientBackground>
             <FloatingOrbs />
 
+            {/* Navigation bar */}
             <Navbar
                 onLogout={handleLogout}
                 showHome={true}
@@ -117,14 +116,17 @@ const CoursePage = () => {
                 showProfile={true}
             />
 
-            {/* Main Content */}
+            {/* Main content area */}
             <main className="relative z-10 max-w-7xl mx-auto px-6 py-8 lg:py-12">
+
+                {/* Error display */}
                 <GlobalError
                     error={error}
                     onDismiss={() => setError(null)}
                     type="error"
                 />
 
+                {/* Leave course confirmation modal */}
                 <ConfirmationModal
                     isOpen={showLeaveModal}
                     onClose={() => setShowLeaveModal(false)}
@@ -135,23 +137,30 @@ const CoursePage = () => {
                     type="warning"
                 />
 
-                {/* Loading State */}
                 {isLoading ? (
                     <LoadingState message="Loading, wait a sec..." />
                 ) : (
                     <div className="flex gap-8">
-                        {/* Left Side - Main Content */}
-                        <div className="flex-1">
-                            <CourseHeader course={course} onLeave={() => setShowLeaveModal(true)} />
 
+                        {/* Left column - Course content */}
+                        <div className="flex-1">
+
+                            {/* Course header with leave button */}
+                            <CourseHeader
+                                course={course}
+                                onLeave={() => setShowLeaveModal(true)}
+                            />
+
+                            {/* Progress and lessons grid */}
                             <div className="grid grid-cols-3 gap-8 mt-8">
-                                {/* Progress Stats - takes 1 column */}
+
+                                {/* Progress stats column */}
                                 <div className="col-span-1 space-y-6">
                                     <ProgressCard progress={progress} />
                                     <AverageScoreCard averageScore={progress?.averageScore} />
                                 </div>
 
-                                {/* Lessons - takes 2 columns */}
+                                {/* Lessons list column */}
                                 <div className="col-span-2">
                                     <LessonsList
                                         lessons={lessons}
@@ -161,13 +170,14 @@ const CoursePage = () => {
                             </div>
                         </div>
 
-                        {/* Right Side - Enrolled Students List (fixed width) */}
+                        {/* Right column - Enrolled students sidebar */}
                         <div className="w-80 flex-shrink-0">
                             <EnrolledStudentsList students={enrolledStudents} />
                         </div>
                     </div>
                 )}
 
+                {/* Page footer */}
                 <Footer />
             </main>
         </GradientBackground>

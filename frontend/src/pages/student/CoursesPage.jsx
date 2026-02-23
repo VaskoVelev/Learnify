@@ -40,18 +40,16 @@ const CoursesPage = () => {
     const [selectedDifficulty, setSelectedDifficulty] = useState("all");
 
     const fetchCourses = async () => {
-        try {
-            setIsLoading(true);
-            setError(null);
+        setIsLoading(true);
+        setError(null);
 
+        try {
             const coursesData = await getAllCourses();
 
             setCourses(coursesData);
             setFilteredCourses(coursesData);
         } catch (err) {
             setError(err.message);
-            setCourses([]);
-            setFilteredCourses([]);
         } finally {
             setIsLoading(false);
         }
@@ -91,17 +89,19 @@ const CoursesPage = () => {
 
 
     const handleEnroll = async (courseId, courseTitle) => {
+        setEnrollingCourseId(courseId);
+        setError(null);
+        setEnrollSuccess(null);
+
         try {
-            setEnrollingCourseId(courseId);
-            setError(null);
-            setEnrollSuccess(null);
-
             await enrollInCourse(courseId);
-            setEnrollSuccess(`Successfully enrolled in "${courseTitle}"`);
 
+            setEnrollSuccess(`Successfully enrolled in "${courseTitle}"`);
+            window.scrollTo({ top: 0, behavior: "smooth" });
             fetchCourses();
         } catch (err) {
             setError(err.message);
+            window.scrollTo({ top: 0, behavior: "smooth" });
         } finally {
             setEnrollingCourseId(null);
         }
@@ -140,6 +140,7 @@ const CoursesPage = () => {
         <GradientBackground>
             <FloatingOrbs />
 
+            {/* Navigation bar */}
             <Navbar
                 user={null}
                 onLogout={handleLogout}
@@ -148,18 +149,19 @@ const CoursesPage = () => {
                 showProfile={true}
             />
 
-            {/* Main Content */}
+            {/* Main content area */}
             <main className="relative z-10 max-w-7xl mx-auto px-6 py-8 lg:py-12">
-                {/* Welcome Section - Updated for Courses Page */}
+
+                {/* Page header */}
                 <div className="mb-8 lg:mb-12">
                     <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+                        {/* Title and description */}
                         <div>
                             <WelcomeBadge
                                 text="Course Catalog"
                                 icon={Sparkles}
                                 className="mb-3"
                             />
-
                             <WelcomeSection
                                 coloredText="All Courses"
                                 title="Explore"
@@ -167,6 +169,7 @@ const CoursesPage = () => {
                             />
                         </div>
 
+                        {/* Course count stat */}
                         <StatsCard
                             icon={BookOpen}
                             label="Courses"
@@ -178,14 +181,13 @@ const CoursesPage = () => {
                     </div>
                 </div>
 
-                {/* Messages Display */}
+                {/* Success/error messages */}
                 <div className="space-y-4 mb-6">
                     <GlobalError
                         error={enrollSuccess}
                         onDismiss={() => setEnrollSuccess(null)}
                         type="success"
                     />
-
                     <GlobalError
                         error={error}
                         onDismiss={() => setError(null)}
@@ -193,7 +195,7 @@ const CoursesPage = () => {
                     />
                 </div>
 
-                {/* Search and Filters */}
+                {/* Search and filter controls */}
                 <div className="mb-8 flex flex-col lg:flex-row gap-4">
                     <SearchBar
                         value={searchTerm}
@@ -201,7 +203,7 @@ const CoursesPage = () => {
                         placeholder="Search courses by title or description..."
                     />
 
-                    {/* Filters */}
+                    {/* Filter dropdowns */}
                     <div className="flex gap-3">
                         <FilterDropdown
                             icon={Tag}
@@ -211,7 +213,6 @@ const CoursesPage = () => {
                             placeholder="All Categories"
                             iconColor="text-teal-400"
                         />
-
                         <FilterDropdown
                             icon={BarChart3}
                             value={selectedDifficulty}
@@ -220,21 +221,19 @@ const CoursesPage = () => {
                             placeholder="All Difficulties"
                             iconColor="text-cyan-400"
                         />
-
                         {hasActiveFilters && (
                             <ClearFiltersButton onClick={clearFilters} />
                         )}
                     </div>
                 </div>
 
-                {/* All Courses Section */}
+                {/* Course listing section */}
                 <section>
                     <SectionHeader
                         icon={BookOpen}
                         title="Available Courses"
                     />
 
-                    {/* Courses Grid */}
                     {isLoading ? (
                         <LoadingState message="Loading, wait a sec..." />
                     ) : filteredCourses.length > 0 ? (
@@ -258,13 +257,13 @@ const CoursesPage = () => {
                             title="No courses found"
                             description={hasActiveFilters
                                 ? "Try adjusting your search or filters to find what you're looking for."
-                                : "There are no courses available at the moment. Please check back later."}
-                            actionText={hasActiveFilters ? "Clear Filters" : undefined}
-                            onActionClick={hasActiveFilters ? clearFilters : undefined}
+                                : "There are no courses available at the moment. Please check back later."
+                            }
                         />
                     )}
                 </section>
 
+                {/* Page footer */}
                 <Footer />
             </main>
         </GradientBackground>

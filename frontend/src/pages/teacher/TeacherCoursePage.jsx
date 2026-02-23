@@ -33,9 +33,10 @@ const TeacherCoursePage = () => {
     const [studentProgress, setStudentProgress] = useState([]);
 
     const fetchCourseData = async () => {
+        setIsLoading(true);
+        setError(null);
+
         try {
-            setIsLoading(true);
-            setError(null);
 
             const courseData = await getCourse(courseId);
             setCourse(courseData);
@@ -49,12 +50,8 @@ const TeacherCoursePage = () => {
             const progressData = await getCourseProgressions(courseId);
             setStudentProgress(progressData);
 
-            setIsLoading(false);
         } catch (err) {
             setError(err.message);
-            setLessons([]);
-            setEnrolledStudents([]);
-            setStudentProgress([]);
         } finally {
             setIsLoading(false);
         }
@@ -91,14 +88,18 @@ const TeacherCoursePage = () => {
     };
 
     const handleDeleteCourse = async () => {
+        setIsLoading(true);
+        setError(null);
+
         try {
-            setIsLoading(true);
             await deleteCourse(courseId);
             navigate("/home");
         } catch (err) {
             setError(err.message);
+        } finally {
             setIsLoading(false);
         }
+
         setShowDeleteCourseModal(false);
     };
 
@@ -108,10 +109,10 @@ const TeacherCoursePage = () => {
     };
 
     const handleKickStudent = async () => {
-        if (!studentToKick) return;
+        setIsLoading(true);
+        setError(null);
 
         try {
-            setIsLoading(true);
             await deleteEnrollment(studentToKick.id, courseId);
 
             const updatedStudents = enrolledStudents.filter(s => s.id !== studentToKick.id);
@@ -143,6 +144,7 @@ const TeacherCoursePage = () => {
         <GradientBackground>
             <FloatingOrbs />
 
+            {/* Navigation bar */}
             <Navbar
                 onLogout={handleLogout}
                 showHome={true}
@@ -150,13 +152,17 @@ const TeacherCoursePage = () => {
                 showProfile={true}
             />
 
+            {/* Main content area */}
             <main className="relative z-10 max-w-7xl mx-auto px-6 py-8 lg:py-12">
+
+                {/* Error display */}
                 <GlobalError
                     error={error}
                     onDismiss={() => setError(null)}
                     type="error"
                 />
 
+                {/* Delete course confirmation modal */}
                 <ConfirmationModal
                     isOpen={showDeleteCourseModal}
                     onClose={() => setShowDeleteCourseModal(false)}
@@ -167,6 +173,7 @@ const TeacherCoursePage = () => {
                     type="danger"
                 />
 
+                {/* Kick student confirmation modal */}
                 <ConfirmationModal
                     isOpen={showKickModal}
                     onClose={() => {
@@ -184,8 +191,11 @@ const TeacherCoursePage = () => {
                     <LoadingState message="Loading course details..." />
                 ) : (
                     <div className="flex gap-8">
-                        {/* Left Side - Main Content */}
+
+                        {/* Left column - Course content */}
                         <div className="flex-1">
+
+                            {/* Course header */}
                             <CourseHeader
                                 course={course}
                                 showCreator={false}
@@ -193,8 +203,8 @@ const TeacherCoursePage = () => {
                                 onDelete={() => setShowDeleteCourseModal(true)}
                             />
 
+                            {/* Lessons section */}
                             <div className="mt-8">
-                                {/* Lessons - Full width */}
                                 <LessonsList
                                     lessons={lessons}
                                     onLessonClick={handleLessonClick}
@@ -204,7 +214,7 @@ const TeacherCoursePage = () => {
                             </div>
                         </div>
 
-                        {/* Right Side - Enrolled Students List with Progress */}
+                        {/* Right column - Students list */}
                         <div className="w-96 flex-shrink-0">
                             <TeacherEnrolledStudentsList
                                 students={studentsWithProgress}
@@ -214,6 +224,7 @@ const TeacherCoursePage = () => {
                     </div>
                 )}
 
+                {/* Page footer */}
                 <Footer />
             </main>
         </GradientBackground>

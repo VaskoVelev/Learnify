@@ -26,24 +26,24 @@ const QuizSubmissionsPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const fetchData = async () => {
+        setIsLoading(true);
+        setError(null);
+
+        try {
+            const quizData = await getQuiz(quizId);
+            setQuiz(quizData);
+
+            const submissionsData = await getMyQuizSubmissions(quizId);
+            setSubmissions(submissionsData);
+        } catch (err) {
+            setError(err.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setIsLoading(true);
-                setError(null);
-
-                const quizData = await getQuiz(quizId);
-                setQuiz(quizData);
-
-                const submissionsData = await getMyQuizSubmissions(quizId);
-                setSubmissions(submissionsData);
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
         fetchData();
     }, [quizId]);
 
@@ -69,6 +69,7 @@ const QuizSubmissionsPage = () => {
         <GradientBackground>
             <FloatingOrbs />
 
+            {/* Navigation bar */}
             <Navbar
                 onLogout={handleLogout}
                 showHome={true}
@@ -76,17 +77,22 @@ const QuizSubmissionsPage = () => {
                 showProfile={true}
             />
 
+            {/* Main content area */}
             <main className="relative z-10 max-w-4xl mx-auto px-6 py-12">
+
+                {/* Back navigation */}
                 <BackButton
                     onClick={() => navigate(`/courses/${courseId}/lessons/${lessonId}/quizzes/${quizId}`)}
                     text="Back to Quiz"
                 />
 
+                {/* Page header */}
                 <PageHeader
                     title="Quiz Submissions"
                     subtitle={`Your previous attempts for "${quiz?.title}"`}
                 />
 
+                {/* Error display */}
                 <GlobalError
                     error={error}
                     onDismiss={() => setError(null)}
@@ -113,6 +119,7 @@ const QuizSubmissionsPage = () => {
                     </div>
                 )}
 
+                {/* Page footer */}
                 <Footer />
             </main>
         </GradientBackground>

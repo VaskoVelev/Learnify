@@ -69,7 +69,7 @@ const NotFoundPage = () => {
                 </div>
             </div>
 
-            {/* Add custom animation for slow spin */}
+            {/* Animation for slow spin */}
             <style jsx>{`
                 @keyframes spin-slow {
                     from {

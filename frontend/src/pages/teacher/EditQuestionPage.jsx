@@ -30,26 +30,19 @@ const EditQuestionPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Fetch question data on mount
-    useEffect(() => {
-        const fetchQuestion = async () => {
-            try {
-                setIsLoading(true);
-                setGlobalError(null);
+    const fetchQuestion = async () => {
+        setIsLoading(true);
+        setGlobalError(null);
 
-                // Get all questions for this quiz
-                const questionsData = await getQuizQuestions(quizId);
+        try {
+            const questionsData = await getQuizQuestions(quizId);
 
-                // Find the specific question we want
-                const questionData = questionsData.find(q => q.id.toString() === questionId);
+            const questionData = questionsData.find(q => q.id.toString() === questionId);
+            const answersData = await getQuestionAnswers(questionId);
+            const sortedAnswers = answersData.sort((a, b) => b.id - a.id);
 
-
-                // Get answers for this question
-                const answersData = await getQuestionAnswers(questionId);
-                const sortedAnswers = answersData.sort((a, b) => b.id - a.id);
-
-                setForm({
-                    text: questionData.text,
+            setForm({
+                text: questionData.text,
                     answers: answersData.map(answer => ({
                         id: answer.id,
                         text: answer.text,
@@ -61,8 +54,9 @@ const EditQuestionPage = () => {
             } finally {
                 setIsLoading(false);
             }
-        };
+    };
 
+    useEffect(() => {
         fetchQuestion();
     }, [quizId, questionId]);
 
@@ -101,14 +95,11 @@ const EditQuestionPage = () => {
         setGlobalError(null);
 
         try {
-            // First update the question text
             await updateQuestion(questionId, { text: form.text });
 
-            // Separate existing answers (with IDs) and new answers (without IDs)
             const existingAnswers = form.answers.filter(a => a.id);
             const newAnswers = form.answers.filter(a => !a.id);
 
-            // Update existing answers
             await Promise.all(
                 existingAnswers.map(answer =>
                     updateAnswer(answer.id, {
@@ -118,7 +109,6 @@ const EditQuestionPage = () => {
                 )
             );
 
-            // Create new answers
             await Promise.all(
                 newAnswers.map(answer =>
                     createAnswer(questionId, {
@@ -144,6 +134,7 @@ const EditQuestionPage = () => {
         <GradientBackground>
             <FloatingOrbs />
 
+            {/* Navigation bar */}
             <Navbar
                 onLogout={handleLogout}
                 showHome={true}
@@ -151,12 +142,16 @@ const EditQuestionPage = () => {
                 showProfile={true}
             />
 
+            {/* Main content area */}
             <main className="relative z-10 max-w-3xl mx-auto px-6 py-12">
+
+                {/* Page header */}
                 <PageHeader
                     title="Edit Question"
                     subtitle="Update your question and answers"
                 />
 
+                {/* Error display */}
                 <GlobalError
                     error={globalError}
                     onDismiss={() => setGlobalError(null)}
@@ -172,7 +167,7 @@ const EditQuestionPage = () => {
                             background: "linear-gradient(145deg, hsla(0, 0%, 100%, 0.08) 0%, hsla(0, 0%, 100%, 0.02) 100%)",
                         }}
                     >
-                        {/* Form */}
+                        {/* Form container */}
                         <div className="p-8">
                             <QuestionForm
                                 form={form}
@@ -189,6 +184,7 @@ const EditQuestionPage = () => {
                     </div>
                 )}
 
+                {/* Page footer */}
                 <Footer />
             </main>
         </GradientBackground>

@@ -37,18 +37,15 @@ const TeacherCoursesPage = () => {
     const [selectedDifficulty, setSelectedDifficulty] = useState("all");
 
     const fetchCourses = async () => {
+        setIsLoading(true);
+        setError(null);
+
         try {
-            setIsLoading(true);
-            setError(null);
-
             const coursesData = await getAllCourses();
-
             setCourses(coursesData);
             setFilteredCourses(coursesData);
         } catch (err) {
             setError(err.message);
-            setCourses([]);
-            setFilteredCourses([]);
         } finally {
             setIsLoading(false);
         }
@@ -118,6 +115,7 @@ const TeacherCoursesPage = () => {
         <GradientBackground>
             <FloatingOrbs />
 
+            {/* Navigation bar */}
             <Navbar
                 onLogout={handleLogout}
                 showHome={true}
@@ -125,16 +123,19 @@ const TeacherCoursesPage = () => {
                 showProfile={true}
             />
 
+            {/* Main content area */}
             <main className="relative z-10 max-w-7xl mx-auto px-6 py-8 lg:py-12">
+
+                {/* Page header with course count */}
                 <div className="mb-8 lg:mb-12">
                     <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-6">
+                        {/* Title and description */}
                         <div>
                             <WelcomeBadge
                                 text="Course Catalog"
                                 icon={Sparkles}
                                 className="mb-3"
                             />
-
                             <WelcomeSection
                                 coloredText="All Courses"
                                 title="Explore"
@@ -142,6 +143,7 @@ const TeacherCoursesPage = () => {
                             />
                         </div>
 
+                        {/* Course count stat */}
                         <StatsCard
                             icon={BookOpen}
                             label="Courses"
@@ -153,6 +155,7 @@ const TeacherCoursesPage = () => {
                     </div>
                 </div>
 
+                {/* Error display */}
                 <div className="space-y-4 mb-6">
                     <GlobalError
                         error={error}
@@ -161,6 +164,7 @@ const TeacherCoursesPage = () => {
                     />
                 </div>
 
+                {/* Search and filter controls */}
                 <div className="mb-8 flex flex-col lg:flex-row gap-4">
                     <SearchBar
                         value={searchTerm}
@@ -168,6 +172,7 @@ const TeacherCoursesPage = () => {
                         placeholder="Search courses by title or description..."
                     />
 
+                    {/* Filter dropdowns */}
                     <div className="flex gap-3">
                         <FilterDropdown
                             icon={Tag}
@@ -177,7 +182,6 @@ const TeacherCoursesPage = () => {
                             placeholder="All Categories"
                             iconColor="text-teal-400"
                         />
-
                         <FilterDropdown
                             icon={BarChart3}
                             value={selectedDifficulty}
@@ -186,13 +190,13 @@ const TeacherCoursesPage = () => {
                             placeholder="All Difficulties"
                             iconColor="text-cyan-400"
                         />
-
                         {hasActiveFilters && (
                             <ClearFiltersButton onClick={clearFilters} />
                         )}
                     </div>
                 </div>
 
+                {/* Course listing section */}
                 <section>
                     <SectionHeader
                         icon={BookOpen}
@@ -220,12 +224,11 @@ const TeacherCoursesPage = () => {
                             description={hasActiveFilters
                                 ? "Try adjusting your search or filters to find what you're looking for."
                                 : "There are no courses available at the moment. Please check back later."}
-                            actionText={hasActiveFilters ? "Clear Filters" : undefined}
-                            onActionClick={hasActiveFilters ? clearFilters : undefined}
                         />
                     )}
                 </section>
 
+                {/* Page footer */}
                 <Footer />
             </main>
         </GradientBackground>

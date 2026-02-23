@@ -5,9 +5,6 @@ const EmptyState = ({
     icon: Icon = BookOpen,
     title = "No courses yet",
     description = "Start your learning journey by exploring our catalog and enrolling in a course",
-    actionText = "Browse Courses",
-    actionLink = "/courses",
-    onActionClick,
     className = ""
 }) => {
     return (
@@ -24,31 +21,6 @@ const EmptyState = ({
                 </div>
                 <h3 className="text-2xl font-semibold text-white mb-3">{title}</h3>
                 <p className="text-white/60 mb-8 max-w-sm mx-auto">{description}</p>
-                {actionLink ? (
-                    <Link
-                        to={actionLink}
-                        className="inline-flex items-center gap-2 py-3.5 px-8 rounded-xl font-semibold text-gray-900 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
-                        style={{
-                            background: "linear-gradient(135deg, hsl(174, 72%, 46%) 0%, hsl(199, 89%, 48%) 100%)",
-                            boxShadow: "0 0 40px hsla(174, 72%, 46%, 0.3)"
-                        }}
-                    >
-                        {actionText}
-                        <ChevronRight className="w-5 h-5" />
-                    </Link>
-                ) : (
-                    <button
-                        onClick={onActionClick}
-                        className="inline-flex items-center gap-2 py-3.5 px-8 rounded-xl font-semibold text-gray-900 transition-all transform hover:scale-[1.02] active:scale-[0.98]"
-                        style={{
-                            background: "linear-gradient(135deg, hsl(174, 72%, 46%) 0%, hsl(199, 89%, 48%) 100%)",
-                            boxShadow: "0 0 40px hsla(174, 72%, 46%, 0.3)"
-                        }}
-                    >
-                        {actionText}
-                        <ChevronRight className="w-5 h-5" />
-                    </button>
-                )}
             </div>
         </div>
     );

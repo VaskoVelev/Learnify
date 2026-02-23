@@ -37,10 +37,10 @@ const QuizPage = () => {
     const [error, setError] = useState(null);
 
     const fetchQuizData = async () => {
-        try {
-            setIsLoading(true);
-            setError(null);
+        setIsLoading(true);
+        setError(null);
 
+        try {
             const quizData = await getQuiz(quizId);
             setQuiz(quizData);
 
@@ -59,16 +59,14 @@ const QuizPage = () => {
                     }
                 })
             );
-
             setQuestions(questionsWithAnswers);
 
-            // Check if student has previous submissions
             try {
                 const submissions = await getMyQuizSubmissions(quizId);
                 setPreviousSubmissions(submissions);
                 setHasPreviousSubmissions(submissions.length > 0);
             } catch (err) {
-                console.error("Error fetching submissions:", err);
+                setError(err.message)
                 setHasPreviousSubmissions(false);
             }
 
@@ -106,10 +104,10 @@ const QuizPage = () => {
     };
 
     const handleSubmit = async () => {
-        try {
-            setIsSubmitting(true);
-            setError(null);
+        setIsSubmitting(true);
+        setError(null);
 
+        try {
             const answers = Object.entries(selectedAnswers).map(([questionId, answerId]) => ({
                 questionId: parseInt(questionId),
                 answerId: parseInt(answerId)
@@ -119,11 +117,8 @@ const QuizPage = () => {
             setSubmission(result);
             setIsSubmitted(true);
 
-            // Update previous submissions count
             setHasPreviousSubmissions(true);
             setPreviousSubmissions(prev => [...prev, result]);
-
-            window.scrollTo({ top: 0, behavior: "smooth" });
         } catch (err) {
             setError(err.message);
         } finally {
@@ -147,6 +142,7 @@ const QuizPage = () => {
         <GradientBackground>
             <FloatingOrbs />
 
+            {/* Navigation bar */}
             <Navbar
                 onLogout={handleLogout}
                 showHome={true}
@@ -154,12 +150,16 @@ const QuizPage = () => {
                 showProfile={true}
             />
 
+            {/* Main content area */}
             <main className="relative z-10 max-w-7xl mx-auto px-6 py-8 lg:py-12">
+
+                {/* Back navigation */}
                 <BackButton
                     onClick={() => navigate(`/courses/${courseId}/lessons/${lessonId}`)}
                     text="Back to Lesson"
                 />
 
+                {/* Error display */}
                 <GlobalError
                     error={error}
                     onDismiss={() => setError(null)}
@@ -171,14 +171,13 @@ const QuizPage = () => {
                 ) : (
                     <>
                         {isSubmitted && submission ? (
-                            // Show ONLY the result card when submitted - no header, no questions
                             <QuizResultCard
                                 submission={submission}
                                 onCheckAnswers={handleCheckAnswers}
                             />
                         ) : (
-                            // Show quiz content when not submitted
                             <>
+                                {/* Quiz header */}
                                 <QuizHeader
                                     title={quiz?.title}
                                     description={quiz?.description}
@@ -188,6 +187,7 @@ const QuizPage = () => {
                                     onViewSubmissions={handleViewSubmissions}
                                 />
 
+                                {/* Questions list */}
                                 <div className="space-y-8">
                                     {questions.map((question, index) => (
                                         <QuestionCard
@@ -201,6 +201,7 @@ const QuizPage = () => {
                                     ))}
                                 </div>
 
+                                {/* Submit button */}
                                 <SubmitButton
                                     allAnswered={allAnswered}
                                     onSubmit={handleSubmit}
@@ -211,6 +212,7 @@ const QuizPage = () => {
                     </>
                 )}
 
+                {/* Page footer */}
                 <Footer />
             </main>
         </GradientBackground>

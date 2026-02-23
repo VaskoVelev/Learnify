@@ -14,7 +14,7 @@ const ForbiddenPage = () => {
 
             <div className="relative z-10 min-h-screen flex items-center justify-center px-6">
                 <div className="max-w-2xl w-full text-center">
-                    {/* Animated shield icon */}
+                    {/* Shield icon */}
                     <div className="relative mb-8">
                         <div className="absolute inset-0 bg-rose-500/30 blur-3xl rounded-full animate-pulse" />
                         <div className="relative flex justify-center">

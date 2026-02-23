@@ -30,7 +30,6 @@ const TeacherLessonPage = () => {
     const [lesson, setLesson] = useState(null);
     const [materials, setMaterials] = useState([]);
     const [quizzes, setQuizzes] = useState([]);
-    const [quizSubmissions, setQuizSubmissions] = useState({});
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [downloadError, setDownloadError] = useState(null);
@@ -39,10 +38,10 @@ const TeacherLessonPage = () => {
     const [materialToDelete, setMaterialToDelete] = useState(null);
 
     const fetchLessonData = async () => {
-        try {
-            setIsLoading(true);
-            setError(null);
+        setIsLoading(true);
+        setError(null);
 
+        try {
             const lessonData = await getLesson(lessonId);
             setLesson(lessonData);
 
@@ -52,25 +51,8 @@ const TeacherLessonPage = () => {
             const quizzesData = await getLessonQuizzes(lessonId);
             setQuizzes(quizzesData);
 
-            if (quizzesData.length > 0) {
-                const submissionsMap = {};
-                await Promise.all(
-                    quizzesData.map(async (quiz) => {
-                        try {
-                            const submissions = await getMyQuizSubmissions(quiz.id);
-                            submissionsMap[quiz.id] = submissions.length > 0;
-                        } catch (err) {
-                            setError(err.message);
-                            submissionsMap[quiz.id] = false;
-                        }
-                    })
-                );
-                setQuizSubmissions(submissionsMap);
-            }
         } catch (err) {
             setError(err.message);
-            setMaterials([]);
-            setQuizzes([]);
         } finally {
             setIsLoading(false);
         }
@@ -160,20 +142,23 @@ const TeacherLessonPage = () => {
         }
     };
 
-    // Edit handlers
     const handleEditLesson = () => {
         navigate(`/courses/${courseId}/lessons/${lessonId}/edit`);
     };
 
     const handleDeleteLesson = async () => {
+        setIsLoading(true);
+        setError(null);
+
         try {
-            setIsLoading(true);
             await deleteLesson(lessonId);
             navigate(`/courses/${courseId}`);
         } catch (err) {
             setError(err.message);
+        } finally {
             setIsLoading(false);
         }
+
         setShowDeleteLessonModal(false);
     };
 
@@ -182,14 +167,19 @@ const TeacherLessonPage = () => {
     };
 
     const handleDeleteMaterial = async (materialId) => {
+        setIsLoading(true);
+        setError(null);
+
         try {
             await deleteMaterial(materialId);
-            // Refresh materials list
             const updatedMaterials = materials.filter(m => m.id !== materialId);
+
             setMaterials(updatedMaterials);
             setMaterialToDelete(null);
         } catch (err) {
             setError(err.message);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -201,6 +191,7 @@ const TeacherLessonPage = () => {
         <GradientBackground>
             <FloatingOrbs />
 
+            {/* Navigation bar */}
             <Navbar
                 onLogout={handleLogout}
                 showHome={true}
@@ -208,19 +199,22 @@ const TeacherLessonPage = () => {
                 showProfile={true}
             />
 
+            {/* Main content area */}
             <main className="relative z-10 max-w-7xl mx-auto px-6 py-8 lg:py-12">
+
+                {/* Error displays */}
                 <GlobalError
                     error={error}
                     onDismiss={() => setError(null)}
                     type="error"
                 />
-
                 <GlobalError
                     error={downloadError}
                     onDismiss={() => setDownloadError(null)}
                     type="error"
                 />
 
+                {/* Delete lesson confirmation modal */}
                 <ConfirmationModal
                     isOpen={showDeleteLessonModal}
                     onClose={() => setShowDeleteLessonModal(false)}
@@ -231,7 +225,7 @@ const TeacherLessonPage = () => {
                     type="danger"
                 />
 
-                {/* Delete Material Modal */}
+                {/* Delete material confirmation modal */}
                 <ConfirmationModal
                     isOpen={!!materialToDelete}
                     onClose={() => setMaterialToDelete(null)}
@@ -246,11 +240,13 @@ const TeacherLessonPage = () => {
                     <LoadingState message="Loading, wait a sec..." />
                 ) : (
                     <>
+                        {/* Back navigation */}
                         <BackButton
                             onClick={() => navigate(`/courses/${courseId}`)}
                             text="Back to Course"
                         />
 
+                        {/* Lesson header */}
                         <LessonHeader
                             title={lesson?.title}
                             onEdit={handleEditLesson}
@@ -258,23 +254,21 @@ const TeacherLessonPage = () => {
                         />
 
                         <div className="grid lg:grid-cols-3 gap-8">
-                            {/* Main Content Column - NO EDIT BUTTONS */}
+
+                            {/* Left column - Main lesson content (view only) */}
                             <div className="lg:col-span-2 space-y-8">
                                 <VideoPlayer
                                     videoUrl={lesson?.videoUrl}
                                     title={lesson?.title}
                                     isAvailable={isVideoAvailable(lesson?.videoUrl)}
-                                    // NO onEdit prop
                                 />
-
-                                <LessonContent
-                                    content={lesson?.content}
-                                    // NO onEdit prop
-                                />
+                                <LessonContent content={lesson?.content} />
                             </div>
 
-                            {/* Sidebar - WITH EDIT/ADD BUTTONS */}
+                            {/* Right column - Sidebar with management buttons */}
                             <div className="lg:col-span-1 space-y-6">
+
+                                {/* Materials list */}
                                 <MaterialsList
                                     materials={materials}
                                     onDownload={handleMaterialDownload}
@@ -283,10 +277,10 @@ const TeacherLessonPage = () => {
                                     onDelete={(id) => setMaterialToDelete(id)}
                                 />
 
+                                {/* Quizzes list */}
                                 <QuizzesList
                                     quizzes={quizzes}
                                     onQuizClick={handleQuizClick}
-                                    quizSubmissions={quizSubmissions}
                                     showAddButton={true}
                                     onAddClick={handleAddQuiz}
                                 />
@@ -295,6 +289,7 @@ const TeacherLessonPage = () => {
                     </>
                 )}
 
+                {/* Page footer */}
                 <Footer />
             </main>
         </GradientBackground>

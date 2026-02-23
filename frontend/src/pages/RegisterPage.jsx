@@ -66,28 +66,39 @@ const RegisterPage = () => {
 
     return (
         <div className="min-h-screen flex" style={{ background: "linear-gradient(135deg, hsl(220, 30%, 8%) 0%, hsl(220, 25%, 15%) 50%, hsl(200, 30%, 12%) 100%)" }}>
+
+            {/* Left side brand panel */}
             <AuthBrandPanel />
 
+            {/* Right side registration form */}
             <div className="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-12">
                 <AuthFormContainer>
+
+                    {/* Header */}
                     <AuthFormHeader
                         title="Create account"
                         subtitle="Join thousands of learners today"
                     />
 
+                    {/* Error display */}
                     <GlobalError
                         error={globalError}
                         onDismiss={handleDismissError}
                         type="error"
                     />
 
+                    {/* Registration form */}
                     <form onSubmit={handleSubmit} className="space-y-4">
+
+                        {/* Role selection */}
                         <AuthRoleSelector
                             value={form.role}
                             onChange={handleRoleChange}
                         />
 
+                        {/* Name fields */}
                         <div className="grid grid-cols-2 gap-3">
+                            {/* First name */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-400 mb-2">First Name</label>
                                 <AuthInput
@@ -103,6 +114,7 @@ const RegisterPage = () => {
                                 <FieldError error={fieldErrors.firstName} />
                             </div>
 
+                            {/* Last name */}
                             <div>
                                 <label className="block text-sm font-medium text-gray-400 mb-2">Last Name</label>
                                 <AuthInput
@@ -118,6 +130,7 @@ const RegisterPage = () => {
                             </div>
                         </div>
 
+                        {/* Email field */}
                         <div>
                             <label className="block text-sm font-medium text-gray-400 mb-2">Email</label>
                             <AuthInput
@@ -133,6 +146,7 @@ const RegisterPage = () => {
                             <FieldError error={fieldErrors.email} />
                         </div>
 
+                        {/* Password field */}
                         <div>
                             <label className="block text-sm font-medium text-gray-400 mb-2">Password</label>
                             <AuthInput
@@ -148,6 +162,7 @@ const RegisterPage = () => {
                             <FieldError error={fieldErrors.password} />
                         </div>
 
+                        {/* Confirm password field */}
                         <div>
                             <label className="block text-sm font-medium text-gray-400 mb-2">Confirm Password</label>
                             <AuthInput
@@ -163,6 +178,7 @@ const RegisterPage = () => {
                             <FieldError error={fieldErrors.confirmPassword} />
                         </div>
 
+                        {/* Submit button */}
                         <AuthButton
                             isLoading={isLoading}
                             className="mt-6"
@@ -171,6 +187,7 @@ const RegisterPage = () => {
                         </AuthButton>
                     </form>
 
+                    {/* Link to login page */}
                     <AuthLink
                         text="Already have an account?"
                         linkText="Sign in"

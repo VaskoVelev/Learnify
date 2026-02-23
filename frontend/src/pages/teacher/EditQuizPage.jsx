@@ -26,28 +26,27 @@ const EditQuizPage = () => {
     });
 
     const [globalError, setGlobalError] = useState(null);
-    const [isLoading, setIsLoading] = useState(true); // Start loading to fetch quiz data
+    const [isLoading, setIsLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    // Fetch quiz data on mount
+    const fetchQuiz = async () => {
+        setIsLoading(true);
+        setGlobalError(null);
+
+        try {
+            const quizData = await getQuiz(quizId);
+            setForm({
+                title: quizData.title || "",
+                description: quizData.description || ""
+            });
+        } catch (err) {
+            setGlobalError(err.message);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     useEffect(() => {
-        const fetchQuiz = async () => {
-            try {
-                setIsLoading(true);
-                setGlobalError(null);
-
-                const quizData = await getQuiz(quizId);
-                setForm({
-                    title: quizData.title || "",
-                    description: quizData.description || ""
-                });
-            } catch (err) {
-                setGlobalError(err.message);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
         fetchQuiz();
     }, [quizId]);
 
@@ -95,6 +94,7 @@ const EditQuizPage = () => {
         <GradientBackground>
             <FloatingOrbs />
 
+            {/* Navigation bar */}
             <Navbar
                 onLogout={handleLogout}
                 showHome={true}
@@ -102,12 +102,16 @@ const EditQuizPage = () => {
                 showProfile={true}
             />
 
+            {/* Main content area */}
             <main className="relative z-10 max-w-3xl mx-auto px-6 py-12">
+
+                {/* Page header */}
                 <PageHeader
                     title="Edit Quiz"
                     subtitle="Update your quiz information"
                 />
 
+                {/* Error display */}
                 <GlobalError
                     error={globalError}
                     onDismiss={() => setGlobalError(null)}
@@ -123,7 +127,7 @@ const EditQuizPage = () => {
                             background: "linear-gradient(145deg, hsla(0, 0%, 100%, 0.08) 0%, hsla(0, 0%, 100%, 0.02) 100%)",
                         }}
                     >
-                        {/* Form */}
+                        {/* Form container */}
                         <div className="p-8">
                             <QuizForm
                                 form={form}
@@ -139,6 +143,7 @@ const EditQuizPage = () => {
                     </div>
                 )}
 
+                {/* Page footer */}
                 <Footer />
             </main>
         </GradientBackground>

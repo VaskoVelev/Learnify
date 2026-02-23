@@ -38,10 +38,10 @@ const LessonPage = () => {
     const [downloadingMaterialId, setDownloadingMaterialId] = useState(null);
 
     const fetchLessonData = async () => {
-        try {
-            setIsLoading(true);
-            setError(null);
+        setIsLoading(true);
+        setError(null);
 
+        try {
             const lessonData = await getLesson(lessonId);
             setLesson(lessonData);
 
@@ -68,8 +68,6 @@ const LessonPage = () => {
             }
         } catch (err) {
             setError(err.message);
-            setMaterials([]);
-            setQuizzes([]);
         } finally {
             setIsLoading(false);
         }
@@ -163,6 +161,7 @@ const LessonPage = () => {
         <GradientBackground>
             <FloatingOrbs />
 
+            {/* Navigation bar */}
             <Navbar
                 onLogout={handleLogout}
                 showHome={true}
@@ -170,51 +169,60 @@ const LessonPage = () => {
                 showProfile={true}
             />
 
-            {/* Main Content */}
+            {/* Main content area */}
             <main className="relative z-10 max-w-7xl mx-auto px-6 py-8 lg:py-12">
+
+                {/* Error displays */}
                 <GlobalError
                     error={error}
                     onDismiss={() => setError(null)}
                     type="error"
                 />
-
                 <GlobalError
                     error={downloadError}
                     onDismiss={() => setDownloadError(null)}
                     type="error"
                 />
 
-                {/* Loading State */}
                 {isLoading ? (
                     <LoadingState message="Loading, wait a sec..." />
                 ) : (
                     <>
+                        {/* Navigation back to course */}
                         <BackButton
                             onClick={() => navigate(`/courses/${courseId}`)}
                             text="Back to Course"
                         />
 
+                        {/* Lesson title header */}
                         <LessonHeader title={lesson?.title} />
 
                         <div className="grid lg:grid-cols-3 gap-8">
-                            {/* Main Content Column */}
+
+                            {/* Left column - Main lesson content */}
                             <div className="lg:col-span-2 space-y-8">
+
+                                {/* Video player */}
                                 <VideoPlayer
                                     videoUrl={lesson?.videoUrl}
                                     title={lesson?.title}
                                     isAvailable={isVideoAvailable(lesson?.videoUrl)}
                                 />
 
+                                {/* Text content */}
                                 <LessonContent content={lesson?.content} />
                             </div>
 
-                            {/* Sidebar */}
+                            {/* Right column - Sidebar with materials and quizzes */}
                             <div className="lg:col-span-1 space-y-6">
+
+                                {/* Downloadable materials */}
                                 <MaterialsList
                                     materials={materials}
                                     onDownload={handleMaterialDownload}
                                 />
 
+                                {/* Quiz list with completion status */}
                                 <QuizzesList
                                     quizzes={quizzes}
                                     onQuizClick={handleQuizClick}
@@ -225,6 +233,7 @@ const LessonPage = () => {
                     </>
                 )}
 
+                {/* Page footer */}
                 <Footer />
             </main>
         </GradientBackground>

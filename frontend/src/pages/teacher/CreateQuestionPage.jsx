@@ -60,10 +60,8 @@ const CreateQuestionPage = () => {
         setGlobalError(null);
 
         try {
-            // First create the question
             const newQuestion = await createQuestion(quizId, { text: form.text });
 
-            // Then create all answers for this question
             await Promise.all(
                 form.answers.map(answer =>
                     createAnswer(newQuestion.id, {
@@ -73,7 +71,6 @@ const CreateQuestionPage = () => {
                 )
             );
 
-            // Navigate back to the quiz page
             navigate(`/courses/${courseId}/lessons/${lessonId}/quizzes/${quizId}`);
         } catch (err) {
             setGlobalError(err.message);
@@ -90,6 +87,7 @@ const CreateQuestionPage = () => {
         <GradientBackground>
             <FloatingOrbs />
 
+            {/* Navigation bar */}
             <Navbar
                 onLogout={handleLogout}
                 showHome={true}
@@ -97,12 +95,16 @@ const CreateQuestionPage = () => {
                 showProfile={true}
             />
 
+            {/* Main content area */}
             <main className="relative z-10 max-w-3xl mx-auto px-6 py-12">
+
+                {/* Page header */}
                 <PageHeader
                     title="Create New Question"
                     subtitle="Add a new question to your quiz"
                 />
 
+                {/* Error display */}
                 <GlobalError
                     error={globalError}
                     onDismiss={() => setGlobalError(null)}
@@ -118,7 +120,7 @@ const CreateQuestionPage = () => {
                             background: "linear-gradient(145deg, hsla(0, 0%, 100%, 0.08) 0%, hsla(0, 0%, 100%, 0.02) 100%)",
                         }}
                     >
-                        {/* Form */}
+                        {/* Form container */}
                         <div className="p-8">
                             <QuestionForm
                                 form={form}
@@ -134,7 +136,7 @@ const CreateQuestionPage = () => {
                     </div>
                 )}
 
-
+                {/* Page footer */}
                 <Footer />
             </main>
         </GradientBackground>

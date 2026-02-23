@@ -31,10 +31,10 @@ const EditCoursePage = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const fetchCourse = async () => {
-        try {
-            setIsLoading(true);
-            setGlobalError(null);
+        setIsLoading(true);
+        setGlobalError(null);
 
+        try {
             const courseData = await getCourse(courseId);
             setForm({
                 title: courseData.title,
@@ -102,6 +102,7 @@ const EditCoursePage = () => {
         <GradientBackground>
             <FloatingOrbs />
 
+            {/* Navigation bar */}
             <Navbar
                 onLogout={handleLogout}
                 showHome={true}
@@ -109,12 +110,16 @@ const EditCoursePage = () => {
                 showProfile={true}
             />
 
+            {/* Main content area */}
             <main className="relative z-10 max-w-3xl mx-auto px-6 py-12">
+
+                {/* Page header */}
                 <PageHeader
                     title="Edit Course"
                     subtitle="Update your course information"
                 />
 
+                {/* Error display */}
                 <GlobalError
                     error={globalError}
                     onDismiss={() => setGlobalError(null)}
@@ -130,7 +135,7 @@ const EditCoursePage = () => {
                             background: "linear-gradient(145deg, hsla(0, 0%, 100%, 0.08) 0%, hsla(0, 0%, 100%, 0.02) 100%)",
                         }}
                     >
-                        {/* Form */}
+                        {/* Form container */}
                         <div className="p-8">
                             <CourseForm
                                 form={form}
@@ -148,6 +153,7 @@ const EditCoursePage = () => {
                     </div>
                 )}
 
+                {/* Page footer */}
                 <Footer />
             </main>
         </GradientBackground>
