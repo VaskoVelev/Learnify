@@ -100,6 +100,20 @@ public class UserService implements UserDetailsService {
         return userMapper.toDto(user);
     }
 
+    public UserDto toggleUserActive(Long userId, Boolean active) {
+        User user = getUserOrThrow(userId);
+
+        Long currentUserId = securityUtils.getCurrentUserId();
+        if (currentUserId.equals(userId)) {
+            throw new IllegalStateException("You cannot change your own active status");
+        }
+
+        user.setActive(active);
+        userRepository.save(user);
+
+        return userMapper.toDto(user);
+    }
+
     public void deleteMe() {
         Long userId = securityUtils.getCurrentUserId();
         User user = getUserOrThrow(userId);

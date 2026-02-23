@@ -14,6 +14,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @RestController
@@ -63,6 +64,16 @@ public class UserController {
     @PutMapping(ApiPaths.ME)
     public ResponseEntity<UserDto> updateMe(@Valid @RequestBody UpdateUserDto request) {
         UserDto userDto = userService.updateMe(request);
+        return ResponseEntity.ok(userDto);
+    }
+
+    @PatchMapping(ApiPaths.USER_BY_ID)
+    public ResponseEntity<UserDto> toggleUserActive(
+            @PathVariable Long id,
+            @RequestBody Map<String, Boolean> request
+    ) {
+        Boolean active = request.get("active");
+        UserDto userDto = userService.toggleUserActive(id, active);
         return ResponseEntity.ok(userDto);
     }
 
