@@ -10,11 +10,9 @@ import {
     FloatingOrbs,
     GlobalError,
     PageHeader,
-    BackButton,
     QuestionForm,
     LoadingState
 } from "../../components";
-import { HelpCircle } from "lucide-react";
 
 const EditQuestionPage = () => {
     const { logout } = useAuth();

@@ -14,7 +14,6 @@ import {
     QuestionForm,
     LoadingState
 } from "../../components";
-import { HelpCircle } from "lucide-react";
 
 const CreateQuestionPage = () => {
     const { logout } = useAuth();

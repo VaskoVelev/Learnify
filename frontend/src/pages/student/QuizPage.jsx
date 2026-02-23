@@ -15,7 +15,6 @@ import {
     BackButton,
     QuizHeader,
     QuestionCard,
-    QuizSubmissionBanner,
     QuizResultCard,
     SubmitButton
 } from "../../components";

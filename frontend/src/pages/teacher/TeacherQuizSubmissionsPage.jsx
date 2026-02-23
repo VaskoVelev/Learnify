@@ -14,7 +14,7 @@ import {
     PageHeader,
     SubmissionCard
 } from "../../components";
-import { History, User } from "lucide-react";
+import { History } from "lucide-react";
 
 const TeacherQuizSubmissionsPage = () => {
     const { logout } = useAuth();

@@ -19,7 +19,7 @@ import {
     AdminUsersList,
     ConfirmationModal
 } from "../../components";
-import { Shield, Users, BookOpen, Sparkles, GraduationCap } from "lucide-react";
+import { Shield, Users, BookOpen, Sparkles } from "lucide-react";
 
 const AdminPanelPage = () => {
     const { user, logout } = useAuth();

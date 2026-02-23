@@ -13,7 +13,6 @@ import {
     QuizForm,
     LoadingState
 } from "../../components";
-import { HelpCircle } from "lucide-react";
 
 const CreateQuizPage = () => {
     const { logout } = useAuth();

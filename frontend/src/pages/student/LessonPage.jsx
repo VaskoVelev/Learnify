@@ -18,9 +18,7 @@ import {
     LessonContent,
     MaterialsList,
     QuizzesList,
-    SidebarCard
 } from "../../components";
-import { Download, HelpCircle } from "lucide-react";
 import { getFileName, isValidFileUrl, getFileDownloadError, isVideoAvailable } from "../../utils";
 
 const LessonPage = () => {

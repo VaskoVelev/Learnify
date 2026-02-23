@@ -12,7 +12,6 @@ import {
     CourseForm,
     LoadingState
 } from "../../components";
-import { BookOpen } from "lucide-react";
 
 const CreateCoursePage = () => {
     const { logout } = useAuth();

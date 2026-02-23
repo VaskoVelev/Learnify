@@ -13,7 +13,6 @@ import {
     MaterialForm,
     LoadingState
 } from "../../components";
-import { Download } from "lucide-react";
 
 const CreateMaterialPage = () => {
     const { logout } = useAuth();

@@ -4,7 +4,6 @@ import { useAuth } from "../../context/AuthContext";
 import { getLesson, deleteLesson } from "../../api/lesson.api";
 import { getLessonMaterials, deleteMaterial } from "../../api/material.api";
 import { getLessonQuizzes } from "../../api/quiz.api";
-import { getMyQuizSubmissions } from "../../api/submission.api";
 import {
     Navbar,
     Footer,

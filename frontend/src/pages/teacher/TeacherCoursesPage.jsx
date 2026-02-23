@@ -23,7 +23,7 @@ import { BookOpen, Sparkles, Tag, BarChart3 } from "lucide-react";
 import { ALL_CATEGORIES, ALL_DIFFICULTIES } from "../../constants";
 
 const TeacherCoursesPage = () => {
-    const { user, logout } = useAuth();
+    const { logout } = useAuth();
     const navigate = useNavigate();
 
     const [courses, setCourses] = useState([]);
