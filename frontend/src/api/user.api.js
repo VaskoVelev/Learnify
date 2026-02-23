@@ -31,6 +31,11 @@ export const updateMe = async (data) => {
     return response.data;
 };
 
+export const toggleUserActive = async (id, active) => {
+    const response = await http.patch(API_PATHS.USER_BY_ID(id), { active });
+    return response.data;
+};
+
 export const deleteMe = async () => {
     await http.delete(API_PATHS.ME);
 };
