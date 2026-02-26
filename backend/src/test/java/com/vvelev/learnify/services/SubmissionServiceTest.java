@@ -136,7 +136,9 @@ public class SubmissionServiceTest {
                 75.0,
                 submittedAt,
                 quiz.getId(),
-                student.getId()
+                student.getId(),
+                "Jane",
+                "Smith"
         );
 
         SubmissionAnswerDetailsDto answerDetails1 = new SubmissionAnswerDetailsDto(
@@ -144,7 +146,9 @@ public class SubmissionServiceTest {
                 question1.getText(),
                 correctAnswer1.getId(),
                 correctAnswer1.getText(),
-                true
+                true,
+                correctAnswer1.getId(),
+                correctAnswer1.getText()
         );
 
         SubmissionAnswerDetailsDto answerDetails2 = new SubmissionAnswerDetailsDto(
@@ -152,7 +156,9 @@ public class SubmissionServiceTest {
                 question2.getText(),
                 incorrectAnswer2.getId(),
                 incorrectAnswer2.getText(),
-                false
+                false,
+                correctAnswer2.getId(),
+                correctAnswer2.getText()
         );
 
         submissionDetailsDto = new SubmissionDetailsDto(
@@ -231,7 +237,7 @@ public class SubmissionServiceTest {
         });
         when(submissionAnswerRepository.save(any(SubmissionAnswer.class))).thenReturn(new SubmissionAnswer());
 
-        SubmissionDto perfectScoreDto = new SubmissionDto(1L, 100.0, LocalDateTime.now(), quiz.getId(), student.getId());
+        SubmissionDto perfectScoreDto = new SubmissionDto(1L, 100.0, LocalDateTime.now(), quiz.getId(), student.getId(), "Jane", "Smith");
         when(submissionMapper.toDto(any(Submission.class))).thenReturn(perfectScoreDto);
 
         SubmissionDto result = submissionService.submitQuiz(quiz.getId(), allCorrectAnswers);
@@ -265,7 +271,7 @@ public class SubmissionServiceTest {
         });
         when(submissionAnswerRepository.save(any(SubmissionAnswer.class))).thenReturn(new SubmissionAnswer());
 
-        SubmissionDto zeroScoreDto = new SubmissionDto(1L, 0.0, LocalDateTime.now(), quiz.getId(), student.getId());
+        SubmissionDto zeroScoreDto = new SubmissionDto(1L, 0.0, LocalDateTime.now(), quiz.getId(), student.getId(), "Jane", "Smith");
         when(submissionMapper.toDto(any(Submission.class))).thenReturn(zeroScoreDto);
 
         SubmissionDto result = submissionService.submitQuiz(quiz.getId(), allIncorrectAnswers);
@@ -295,7 +301,7 @@ public class SubmissionServiceTest {
         });
         when(submissionAnswerRepository.save(any(SubmissionAnswer.class))).thenReturn(new SubmissionAnswer());
 
-        SubmissionDto partialScoreDto = new SubmissionDto(1L, 50.0, LocalDateTime.now(), quiz.getId(), student.getId());
+        SubmissionDto partialScoreDto = new SubmissionDto(1L, 50.0, LocalDateTime.now(), quiz.getId(), student.getId(), "Jane", "Smith");
         when(submissionMapper.toDto(any(Submission.class))).thenReturn(partialScoreDto);
 
         SubmissionDto result = submissionService.submitQuiz(quiz.getId(), submissionAnswers);
