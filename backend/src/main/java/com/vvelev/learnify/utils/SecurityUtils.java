@@ -2,7 +2,7 @@ package com.vvelev.learnify.utils;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-
+//coment
 @Component
 public class SecurityUtils {
     public Long getCurrentUserId() {
