@@ -141,6 +141,8 @@
 					<configLocation>google_checks.xml</configLocation>
 					<consoleOutput>true</consoleOutput>
 					<failsOnError>true</failsOnError>
+					<violationSeverity>warning</violationSeverity>
+					<maxAllowedViolations>0</maxAllowedViolations>
 					<linkXRef>false</linkXRef>
 				</configuration>
 				<executions>
