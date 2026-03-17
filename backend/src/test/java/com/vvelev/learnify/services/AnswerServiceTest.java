@@ -312,7 +312,7 @@ public class AnswerServiceTest {
         verifyNoInteractions(answerMapper);
     }
 
-    /* -------------------- Delete Answer -------------------- */
+    /* ------------------- Delete Answer ------------------- */
 
     @Test
     void deleteAnswer_ShouldDeleteAnswer_WhenUserIsCourseCreator() {
