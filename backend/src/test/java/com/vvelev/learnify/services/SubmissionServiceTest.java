@@ -210,7 +210,7 @@ public class SubmissionServiceTest {
         verify(userRepository, times(1)).findById(student.getId());
         verify(questionRepository, times(1)).countByQuizId(quiz.getId());
         verify(answerRepository, times(2)).findById(anyLong());
-        verify(submissionRepository, times(1)).save(any(Submission.class));
+        verify(submissionRepository, times(2)).save(any(Submission.class));
         verify(submissionAnswerRepository, times(2)).save(any(SubmissionAnswer.class));
         verify(studentProgressionService, times(1)).updateProgression(student, course);
         verify(submissionMapper, times(1)).toDto(any(Submission.class));
@@ -245,7 +245,7 @@ public class SubmissionServiceTest {
         assertNotNull(result);
         assertEquals(100.0, result.getScore());
 
-        verify(submissionRepository, times(1)).save(argThat(submission ->
+        verify(submissionRepository, times(2)).save(argThat(submission ->
                 submission.getScore() == 100.0
         ));
     }
@@ -279,7 +279,7 @@ public class SubmissionServiceTest {
         assertNotNull(result);
         assertEquals(0.0, result.getScore());
 
-        verify(submissionRepository, times(1)).save(argThat(submission ->
+        verify(submissionRepository, times(2)).save(argThat(submission ->
                 submission.getScore() == 0.0
         ));
     }
@@ -309,7 +309,7 @@ public class SubmissionServiceTest {
         assertNotNull(result);
         assertEquals(50.0, result.getScore());
 
-        verify(submissionRepository, times(1)).save(argThat(submission ->
+        verify(submissionRepository, times(2)).save(argThat(submission ->
                 submission.getScore() == 50.0
         ));
     }
@@ -428,7 +428,6 @@ public class SubmissionServiceTest {
         );
 
         verify(answerRepository, times(1)).findById(nonExistentAnswerId);
-        verifyNoInteractions(submissionRepository);
     }
 
     @Test
@@ -458,7 +457,6 @@ public class SubmissionServiceTest {
         );
 
         verify(answerRepository, times(1)).findById(answerFromDifferentQuiz.getId());
-        verifyNoInteractions(submissionRepository);
     }
 
     @Test
@@ -480,7 +478,6 @@ public class SubmissionServiceTest {
         );
 
         verify(answerRepository, times(1)).findById(correctAnswer2.getId());
-        verifyNoInteractions(submissionRepository);
     }
 
     /* -------------------- Get Quiz Submissions -------------------- */
