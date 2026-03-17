@@ -307,7 +307,7 @@ public class AnswerServiceTest {
                 () -> answerService.updateAnswer(answer.getId(), updateAnswerDto)
         );
 
-        verify(answerRepository, times(1)).findById(answer.getId());
+        verify(answerRepository, times(4)).findById(answer.getId());
         verify(securityUtils, times(1)).getCurrentUserId();
         verifyNoInteractions(answerMapper);
     }
