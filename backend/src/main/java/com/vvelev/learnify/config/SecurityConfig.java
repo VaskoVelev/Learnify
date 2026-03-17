@@ -57,11 +57,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(c -> c
                         .requestMatchers(HttpMethod.POST, ApiPaths.AUTH_LOGIN, ApiPaths.AUTH_REFRESH, ApiPaths.USERS).permitAll()
 
-                        .requestMatchers(HttpMethod.GET, ApiPaths.USERS, ApiPaths.USER_BY_ID, ApiPaths.ENROLLMENTS).hasRole(Role.ADMIN.name())
-                        .requestMatchers(HttpMethod.PUT, ApiPaths.USER_BY_ID).hasRole(Role.ADMIN.name())
-                        .requestMatchers(HttpMethod.PATCH, ApiPaths.USER_BY_ID).hasRole(Role.ADMIN.name())
-
-                        .requestMatchers(HttpMethod.GET,
+                        .requestMatchers(HttpMethod.GET, ApiPaths.USERS, ApiPaths.USER_BY_ID, ApiPaths.ENROLLMENTS).hasRole(Role.ADMIN.name()).requestMatchers(HttpMethod.PUT, ApiPaths.USER_BY_ID).hasRole(Role.ADMIN.name()).requestMatchers(HttpMethod.PATCH, ApiPaths.USER_BY_ID).hasRole(Role.ADMIN.name()).requestMatchers(HttpMethod.GET,
                                 ApiPaths.COURSES_CREATED_ME,
                                 ApiPaths.COURSE_PROGRESSIONS,
                                 ApiPaths.QUIZ_SUBMISSIONS
