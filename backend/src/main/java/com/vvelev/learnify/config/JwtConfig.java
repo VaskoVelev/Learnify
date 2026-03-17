@@ -17,7 +17,7 @@ import javax.crypto.SecretKey;
 @Configuration
 public class JwtConfig {
     @Value("${JWT_SECRET:erdhgesrhgnwrtbwrtiuhnbwrtuihnrtwuihnrwutiohnuriwtohnuirw}")
-    private String secret;
+    private String secret
 
     @Value("${JWT_ACCESS_EXPIRATION:300}")
     private int accessTokenExpiration;
