@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
     );
     const [user, setUser] = useState(null);
     const [isAuthenticated, setIsAuthenticated] = useState(!!accessToken);
-    const [loading, setLoading] = useState(() => !!localStorage.getItem("accessToken"));
+    const [loading, setLoading] = useState(true);
 
     const loadUser = async () => {
         const me = await getMe();
@@ -46,21 +46,20 @@ export const AuthProvider = ({ children }) => {
 
     useEffect(() => {
         const initAuth = async () => {
-            const token = localStorage.getItem("accessToken");
-
-            if (!token) {
-                // loading was already initialised to false — nothing to do
-                return;
-            }
-
             try {
+                const token = localStorage.getItem("accessToken");
+
+                if (!token) {
+                    setIsAuthenticated(false);
+                    setUser(null);
+                    return;
+                }
+
                 await loadUser();
                 setIsAuthenticated(true);
             } catch {
                 setIsAuthenticated(false);
                 setUser(null);
-                localStorage.removeItem("accessToken");
-                setAccessToken(null);
             } finally {
                 setLoading(false);
             }
