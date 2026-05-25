@@ -78,10 +78,6 @@ export const AuthProvider = ({ children }) => {
         updateUser,
     };
 
-    if (loading) {
-        return null;
-    }
-
     return (
         <AuthContext.Provider value={value}>
             {children}
