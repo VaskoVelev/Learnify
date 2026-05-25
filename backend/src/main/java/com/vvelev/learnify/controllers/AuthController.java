@@ -6,10 +6,11 @@ import com.vvelev.learnify.dtos.auth.AuthResponseDto;
 import com.vvelev.learnify.dtos.auth.LoginDto;
 import com.vvelev.learnify.dtos.auth.LoginResult;
 import com.vvelev.learnify.services.AuthService;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,13 +24,15 @@ public class AuthController {
     public ResponseEntity<AuthResponseDto> login(@Valid @RequestBody LoginDto request, HttpServletResponse response) {
         LoginResult result = authService.login(request);
 
-        Cookie cookie = new Cookie("refreshToken", result.getRefreshToken());
-        cookie.setHttpOnly(true);
-        cookie.setPath(ApiPaths.AUTH_REFRESH);
-        cookie.setMaxAge(jwtConfig.getRefreshTokenExpiration());
-        cookie.setSecure(true);
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", result.getRefreshToken())
+                .httpOnly(true)
+                .path(ApiPaths.AUTH_REFRESH)
+                .maxAge(jwtConfig.getRefreshTokenExpiration())
+                .secure(true)
+                .sameSite("None")
+                .build();
 
-        response.addCookie(cookie);
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.ok(new AuthResponseDto(result.getAccessToken()));
     }
 
@@ -41,13 +44,15 @@ public class AuthController {
 
     @PostMapping(ApiPaths.AUTH_LOGOUT)
     public ResponseEntity<Void> logout(HttpServletResponse response) {
-        Cookie cookie = new Cookie("refreshToken", null);
-        cookie.setHttpOnly(true);
-        cookie.setPath(ApiPaths.AUTH_REFRESH);
-        cookie.setMaxAge(0);
-        cookie.setSecure(true);
-        response.addCookie(cookie);
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .path(ApiPaths.AUTH_REFRESH)
+                .maxAge(0)
+                .secure(true)
+                .sameSite("None")
+                .build();
 
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
         return ResponseEntity.ok().build();
     }
 }
