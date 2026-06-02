@@ -92,8 +92,10 @@ public class SubmissionService {
 
         Long userId = securityUtils.getCurrentUserId();
 
-        if (!isStudentEnrolled(userId, course.getId()) && !isSubmissionCreator(submission, userId) && !isCourseCreator(course, userId)) {
-            throw new AccessDeniedException();
+        if (!isCourseCreator(course, userId)) {
+            if (!isStudentEnrolled(userId, course.getId()) || !isSubmissionCreator(submission, userId)) {
+                throw new AccessDeniedException();
+            }
         }
 
         return submissionMapper.toDetailsDto(submission);
